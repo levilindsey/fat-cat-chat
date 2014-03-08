@@ -1,0 +1,74 @@
+
+body {
+  background-color: #303030;
+  color: #B0C0D0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+h1 {
+  font-size: 24pt;
+  width: 100%;
+  text-align: center;
+}
+
+a {
+  font-weight: bold;
+}
+
+body div a:active {
+  color: #ea566b;
+  text-decoration: none;
+}
+
+a:link {
+  color: #9988cc;/*#be56ea*/
+  text-decoration: none;
+}
+
+body a:hover {
+  text-decoration: underline;
+}
+
+a:visited {
+  color: #887799;
+  text-decoration: none;
+}
+
+.errorMessage {
+  display: block;
+  position: relative;
+  width: 100%;
+  margin-top: 80px;
+  color: #d44;
+  background: rgba(0,0,0,0.7);
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  z-index: 32090;
+  cursor: pointer;
+}
+
+#footer {
+  color: #B0C0D0;
+  font-size: 12pt;
+  width: 100%;
+  margin: 30px 0;
+  text-align: center;
+}
+
+#chat-container {
+  position: relative;
+  margin: 10px auto;
+  font-size: 17pt;
+}
+
+.broadcast-msg {
+  background-color: #202020;
+  color: #B0C0D0;
+}
+
+.unicast-msg {
+  background-color: #102804;
+  color: #80B060;
+  font-weight: bold;
+}

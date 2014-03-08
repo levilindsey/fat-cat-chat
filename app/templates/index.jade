@@ -1,0 +1,31 @@
+- var currentVersion = '?v=0.0.1';
+- var BASE_DIR = '';
+
+doctype html
+html(lang='en')
+  head
+    title
+      | Fat-Cat Chat
+    meta(charset='utf-8')
+    meta(name='description', content='A simple IRC-like chat server.')
+    link(rel='shortcut icon', href='#{BASE_DIR}/images/favicon.ico#{currentVersion}')
+    link(rel='stylesheet', href='#{BASE_DIR}/stylesheets/index.css#{currentVersion}')
+  body
+
+    h1
+      | Fat-Cat Chat
+
+    #chat-container
+
+    #footer
+      a(href='http://jackieandlevi.com/levi', target='_blank')
+        | Levi
+      |  made this.&nbsp;
+      a(href='https://github.com/levisl176/fat-cat-chat', target='_blank')
+        | Fork it on GitHub
+      | !
+
+    script(src='#{BASE_DIR}/scripts/params.js#{currentVersion}')
+    script(src='#{BASE_DIR}/scripts/util.js#{currentVersion}')
+    script(src='#{BASE_DIR}/scripts/log.js#{currentVersion}')
+    script(src='#{BASE_DIR}/scripts/index.js#{currentVersion}')
