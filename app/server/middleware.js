@@ -29,7 +29,7 @@ function setUpStaticFiles(workingDirectory, server, express) {
   var staticPath;
 
   // Set up the home files
-  staticPath = __dirname + '/' + BASE_DIR + workingDirectory + '/public';
+  staticPath = __dirname + '/' + BASE_DIR + workingDirectory + '/client';
   server.use('/', express.static(staticPath));
   console.log('Serving static files: staticPath=' + staticPath);
 }

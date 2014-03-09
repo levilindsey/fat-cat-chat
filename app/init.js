@@ -1,6 +1,6 @@
 // This script instantiates the server and begins listening for requests.
 
-var PORT = 8080;
+var PORT = process.env.PORT || 3000;
 
 var server = require('./server/server').createServer();
 

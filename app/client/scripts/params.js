@@ -15,7 +15,7 @@
   params.APP = moduleParams;
 
   moduleParams.TITLE = 'Fat-Cat Chat';
-  moduleParams.VERSION = '0.0.1';
+  moduleParams.VERSION = '0.0.3';
   moduleParams.LICENSE =
       'The MIT License (MIT). Copyright (c) 2014 Levi Lindsey <levi@jackieandlevi.com>.';
 
@@ -33,7 +33,7 @@
   moduleParams = {};
   params.SPRITES = moduleParams;
 
-  moduleParams.SRC = params.BASE_DIR + '/images/spritesheet.png';
+  moduleParams.SRC = params.BASE_DIR + '/images/spritesheet_32.png';
 
   // --- Localization parameters --- //
 
@@ -42,12 +42,8 @@
   moduleParams = {};
   params.L18N.EN = moduleParams;
 
-  moduleParams.TAP_THUMBNAIL_PROMPT = '(tap to expand thumbnail)';
-
   moduleParams.BAD_BROWSER_MESSAGE =
       ':( Sorry, but some of the fancy features of this app may not work on your browser. You should really upgrade to a newer version.';
-  moduleParams.METADATA_ERROR_MESSAGE =
-      ':( Unable to download or parse the metadata for the images. Please check your Internet connection and try again.';
 
   // --- Miscellaneous parameters --- //
 

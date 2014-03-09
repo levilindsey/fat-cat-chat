@@ -4,7 +4,7 @@
  */
 (function () {
 
-  var params, util, log;
+  var params, util, log, User, Room, Message, ConsoleEntry, Console, IOManager, ConsoleManager;
 
   // ------------------------------------------------------------------------------------------- //
   // Private static functions
@@ -31,7 +31,21 @@
    * @function index~reset
    */
   function reset() {
-    // TODO: initialize modules
+    User = app.User;
+    Room = app.Room;
+    Message = app.Message;
+    ConsoleEntry = app.ConsoleEntry;
+    Console = app.Console;
+    IOManager = app.IOManager;
+    ConsoleManager = app.ConsoleManager;
+
+    User.initStaticFields();
+    Room.initStaticFields();
+    Message.initStaticFields();
+    ConsoleEntry.initStaticFields();
+    Console.initStaticFields();
+    IOManager.initStaticFields();
+    ConsoleManager.initStaticFields();
 
     log.i('reset', 'All modules initialized');
 
