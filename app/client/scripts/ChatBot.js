@@ -1,6 +1,6 @@
 /**
- * This module defines a constructor for Room objects.
- * @module Room
+ * This module defines a constructor for ChatBot objects.
+ * @module ChatBot
  */
 (function () {
   // ------------------------------------------------------------------------------------------- //
@@ -13,12 +13,12 @@
 
   /**
    * Initializes some static state for this module.
-   * @function Room.initStaticFields
+   * @function ChatBot.initStaticFields
    */
   function initStaticFields() {
     params = app.params;
     util = app.util;
-    log = new app.Log('Room');
+    log = new app.Log('ChatBot');
     log.d('initStaticFields', 'Module initialized');
   }
 
@@ -28,22 +28,18 @@
   /**
    * @constructor
    * @global
-   * @param {String} name The name of this room.
-   * @param {Array.<User>} users The users in this room.
-   * @param {Number} startTime The first time this room was detectable by this client.
+   * @param {ConsoleManager} consoleManager
    */
-  function Room(name, users, startTime) {
-    var room = this;
+  function ChatBot(consoleManager) {
+    var ChatBot = this;
 
-    room.name = name;
-    room.users = users;
-    room.startTime = startTime;
+    ChatBot.consoleManager = consoleManager;
   }
 
   // Expose this module
   if (!window.app) window.app = {};
-  window.app.Room = Room;
-  Room.initStaticFields = initStaticFields;
+  window.app.ChatBot = ChatBot;
+  ChatBot.initStaticFields = initStaticFields;
 
-  console.log('Room module loaded');
+  console.log('ChatBot module loaded');
 })();

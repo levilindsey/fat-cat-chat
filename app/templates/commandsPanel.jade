@@ -4,87 +4,88 @@ div(id='commandsPanel' class='panelContainer closed')
       span.insetText(text='Commands')
         | Commands
   .panelBody
-    h3
-      | Basic
-    dl
-      dt
+    .innerBodyContainer
+      h3
+        | Basic
+      dl
+        dt
+          code.command
+            | /help
+        dd
+          | Type&nbsp;
+          code.command
+            | /help
+          |  to see a list of the available commands.
+        dt
+          code.command
+            | /rooms
+        dd
+          | Type&nbsp;
+          code.command
+            | /rooms
+          |  to see all of the current rooms.
+        dt
+          code.command
+            | /join
+        dd
+          | Type&nbsp;
+          code.command
+            | /join &lt;room_name&gt;
+          |  to join a new room. If the room did not previously exist, it will be created.
+        dt
+          code.command
+            | /msg
+        dd
+          | Type&nbsp;
+          code.command
+            | /msg &lt;user_name&gt; (&lt;message&gt;)
+          |  to send a private message to a user.
+        dt
+          code.command
+            | /nick
+        dd
+          | Type&nbsp;
+          code.command
+            | /nick &lt;new_nickname&gt;
+          |  to change your nickname.
+        dt
+          code.command
+            | /ping
+        dd
+          | Type&nbsp;
+          code.command
+            | /ping &lt;user_name&gt;
+          |  to get the lag time between you and another user.
+        dt
+          code.command
+            | /ignore
+        dd
+          | Type&nbsp;
+          code.command
+            | /ignore &lt;user_name&gt;
+          |  to ignore all messages from a user.
+        dt
+          code.command
+            | /leave
+        dd
+          | Type&nbsp;
+          code.command
+            | /leave
+          |  to leave the chat room. If you are the last user to leave the room, it will be removed.
+        dt
+          code.command
+            | /quit
+        dd
+          | Type&nbsp;
+          code.command
+            | /quit
+          |  to be removed from the chat server.
+      p
+        | Type anything not prefixed with&nbsp;
         code.command
-          | /help
-      dd
-        | Type&nbsp;
-        code.command
-          | /help
-        |  to see a list of the available commands.
-      dt
-        code.command
-          | /rooms
-      dd
-        | Type&nbsp;
-        code.command
-          | /rooms
-        |  to see all of the current rooms.
-      dt
-        code.command
-          | /join
-      dd
-        | Type&nbsp;
-        code.command
-          | /join #&lt;channel_name&gt;
-        |  to join a new channel. If the channel did not previously exist, it will be created.
-      dt
-        code.command
-          | /msg
-      dd
-        | Type&nbsp;
-        code.command
-          | /msg &lt;user_name&gt; (&lt;message&gt;)
-        |  to send a private message to a user.
-      dt
-        code.command
-          | /nick
-      dd
-        | Type&nbsp;
-        code.command
-          | /nick &lt;new_nickname&gt;
-        |  to change your nickname.
-      dt
-        code.command
-          | /ping
-      dd
-        | Type&nbsp;
-        code.command
-          | /ping &lt;user_name&gt;
-        |  to get the lag time between you and another user.
-      dt
-        code.command
-          | /ignore
-      dd
-        | Type&nbsp;
-        code.command
-          | /ignore &lt;user_name&gt;
-        |  to ignore all messages from a user.
-      dt
-        code.command
-          | /leave
-      dd
-        | Type&nbsp;
-        code.command
-          | /leave
-        |  to leave the chat room. If you are the last user to leave the channel, it will be removed.
-      dt
-        code.command
-          | /quit
-      dd
-        | Type&nbsp;
-        code.command
-          | /quit
-        |  to be removed from the chat server.
-    p
-      | Type anything not prefixed with&nbsp;
-      code.command
-        | /
-      |  in order to send a message to everyone in the room.
-    h3
-      | Admin
-    p.hint
-      | Coming soon
+          | /
+        |  in order to send a message to everyone in the room.
+      h3
+        | Admin
+      p.hint
+        | Coming soon

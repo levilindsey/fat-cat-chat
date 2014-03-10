@@ -17,13 +17,16 @@
    * @function ConsoleEntry~createElements
    */
   function createElements() {
-    var consoleEntry;
+    var consoleEntry, li;
 
     consoleEntry = this;
 
-    // TODO: set up elements
+    li =
+        util.createElement('li', consoleEntry.parent, null,
+            ['consoleEntry', consoleEntry.message.type]);
 
     consoleEntry.elements = {
+      li: li
     };
   }
 
@@ -32,19 +35,12 @@
 
   /**
    *
-   * @function ConsoleEntry#resize
+   * @function ConsoleEntry#removeFromDOM
    */
-  function resize() {
-    var consoleEntry, viewportSize;
-
-    consoleEntry = this;
-    viewportSize = util.getViewportSize();
-
-    // TODO:
+  function removeFromDom() {
+    var consoleEntry = this;
+    util.removeChildIfPresent(consoleEntry.parent, consoleEntry.elements.li);
   }
-
-  // ------------------------------------------------------------------------------------------- //
-  // Private static functions
 
   // ------------------------------------------------------------------------------------------- //
   // Public static functions
@@ -66,14 +62,18 @@
   /**
    * @constructor
    * @global
+   * @param {Message} message The message for this console entry to display.
+   * @param {HTMLElement} parent The parent element to add this entry's DOM element to.
    */
-  function ConsoleEntry() {
+  function ConsoleEntry(message, parent) {
     var consoleEntry = this;
 
-    consoleEntry.resize = resize;
+    consoleEntry.message = message;
+    consoleEntry.parent = parent;
+    consoleEntry.removeFromDom = removeFromDom;
+    consoleEntry.elements = null;
 
     createElements.call(consoleEntry);
-    resize.call(consoleEntry);
   }
 
   // Expose this module

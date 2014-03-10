@@ -328,17 +328,17 @@
    */
   function setUpCreateObjectURL() {
     if (window.webkitURL) {
-      util.createObjectURL = function(fileObject) {
+      util.createObjectURL = function (fileObject) {
         return window.webkitURL.createObjectURL(fileObject);
       };
-      util.revokeObjectURL = function(objectURL) {
+      util.revokeObjectURL = function (objectURL) {
         window.webkitURL.revokeObjectURL(objectURL);
       };
     } else if (window.URL && window.URL.createObjectURL) {
-      util.createObjectURL = function(fileObject) {
+      util.createObjectURL = function (fileObject) {
         return window.URL.createObjectURL(fileObject);
       };
-      util.revokeObjectURL = function(objectURL) {
+      util.revokeObjectURL = function (objectURL) {
         window.URL.revokeObjectURL(objectURL);
       };
     } else {

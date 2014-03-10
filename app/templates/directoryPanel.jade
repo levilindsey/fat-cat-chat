@@ -1,16 +1,15 @@
-div(id='directoryPanel' class='panelContainer closed')
+div(id='directoryPanel' class='panelContainer')
   .panelHeader
     .panelTitleContainer
-      span.insetText(text='Directory')
+      span(id='directoryHeader' class='insetText' text='Directory')
         | Directory
   .panelBody
-    .usersColumn
-      h3
-        | Users
-      ul
-        li TODO: REMOVE THIS LIST ITEM!!
-    #roomsColumn
-      h3
-        | Rooms
-      ul
-        li TODO: REMOVE THIS LIST ITEM!!
+    .innerBodyContainer
+      #roomsColumn
+        h3
+          | Rooms
+        div(id='directoryRoomsConsole' class='chatConsole')
+      .usersColumn
+        h3
+          | Users
+        div(id='directoryUsersConsole' class='chatConsole')

@@ -1,0 +1,14 @@
+div(id='roomChatPanel' class='panelContainer closed hidden')
+  .panelHeader
+    .panelTitleContainer
+      span(id='roomChatHeader' class='insetText' text='Room: room_name')
+        | Room: room_name
+  .panelBody
+    .innerBodyContainer
+      .messagesColumn
+        div(id='roomChatMessagesConsole' class='chatConsole')
+        input(type='text' id='roomChatMessagesTextBox' class='consoleTextBox' placeholder='Type message here')
+      .usersColumn
+        h3
+          | Users
+        div(id='roomChatUsersConsole' class='chatConsole')

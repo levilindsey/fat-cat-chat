@@ -1,4 +1,4 @@
-- var currentVersion = '?v=0.0.3';
+- var currentVersion = '?v=0.0.4';
 - var BASE_DIR = '';
 
 doctype html
@@ -18,10 +18,26 @@ html(lang='en')
           | Fat-Cat Chat&nbsp;
           img(class='emoticon wink' src='#{BASE_DIR}/images/empty.gif')
 
-      include chatRoomPanel
+      #buttonsPanel
+        button#changeNameButton
+          | Change Name
+        button#newRoomButton
+          | New Room
+        button#addBotButton
+          | Add Bot
+
+      #textEntryDialoguePanel.hidden
+        input(type='text' id='changeNameTextBox' placeholder='Enter name')
+        button#confirmButton
+          | OK
+        button#cancelButton
+          | Cancel
+
+      include roomChatPanel
       include directoryPanel
       include commandsPanel
       include emoticonsPanel
+      include privateChatPanel
 
       #footer
         a(href='http://jackieandlevi.com/levi', target='_blank')
@@ -38,7 +54,9 @@ html(lang='en')
     script(src='#{BASE_DIR}/scripts/Room.js#{currentVersion}')
     script(src='#{BASE_DIR}/scripts/Message.js#{currentVersion}')
     script(src='#{BASE_DIR}/scripts/ConsoleEntry.js#{currentVersion}')
-    script(src='#{BASE_DIR}/scripts/Console.js#{currentVersion}')
+    script(src='#{BASE_DIR}/scripts/ChatConsole.js#{currentVersion}')
+    script(src='#{BASE_DIR}/scripts/ChatTextBox.js#{currentVersion}')
     script(src='#{BASE_DIR}/scripts/IOManager.js#{currentVersion}')
+    script(src='#{BASE_DIR}/scripts/ChatBot.js#{currentVersion}')
     script(src='#{BASE_DIR}/scripts/ConsoleManager.js#{currentVersion}')
     script(src='#{BASE_DIR}/scripts/index.js#{currentVersion}')

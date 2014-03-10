@@ -4,7 +4,7 @@
  */
 (function () {
 
-  var params, util, log, User, Room, Message, ConsoleEntry, Console, IOManager, ConsoleManager;
+  var params, util, log, User, Room, Message, ConsoleEntry, ChatConsole, ChatTextBox, IOManager, ChatBot, ConsoleManager, consoleManager;
 
   // ------------------------------------------------------------------------------------------- //
   // Private static functions
@@ -35,22 +35,29 @@
     Room = app.Room;
     Message = app.Message;
     ConsoleEntry = app.ConsoleEntry;
-    Console = app.Console;
+    ChatConsole = app.ChatConsole;
+    ChatTextBox = app.ChatTextBox;
     IOManager = app.IOManager;
     ConsoleManager = app.ConsoleManager;
+    ChatBot = app.ChatBot;
 
     User.initStaticFields();
     Room.initStaticFields();
     Message.initStaticFields();
     ConsoleEntry.initStaticFields();
-    Console.initStaticFields();
+    ChatConsole.initStaticFields();
+    ChatTextBox.initStaticFields();
     IOManager.initStaticFields();
     ConsoleManager.initStaticFields();
+    ChatBot.initStaticFields();
 
     log.i('reset', 'All modules initialized');
 
     cacheSpriteSheet();
-    checkBrowserCompatibility();
+
+    if (checkBrowserCompatibility()) {
+      consoleManager = new ConsoleManager();
+    }
   }
 
   /**
@@ -69,6 +76,9 @@
   function checkBrowserCompatibility() {
     if (!util.isBrowserCompatible) {
       showErrorMessage(params.L18N.EN.BAD_BROWSER_MESSAGE);
+      return false;
+    } else {
+      return true;
     }
   }
 

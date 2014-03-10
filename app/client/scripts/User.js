@@ -9,15 +9,6 @@
   var params, util, log;
 
   // ------------------------------------------------------------------------------------------- //
-  // Private dynamic functions
-
-  // ------------------------------------------------------------------------------------------- //
-  // Public dynamic functions
-
-  // ------------------------------------------------------------------------------------------- //
-  // Private static functions
-
-  // ------------------------------------------------------------------------------------------- //
   // Public static functions
 
   /**
@@ -37,11 +28,15 @@
   /**
    * @constructor
    * @global
+   * @param {String} name The name of this user.
+   * @param {Number} startTime The first time this user was detectable by this client.
    */
-  function User() {
+  function User(name, startTime) {
     var user = this;
 
-
+    user.name = name;
+    user.startTime = startTime;
+    user.isIgnored = false;
   }
 
   // Expose this module
