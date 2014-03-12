@@ -4,7 +4,7 @@
  */
 (function () {
 
-  var params, util, log, User, Room, Message, ConsoleEntry, ChatConsole, ChatTextBox, IOManager, ChatBot, ConsoleManager, consoleManager;
+  var params, util, log, User, Room, Message, ConsoleEntry, ChatConsole, ChatTextBox, IOManager, ChatBot, UIManager, ConsoleManager, uiManager, consoleManager;
 
   // ------------------------------------------------------------------------------------------- //
   // Private static functions
@@ -38,6 +38,7 @@
     ChatConsole = app.ChatConsole;
     ChatTextBox = app.ChatTextBox;
     IOManager = app.IOManager;
+    UIManager = app.UIManager;
     ConsoleManager = app.ConsoleManager;
     ChatBot = app.ChatBot;
 
@@ -48,13 +49,16 @@
     ChatConsole.initStaticFields();
     ChatTextBox.initStaticFields();
     IOManager.initStaticFields();
+    UIManager.initStaticFields();
     ConsoleManager.initStaticFields();
     ChatBot.initStaticFields();
 
     log.i('reset', 'All modules initialized');
 
     if (checkBrowserCompatibility()) {
+      uiManager = new UIManager();
       consoleManager = new ConsoleManager();
+      uiManager.init(consoleManager);
     }
   }
 

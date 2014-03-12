@@ -24,10 +24,10 @@
     chatTextBox = this;
 
     textBox = document.getElementById(textBoxId);
-    util.listen(textBox, 'keydown', function(event) {
+    util.listen(textBox, 'keydown', function (event) {
       onKeyDown.call(chatTextBox, event.keyCode);
     });
-    util.listen(textBox, 'change', function() {
+    util.listen(textBox, 'change', function () {
       onKeyDown.call(chatTextBox, chatTextBox.textBox.innerHTML);
     });
 
@@ -44,7 +44,11 @@
   function onKeyDown(keyCode) {
     var chatTextBox = this;
     if (keyCode === ENTER_KEY_CODE) {
-      chatTextBox.consoleManager.handleOutGoingMessage(chatTextBox.textBox.getAttribute('value'), chatTextBox);
+      log.i('onKeyDown', 'User pressed ENTER');
+
+      chatTextBox.consoleManager.handleOutGoingMessage(chatTextBox.textBox.getAttribute('value'),
+          chatTextBox);
+
       chatTextBox.textBox.innerHTML = '';
     }
   }
@@ -56,7 +60,8 @@
    */
   function onTextChanged(newText) {
     var chatTextBox = this;
-    // TODO:
+
+    // TODO: If I have time, add an overlay over the textbox, which I can then size and position precicesly in order to "add markup" to the contents of the textbox
   }
 
   // ------------------------------------------------------------------------------------------- //

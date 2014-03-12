@@ -40,9 +40,26 @@
     log.d('initStaticFields', 'Module initialized');
   }
 
+  /**
+   *
+   * @function IOManager.parseOutGoingMessage
+   * @param {String} rawText
+   * @param {String} htmlText
+   * @param {User} thisUser
+   * @param {Room|null} room
+   * @param {User|null} privateChatUser
+   * @param {Boolean} isPrivateMessage
+   * @returns {Message}
+   */
+  function parseOutGoingMessage(rawText, htmlText, thisUser, room, privateChatUser,
+                                isPrivateMessage) {
+    var serverText, time, type, command, arguments;
 
-  function parseOutGoingMessage(text, thisUser, activeRoom, privateChatUser, isPrivateMessage) {
+    time = Date.now();
 
+    // TODO:
+
+    return new Message(rawText, htmlText, serverText, thisUser, time, type, command, arguments);
   }
 
   // ------------------------------------------------------------------------------------------- //
