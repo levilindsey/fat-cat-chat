@@ -53,8 +53,6 @@
 
     log.i('reset', 'All modules initialized');
 
-    cacheSpriteSheet();
-
     if (checkBrowserCompatibility()) {
       consoleManager = new ConsoleManager();
     }
@@ -71,6 +69,7 @@
   }
 
   /**
+   * Uses feature detection to ensure the browser can handle this app.
    * @function index~checkBrowserCompatibility
    */
   function checkBrowserCompatibility() {
@@ -97,21 +96,6 @@
     errorMessageElement.onclick = function () {
       body.removeChild(errorMessageElement);
     };
-  }
-
-  /**
-   * Caches the master sprite sheet.
-   * @function index~cacheSpriteSheet
-   */
-  function cacheSpriteSheet() {
-    var image = new Image();
-    util.listen(image, 'load', function () {
-      log.i('cacheSpriteSheet', 'success');
-    });
-    util.listen(image, 'error', function () {
-      log.e('cacheSpriteSheet', 'error');
-    });
-    image.src = params.SPRITES.SRC;
   }
 
   // ------------------------------------------------------------------------------------------- //
