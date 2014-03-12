@@ -777,6 +777,8 @@
   if (!window.app) window.app = {};
   window.app.ConsoleManager = ConsoleManager;
   ConsoleManager.initStaticFields = initStaticFields;
+  ConsoleManager.parseCommands = parseCommands;
+  ConsoleManager.parseEmoticons = parseEmoticons;
 
   console.log('ConsoleManager module loaded');
 })();

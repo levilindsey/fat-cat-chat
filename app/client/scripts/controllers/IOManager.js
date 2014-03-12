@@ -14,6 +14,15 @@
   // ------------------------------------------------------------------------------------------- //
   // Public dynamic functions
 
+  /**
+   *
+   * @function IOManager#sendMessage
+   * @param message
+   */
+  function sendMessage(message) {
+    // TODO:
+  }
+
   // ------------------------------------------------------------------------------------------- //
   // Private static functions
 
@@ -31,6 +40,11 @@
     log.d('initStaticFields', 'Module initialized');
   }
 
+
+  function parseOutGoingMessage(text, thisUser, activeRoom, privateChatUser, isPrivateMessage) {
+
+  }
+
   // ------------------------------------------------------------------------------------------- //
   // Expose this module's constructor
 
@@ -39,15 +53,16 @@
    * @global
    */
   function IOManager() {
-    var IOManager = this;
+    var ioManager = this;
 
-
+    ioManager.sendMessage = sendMessage;
   }
 
   // Expose this module
   if (!window.app) window.app = {};
   window.app.IOManager = IOManager;
   IOManager.initStaticFields = initStaticFields;
+  IOManager.parseOutGoingMessage = parseOutGoingMessage;
 
   console.log('IOManager module loaded');
 })();
