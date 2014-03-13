@@ -1,0 +1,19 @@
+#headerPanel
+  h1
+    | Fat-Cat Chat&nbsp;
+    img(class='emoticon wink' src='#{BASE_DIR}/images/empty.gif')
+
+#buttonsPanel
+  button#changeNameButton
+    | Change Name
+  button#newRoomButton
+    | New Room
+  button#addBotButton
+    | Add Bot
+
+#textEntryDialoguePanel.hidden
+  input(type='text' id='changeNameTextBox' placeholder='Enter name')
+  button#confirmButton
+    | OK
+  button#cancelButton
+    | Cancel

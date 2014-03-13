@@ -6,6 +6,8 @@
   // ------------------------------------------------------------------------------------------- //
   // Private static variables
 
+  var AUTO_OPEN_DIRECTORY_PANEL_DELAY = 400;
+
   var params, util, log, ChatConsole, ChatTextBox, ChatBot;
 
   // ------------------------------------------------------------------------------------------- //
@@ -263,6 +265,11 @@
     });
 
     consoleManager.init();
+
+    // Start the directory panel closed, but then show it sliding open
+    setTimeout(function() {
+      onPanelHeaderClick.call(uiManager, uiManager.panels.directory.container);
+    }, AUTO_OPEN_DIRECTORY_PANEL_DELAY);
   }
 
   /**

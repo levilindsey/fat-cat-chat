@@ -80,11 +80,32 @@ div(id='commandsPanel' class='panelContainer closed')
           code.command
             | /quit
           |  to be removed from the chat server.
+        dt
+          code.command
+            | /link
+        dd
+          | Type&nbsp;
+          code.command
+            | /link &lt;http[s]://somelink.com&gt; (&lt;message&gt;)
+          | &nbsp;
+          em
+            | anywhere
+          |  within a message to indicate that the given message should be shown as a hyperlink pointing to the given URL.
+      p
+        | All commands&mdash;except the&nbsp
+        code.command
+          | /link
+        |  command&mdash;must be given as the first text in the message.
       p
         | Type anything not prefixed with&nbsp;
         code.command
           | /
-        |  in order to send a message to everyone in the room.
+        |  in order to send a normal message to everyone in the room.
+      p
+        | Any word that starts with "
+        code
+          | http[s]://[...]
+        | " will be shown as an active hyperlink within the console.
       h3
         | Admin
       p.hint

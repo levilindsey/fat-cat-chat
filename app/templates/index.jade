@@ -13,26 +13,8 @@ html(lang='en')
   body
 
     #contentColumn
-      #headerPanel
-        h1
-          | Fat-Cat Chat&nbsp;
-          img(class='emoticon wink' src='#{BASE_DIR}/images/empty.gif')
 
-      #buttonsPanel
-        button#changeNameButton
-          | Change Name
-        button#newRoomButton
-          | New Room
-        button#addBotButton
-          | Add Bot
-
-      #textEntryDialoguePanel.hidden
-        input(type='text' id='changeNameTextBox' placeholder='Enter name')
-        button#confirmButton
-          | OK
-        button#cancelButton
-          | Cancel
-
+      include topPanels
       include roomChatPanel
       include directoryPanel
       include commandsPanel
@@ -46,6 +28,8 @@ html(lang='en')
         a(href='https://github.com/levisl176/fat-cat-chat', target='_blank')
           | Fork it on GitHub
         | !
+
+    script(src='#{BASE_DIR}/scripts/lib/he.js#{currentVersion}')
 
     script(src='#{BASE_DIR}/scripts/util/params.js#{currentVersion}')
     script(src='#{BASE_DIR}/scripts/util/util.js#{currentVersion}')

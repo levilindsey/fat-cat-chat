@@ -53,13 +53,21 @@
    */
   function parseOutGoingMessage(rawText, htmlText, thisUser, room, privateChatUser,
                                 isPrivateMessage) {
-    var serverText, time, type, command, arguments;
+    var message, serverText, time, type, command, arguments;
+
+    if (!rawText) {
+      return null;
+    }
 
     time = Date.now();
 
-    // TODO:
+    if (rawText[0] === '/') {
 
-    return new Message(rawText, htmlText, serverText, thisUser, time, type, command, arguments);
+    } else {
+      message = new Message(rawText, htmlText, serverText, thisUser, time, type, command, arguments);
+    }
+
+    return message;
   }
 
   // ------------------------------------------------------------------------------------------- //

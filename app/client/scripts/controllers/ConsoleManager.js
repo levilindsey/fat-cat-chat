@@ -6,7 +6,7 @@
   // ------------------------------------------------------------------------------------------- //
   // Private static variables
 
-  var params, util, log, Room, User, Message, ChatConsole, ChatTextBox, IOManager, ChatBot, helpMessages;
+  var he, params, util, log, Room, User, Message, IOManager, helpMessages;
 
   // ------------------------------------------------------------------------------------------- //
   // Private dynamic functions
@@ -328,7 +328,7 @@
     consoleManager = this;
 
     isPrivateMessage = chatTextBox === consoleManager.textBoxes.privateMessages;
-    message = parseOutGoingMessage(rawText, isPrivateMessage);
+    message = parseOutGoingMessage.call(consoleManager, rawText, isPrivateMessage);
 
     if (chatTextBox === consoleManager.textBoxes.chatRoomMessages) {
       console = consoleManager.consoles.chatRoomMessages;
@@ -381,10 +381,18 @@
    */
   function parseRawMessageTextForDom(text) {
     var consoleManager = this;
+
+    // Encode HTML entities so that the text may be safely inserted into the HTML document
+    text = he.encode(text);
+
+    // Replace any substrings that represent commands, emoticons, current rooms, current users, or links with decorated versions
+    // TODO: add event handlers to the inline elements created in each of the following functions
     text = parseCommands(text);
     text = parseEmoticons(text);
     text = parseRooms.call(consoleManager, text);
     text = parseUsers.call(consoleManager, text);
+    // TODO: parseURLs
+
     return text;
   }
 
@@ -510,9 +518,14 @@
    * @returns {String}
    */
   function parseCommands(text) {
-    for (var property in params.COMMANDS) {
+    var property;
+
+    // TODO: replace /link commands with <a> elements
+
+    for (property in params.COMMANDS) {
       text = text.replace(property, params.COMMANDS[property]);
     }
+
     return text;
   }
 
@@ -523,9 +536,12 @@
    * @returns {String}
    */
   function parseEmoticons(text) {
-    for (var property in params.EMOTICONS) {
+    var property;
+
+    for (property in params.EMOTICONS) {
       text = text.replace(property, params.EMOTICONS[property]);
     }
+
     return text;
   }
 
@@ -537,6 +553,7 @@
    * @function ConsoleManager.initStaticFields
    */
   function initStaticFields() {
+    he = app.he;
     params = app.params;
     util = app.util;
     log = new app.Log('ConsoleManager');

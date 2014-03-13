@@ -1111,6 +1111,36 @@
     }
   }
 
+  /**
+   *
+   * @function util.decodeHtmlEntities
+   * @param {String} text
+   * @returns {String}
+   */
+  function decodeHtmlEntities(text) {
+    return text.replace(/&#(\d+);/g, function(match, charCode) {
+      return String.fromCharCode(charCode);
+    });
+  }
+
+  /**
+   *
+   * @function util.encodeHtmlEntities
+   * @param {String} text
+   * @returns {String}
+   */
+  function encodeHtmlEntities(text) {
+    var buffer, i, count, encodedChar;
+    buffer = [];
+
+    for (i = 0, count = text.length; i < count; i++) {
+      encodedChar = ['&#', text[i].charCodeAt(0), ';'].join();
+      buffer.push(encodedChar);
+    }
+
+    return buffer.join('');
+  }
+
   // ------------------------------------------------------------------------------------------- //
   // Expose this module
 
@@ -1146,6 +1176,8 @@
     interpolate: interpolate,
     getEasingFunction: getEasingFunction,
     removeChildrenWithClass: removeChildrenWithClass,
+    decodeHtmlEntities: decodeHtmlEntities,
+    encodeHtmlEntities: encodeHtmlEntities,
     XHR: null,
     listen: null,
     stopListening: null,
