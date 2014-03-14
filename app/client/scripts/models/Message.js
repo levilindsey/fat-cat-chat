@@ -30,19 +30,17 @@
    * @global
    * @param {String} rawText The raw text of this message.
    * @param {String} htmlText The text of this message parsed to include inline HTML elements.
-   * @param {String} serverText The text of this message parsed to be sent to the server.
    * @param {User} fromUser The user who sent this message.
    * @param {Number} time The time this message arrived.
-   * @param {'in'|'out'|'system'|'error'|'room'|'user'} type The message type.
+   * @param {'in'|'out'|'command'|'system'|'error'|'room'|'user'} type The message type.
    * @param {'none'|'help'|'rooms'|'join'|'msg'|'nick'|'ping'|'ignore'|'leave'|'quit'} [command] The message command type.
    * @param {Array.<String>} [arguments] The different arguments used with this command.
    */
-  function Message(rawText, htmlText, serverText, fromUser, time, type, command, arguments) {
+  function Message(rawText, htmlText, fromUser, time, type, command, arguments) {
     var message = this;
 
     message.rawText = rawText;
     message.htmlText = htmlText;
-    message.serverText = serverText;
     message.fromUser = fromUser;
     message.time = time;
     message.type = type;

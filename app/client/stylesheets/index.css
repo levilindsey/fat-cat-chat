@@ -74,14 +74,6 @@ button {
   border-radius: 3px 3px 3px 3px;
 }
 
-code.command {
-  color: #99eeaa;
-}
-
-code.emoticon {
-  color: #eebb88;
-}
-
 ul {
   list-style-type: none;
   margin: 0;
@@ -204,9 +196,9 @@ ul {
 .panelBody {
   position: relative;
   width: 100%;
-  max-height: 700px;
+  max-height: 1000px;
   background-color: #202020;
-  overflow: hidden;
+  overflow: auto;
   box-shadow: -1px 1px 6px 0 #000000;
   -webkit-border-radius: 0 0 6px 6px;
   -moz-border-radius: 0 0 6px 6px;
@@ -469,6 +461,10 @@ img.emoticon.blank {
   color: #b0b0a0;
 }
 
+.command {
+  color: #99eeaa;
+}
+
 .system {
   color: #b0c0f0;
 }
@@ -483,4 +479,12 @@ img.emoticon.blank {
 
 .user, code.user {
   color: #e0a080;
+}
+
+.emoticon {
+  color: #eebb88;
+}
+
+code.command {
+  font-weight: bold;
 }

@@ -46,14 +46,12 @@
    * @param {String} rawText
    * @param {String} htmlText
    * @param {User} thisUser
-   * @param {Room|null} room
    * @param {User|null} privateChatUser
    * @param {Boolean} isPrivateMessage
    * @returns {Message}
    */
-  function parseOutGoingMessage(rawText, htmlText, thisUser, room, privateChatUser,
-                                isPrivateMessage) {
-    var message, serverText, time, type, command, arguments;
+  function parseOutGoingMessage(rawText, htmlText, thisUser, privateChatUser, isPrivateMessage) {
+    var time, type, result, command, arguments;
 
     if (!rawText) {
       return null;
@@ -61,13 +59,63 @@
 
     time = Date.now();
 
+    // Is this a command?
     if (rawText[0] === '/') {
+      type = 'command';
 
+      if (params.COMMANDS.help.regex.exec(rawText)) {
+        command = 'help';
+      } else if (params.COMMANDS.rooms.regex.exec(rawText)) {
+        command = 'rooms';
+      } else if (result = params.COMMANDS.join.regex.exec(rawText)) {
+        if (rawText.lastIndexOf(' ') > 5) {
+          type = 'error';
+          command = 'none';
+          arguments = ['Room names cannot contain spaces'];
+        } else {
+          command = 'join';
+          arguments = [result[1]];
+        }
+      } else if (result = params.COMMANDS.msg.regex.exec(rawText)) {
+        command = 'msg';
+        arguments = [result[1], result[2]];
+      } else if (result = params.COMMANDS.nick.regex.exec(rawText)) {
+        if (rawText.lastIndexOf(' ') > 5) {
+          type = 'error';
+          command = 'none';
+          arguments = ['User names cannot contain spaces'];
+        } else {
+          command = 'nick';
+          arguments = [result[1]];
+        }
+      } else if (result = params.COMMANDS.ping.regex.exec(rawText)) {
+        command = 'ping';
+        arguments = [result[1]];
+      } else if (result = params.COMMANDS.ignore.regex.exec(rawText)) {
+        command = 'ignore';
+        arguments = [result[1]];
+      } else if (params.COMMANDS.leave.regex.exec(rawText)) {
+        command = 'leave';
+      } else if (params.COMMANDS.quit.regex.exec(rawText)) {
+        command = 'quit';
+      } else {
+        // Print an error message to the user, because she entered an invalid command
+        type = 'error';
+        command = 'none';
+        arguments = ['Invalid command'];
+      }
     } else {
-      message = new Message(rawText, htmlText, serverText, thisUser, time, type, command, arguments);
+      type = 'out';
+
+      if (isPrivateMessage) {
+        command = 'msg';
+        rawText = '/msg ' + privateChatUser.name + ' (' + rawText + ')';
+      } else { // Normal, public message
+        command = 'none';
+      }
     }
 
-    return message;
+    return new Message(rawText, htmlText, thisUser, time, type, command, arguments);
   }
 
   // ------------------------------------------------------------------------------------------- //

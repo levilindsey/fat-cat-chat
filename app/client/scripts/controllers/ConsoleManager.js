@@ -47,12 +47,12 @@
 
     if (consoleManager.allRooms.length > 0) {
       consoleManager.allRooms.forEach(function (room) {
-        message = new Message(room.name, room.name, null, null, time, 'room');
+        message = new Message(room.name, room.name, null, time, 'room');
         console.addMessage(message);
       });
     } else {
       text = 'There are no open rooms right now.';
-      message = new Message(text, text, null, null, time, 'system');
+      message = new Message(text, text, null, time, 'system');
     }
   }
 
@@ -272,7 +272,7 @@
     consoleManager = this;
     htmlText = parseRawMessageTextForDom(rawText);
     return IOManager.parseOutGoingMessage(rawText, htmlText, consoleManager.thisUser,
-        consoleManager.activeRoom, consoleManager.privateChatUser, isPrivate);
+        consoleManager.privateChatUser, isPrivate);
   }
 
   /**
@@ -330,6 +330,10 @@
     isPrivateMessage = chatTextBox === consoleManager.textBoxes.privateMessages;
     message = parseOutGoingMessage.call(consoleManager, rawText, isPrivateMessage);
 
+    if (!message) {
+      return;
+    }
+
     if (chatTextBox === consoleManager.textBoxes.chatRoomMessages) {
       console = consoleManager.consoles.chatRoomMessages;
       console.addMessage(message);
@@ -370,6 +374,8 @@
       }
     } else if (chatTextBox === consoleManager.textBoxes.privateMessages) {
       consoleManager.consoles.privateMessages.addMessage(message);
+
+      // TODO: handle private chat window message
     }
   }
 
@@ -523,7 +529,7 @@
     // TODO: replace /link commands with <a> elements
 
     for (property in params.COMMANDS) {
-      text = text.replace(property, params.COMMANDS[property]);
+      text = text.replace(params.COMMANDS[property].rawString, params.COMMANDS[property].htmlElement);
     }
 
     return text;

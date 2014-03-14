@@ -81,15 +81,51 @@
   params.SMALL_SCREEN_HEIGHT_THRESHOLD = 675;
 
   params.COMMANDS = {
-    '/help': '<code class=\'command\'>/help</code>',
-    '/rooms': '<code class=\'command\'>/rooms</code>',
-    '/join': '<code class=\'command\'>/join</code>',
-    '/msg': '<code class=\'command\'>/msg</code>',
-    '/nick': '<code class=\'command\'>/nick</code>',
-    '/ping': '<code class=\'command\'>/ping</code>',
-    '/ignore': '<code class=\'command\'>/ignore</code>',
-    '/leave': '<code class=\'command\'>/leave</code>',
-    '/quit': '<code class=\'command\'>/quit</code>'
+    help: {
+      regex: /^\/help/,
+      rawString: '/help',
+      htmlElement: '<code class=\'command\'>/help</code>'
+    },
+    rooms: {
+      regex: /^\/rooms/,
+      rawString: '/rooms',
+      htmlElement: '<code class=\'command\'>/rooms</code>'
+    },
+    join: {
+      regex: /^\/join (\S+)/,
+      rawString: '/join',
+      htmlElement: '<code class=\'command\'>/join</code>'
+    },
+    msg: {
+      regex: /^\/msg (\S+) \((.*)\)/,
+      rawString: '/msg',
+      htmlElement: '<code class=\'command\'>/msg</code>'
+    },
+    nick: {
+      regex: /^\/nick (\S+)/,
+      rawString: '/nick',
+      htmlElement: '<code class=\'command\'>/nick</code>'
+    },
+    ping: {
+      regex: /^\/ping (\S+)/,
+      rawString: '/ping',
+      htmlElement: '<code class=\'command\'>/ping</code>'
+    },
+    ignore: {
+      regex: /^\/ignore (\S+)/,
+      rawString: '/ignore',
+      htmlElement: '<code class=\'command\'>/ignore</code>'
+    },
+    leave: {
+      regex: /^\/leave/,
+      rawString: '/leave',
+      htmlElement: '<code class=\'command\'>/leave</code>'
+    },
+    quit: {
+      regex: /^\/quit/,
+      rawString: '/quit',
+      htmlElement: '<code class=\'command\'>/quit</code>'
+    }
   };
 
   params.EMOTICONS = {
