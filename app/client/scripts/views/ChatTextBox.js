@@ -6,8 +6,6 @@
   // ------------------------------------------------------------------------------------------- //
   // Private static variables
 
-  var ENTER_KEY_CODE = 13;
-
   var params, util, log, ConsoleEntry;
 
   // ------------------------------------------------------------------------------------------- //
@@ -28,12 +26,10 @@
       onKeyDown.call(chatTextBox, event.keyCode);
     });
     util.listen(textBox, 'change', function () {
-      onKeyDown.call(chatTextBox, chatTextBox.textBox.innerHTML);
+      onTextChanged.call(chatTextBox, chatTextBox.textBox.innerHTML);
     });
 
-    chatTextBox.elements = {
-      textBox: textBox
-    };
+    chatTextBox.textBox = textBox;
   }
 
   /**
@@ -43,13 +39,12 @@
    */
   function onKeyDown(keyCode) {
     var chatTextBox = this;
-    if (keyCode === ENTER_KEY_CODE) {
+    if (keyCode === params.ENTER_KEY_CODE) {
       log.i('onKeyDown', 'User pressed ENTER');
 
-      chatTextBox.consoleManager.handleOutGoingMessage(chatTextBox.textBox.getAttribute('value'),
-          chatTextBox);
+      chatTextBox.consoleManager.ioManager.outMessageManager.handleOutGoingMessage(chatTextBox.textBox.value, chatTextBox);
 
-      chatTextBox.textBox.innerHTML = '';
+      chatTextBox.textBox.value = '';
     }
   }
 
@@ -75,7 +70,7 @@
   function resize(width) {
     var chatTextBox = this;
 
-    chatTextBox.elements.textBox.style.width = width + 'px';
+    chatTextBox.textBox.style.width = width + 'px';
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -108,7 +103,7 @@
     chatTextBox.consoleManager = consoleManager;
     chatTextBox.entries = [];
     chatTextBox.resize = resize;
-    chatTextBox.elements = null;
+    chatTextBox.textBox = null;
 
     setUpElements.call(chatTextBox, textBoxId);
   }

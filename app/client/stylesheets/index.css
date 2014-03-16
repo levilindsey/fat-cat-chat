@@ -67,11 +67,11 @@ a:visited {
 button {
   font-size: 20px;
   font-weight: bold;
-  -webkit-border-radius: 3px 3px 3px 3px;
-  -moz-border-radius: 3px 3px 3px 3px;
-  -ms-border-radius: 3px 3px 3px 3px;
-  -o-border-radius: 3px 3px 3px 3px;
-  border-radius: 3px 3px 3px 3px;
+  -webkit-border-radius: 5px 5px 5px 5px;
+  -moz-border-radius: 5px 5px 5px 5px;
+  -ms-border-radius: 5px 5px 5px 5px;
+  -o-border-radius: 5px 5px 5px 5px;
+  border-radius: 5px 5px 5px 5px;
 }
 
 ul {
@@ -302,6 +302,12 @@ ul {
   overflow: auto;
 }
 
+.chatConsole li {
+  height: 34px;
+  margin: 0 0 0 7px;
+  padding: 0;
+}
+
 .consoleTextBox, input {
   background-color: #000000;
   color: #e8e8d8;
@@ -419,6 +425,13 @@ img.emoticon.blank {
   padding: 10px;
 }
 
+#ownUserNameDisplay {
+  width: 100%;
+  text-align: center;
+  margin: 0;
+  padding-top: 8px;
+}
+
 #textEntryDialoguePanel>input {
   width: 166px;
   height: 23px;
@@ -482,7 +495,7 @@ code.user {
 }
 
 .emoticon {
-  color: #eebb88;
+  color: #dddd99;
 }
 
 code.command {

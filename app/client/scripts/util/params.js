@@ -40,6 +40,8 @@
   moduleParams.DEBUG = true;
   moduleParams.VERBOSE = true;
 
+  moduleParams.SEPARATOR_LINE = '********************************************************************************';
+
   // --- Sprite parameters --- //
 
   moduleParams = {};
@@ -75,6 +77,7 @@
   params.TRANSPARENT_GIF_URL = params.BASE_DIR + '/images/empty.gif';
   params.ADD_CSS_TRANSITION_DELAY = 80;
   params.SVG_NAMESPACE = 'http://www.w3.org/2000/svg';
+  params.ENTER_KEY_CODE = 13;
   params.TWO_PI = Math.PI * 2;
   params.HALF_PI = Math.PI * 0.5;
   params.SMALL_SCREEN_WIDTH_THRESHOLD = 900;
@@ -135,31 +138,54 @@
   };
 
   params.EMOTICONS = {
-    ':)': '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'happy\' />',
-    ':-)': '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'happy\' />',
-    ':D': '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'superHappy\' />',
-    ':-D': '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'superHappy\' />',
-    ';)': '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'wink\' />',
-    ';-)': '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'wink\' />',
-    ':\'(': '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'cry\' />',
-    ':\'-(': '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'cry\' />',
-    ':o': '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'surprise\' />',
-    ':-o': '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'surprise\' />',
-    ':O': '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'surprise\' />',
-    ':-O': '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'surprise\' />',
-    ':/': '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'uncertain\' />',
-    ':-/': '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'uncertain\' />',
-    'x(': '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'angry\' />',
-    'x-(': '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'angry\' />',
-    ':(': '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'sad\' />',
-    ':-(': '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'sad\' />',
-    'B)': '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'sunglasses\' />',
-    'B-)': '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'sunglasses\' />',
-    ':P': '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'tongue\' />',
-    ':-P': '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'tongue\' />',
-    '<3': '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'heart\' />',
-    ':|': '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'blank\' />',
-    ':-|': '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'blank\' />'
+    happy: {
+      raw: [ ':)', ':-)' ],
+      html: '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'emoticon happy\' alt=\'Happy emoticon\' />'
+    },
+    superHappy: {
+      raw: [ ':D', ':-D' ],
+      html: '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'emoticon superHappy\' alt=\'Super happy emoticon\' />'
+    },
+    wink: {
+      raw: [ ';)', ';-)' ],
+      html: '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'emoticon wink\' alt=\'Wink emoticon\' />'
+    },
+    cry: {
+      raw: [ ':\'(', ':\'-(', ':&#x27;(', ':&#x27;-(' ],
+      html: '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'emoticon cry\' alt=\'Cry emoticon\' />'
+    },
+    surprise: {
+      raw: [ ':o', ':-o', ':O', ':-O' ],
+      html: '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'emoticon surprise\' alt=\'Surprise emoticon\' />'
+    },
+    uncertain: {
+      raw: [ ':/', ':-/' ],
+      html: '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'emoticon uncertain\' alt=\'Uncertain emoticon\' />'
+    },
+    angry: {
+      raw: [ 'x(', 'x-(', 'X(', 'X-(' ],
+      html: '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'emoticon angry\' alt=\'Angry emoticon\' />'
+    },
+    sad: {
+      raw: [ ':(', ':-(' ],
+      html: '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'emoticon sad\' alt=\'Sad emoticon\' />'
+    },
+    sunglasses: {
+      raw: [ 'B)', 'B-)' ],
+      html: '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'emoticon sunglasses\' alt=\'Sunglasses emoticon\' />'
+    },
+    tongue: {
+      raw: [ ':P', ':-P', ':p', ':-p' ],
+      html: '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'emoticon tongue\' alt=\'Tongue emoticon\' />'
+    },
+    heart: {
+      raw: [ '<3', '&#x3C;3' ],
+      html: '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'emoticon heart\' alt=\'Heart emoticon\' />'
+    },
+    blank: {
+      raw: [ ':|', ':-|' ],
+      html: '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'emoticon blank\' alt=\'Blank emoticon\' />'
+    }
   };
 
   params.CAT_GIFS = [

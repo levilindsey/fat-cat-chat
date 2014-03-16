@@ -6,7 +6,7 @@
   // ------------------------------------------------------------------------------------------- //
   // Private static variables
 
-  var he, params, util, log, Room, User, Message;
+  var he, params, util, log, Room, User, Message, ChatBot;
 
   // ------------------------------------------------------------------------------------------- //
   // Private dynamic functions
@@ -144,8 +144,35 @@
     return new Message(rawText, htmlText, null, time, 'system', null, null);
   }
 
+  /**
+   *
+   * @function ConsoleManager#addChatBot
+   */
+  function addChatBot() {
+    var consoleManager, botName, bot;
+
+    consoleManager = this;
+    botName = generateRandomUserName(true);
+
+    log.d('addChatBot', 'name=' + botName);
+
+    bot = new ChatBot(consoleManager, botName);
+    consoleManager.bots.push(bot);
+  }
+
   // ------------------------------------------------------------------------------------------- //
   // Private static functions
+
+  /**
+   *
+   * @function ConsoleManager~generateRandomUserName
+   * @param {Boolean} isBot
+   * @returns {String}
+   */
+  function generateRandomUserName(isBot) {
+    var prefix = isBot ? 'catBot' : 'coolCat';
+    return prefix + parseInt(Math.random() * 100000000);
+  }
 
   // ------------------------------------------------------------------------------------------- //
   // Public static functions
@@ -162,6 +189,7 @@
     Room = app.Room;
     User = app.User;
     Message = app.Message;
+    ChatBot = app.ChatBot;
     log.d('initStaticFields', 'Module initialized');
   }
 
@@ -190,10 +218,15 @@
    * @returns {String}
    */
   function parseEmoticons(text) {
-    var property;
+    var property, rawArray, html, i, count;
 
     for (property in params.EMOTICONS) {
-      text = text.replace(property, params.EMOTICONS[property]);
+      rawArray = params.EMOTICONS[property].raw;
+      html = params.EMOTICONS[property].html;
+
+      for (i = 0, count = rawArray.length; i < count; i++) {
+        text = text.replace(rawArray[i], html);
+      }
     }
 
     return text;
@@ -212,7 +245,7 @@
 
     consoleManager.uiManager = uiManager;
     consoleManager.ioManager = null;
-    consoleManager.thisUser = null;
+    consoleManager.thisUser = new User(generateRandomUserName(false), Date.now());
     consoleManager.activeRoom = null;
     consoleManager.privateChatUser = null;
     consoleManager.allUsers = [];
@@ -225,6 +258,7 @@
     consoleManager.getUserFromName = getUserFromName;
     consoleManager.parseRawMessageTextForDom = parseRawMessageTextForDom;
     consoleManager.parseInternalSystemMessage = parseInternalSystemMessage;
+    consoleManager.addChatBot = addChatBot;
   }
 
   // Expose this module

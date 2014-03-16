@@ -16,20 +16,23 @@
    * @function ChatConsole~setUpElements
    * @param {String} containerId The ID of the container element for this chatConsole.
    * @param {String} headerId The ID of the header element for this chatConsole.
+   * @param {String} panelId The ID of the panel container element for this chatConsole.
    */
-  function setUpElements(containerId, headerId) {
-    var chatConsole, container, list, header;
+  function setUpElements(containerId, headerId, panelId) {
+    var chatConsole, container, list, header, panel;
 
     chatConsole = this;
 
     container = document.getElementById(containerId);
     list = util.createElement('ul', container, null, null);
     header = document.getElementById(headerId);
+    panel = document.getElementById(panelId);
 
     chatConsole.elements = {
       container: container,
       list: list,
-      header: header
+      header: header,
+      panel: panel
     };
   }
 
@@ -55,6 +58,8 @@
    */
   function addMessage(message) {
     var chatConsole, entry;
+
+    log.d('addMessage', 'message.htmlText=' + message.htmlText);
     chatConsole = this;
 
     entry = new ConsoleEntry(message, chatConsole.elements.list);
@@ -79,6 +84,8 @@
    */
   function setTitle(title) {
     var chatConsole = this;
+    log.d('setTitle', 'title=' + title);
+
     chatConsole.elements.header.innerHTML = title;
     chatConsole.elements.header.setAttribute('text', title);
   }
@@ -106,9 +113,10 @@
    * @global
    * @param {String} containerId The ID of the container element for this chatConsole.
    * @param {String} headerId The ID of the header element for this chatConsole.
+   * @param {String} panelId The ID of the panel container element for this chatConsole.
    * @param {ConsoleManager} consoleManager
    */
-  function ChatConsole(containerId, headerId, consoleManager) {
+  function ChatConsole(containerId, headerId, panelId, consoleManager) {
     var chatConsole = this;
 
     chatConsole.consoleManager = consoleManager;
@@ -119,7 +127,7 @@
     chatConsole.clearMessages = clearMessages;
     chatConsole.elements = null;
 
-    setUpElements.call(chatConsole, containerId, headerId);
+    setUpElements.call(chatConsole, containerId, headerId, panelId);
   }
 
   // Expose this module

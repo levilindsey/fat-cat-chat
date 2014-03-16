@@ -19,6 +19,7 @@
   function printHelp(console) {
     var outMessageManager, rawText, message;
 
+    log.d('printHelp');
     outMessageManager = this;
 
     // Show the user-entered command
@@ -39,6 +40,7 @@
   function printRooms(console) {
     var outMessageManager, message, rawText;
 
+    log.d('printRooms');
     outMessageManager = this;
 
     // Show the user-entered command
@@ -46,8 +48,8 @@
     message = parseOutGoingMessage.call(outMessageManager, rawText, false);
     console.addMessage(message);
 
-    if (outMessageManager.allRooms.length > 0) {
-      outMessageManager.allRooms.forEach(function (room) {
+    if (outMessageManager.consoleManager.allRooms.length > 0) {
+      outMessageManager.consoleManager.allRooms.forEach(function (room) {
         message = outMessageManager.consoleManager.parseInternalSystemMessage(room.name);
         console.addMessage(message);
       });
@@ -67,12 +69,17 @@
   function sendPrivateMessage(message, console) {
     var outMessageManager, userName, privateChatUser, rawText;
 
+    log.d('sendPrivateMessage', 'message.htmlText=' + message.htmlText);
     outMessageManager = this;
+
+    if (!message) {
+      return;
+    }
 
     userName = message.arguments[0];
     privateChatUser = outMessageManager.consoleManager.getUserFromName(userName);
 
-    if (privateChatUser === null) {
+    if (!privateChatUser) {
       // There is no user with this name
 
       // Show the user-entered message
@@ -93,11 +100,11 @@
       outMessageManager.ioManager.sendMessage(message);
 
       // Show the user-entered message
-      outMessageManager.consoles.privateMessages.addMessage(message);
+      outMessageManager.consoleManager.consoles.privateMessages.addMessage(message);
 
-      outMessageManager.textBoxes.privateMessages.focus();
+      outMessageManager.ioManager.uiManager.textBoxes.privateMessages.textBox.focus();
 
-      outMessageManager.privateChatUser = privateChatUser;
+      outMessageManager.consoleManager.privateChatUser = privateChatUser;
       privateChatUser.privateMessages.push(message);
     }
   }
@@ -112,11 +119,16 @@
   function pingUser(userName, message, console) {
     var outMessageManager, pingUser, rawText;
 
+    log.d('pingUser');
     outMessageManager = this;
+
+    if (!userName) {
+      return;
+    }
 
     pingUser = outMessageManager.consoleManager.getUserFromName(userName);
 
-    if (pingUser === null) {
+    if (!pingUser) {
       // There is no user with this name
 
       rawText = 'There is no user with the name ' + userName;
@@ -146,11 +158,16 @@
   function ignoreUser(userName, console, message) {
     var outMessageManager, ignoredUser, rawText;
 
+    log.d('ignoreUser');
     outMessageManager = this;
+
+    if (!userName) {
+      return;
+    }
 
     ignoredUser = outMessageManager.consoleManager.getUserFromName(userName);
 
-    if (ignoredUser === null) {
+    if (!ignoredUser) {
       // There is no user with this name
 
       rawText = 'There is no user with the name ' + userName;
@@ -189,10 +206,11 @@
   function leaveRoom(message, console) {
     var outMessageManager, rawText;
 
+    log.d('leaveRoom');
     outMessageManager = this;
 
     // We do not need to inform the server when "leaving" a private chat
-    if (console === outMessageManager.consoles.chatRoomMessages) {
+    if (console === outMessageManager.consoleManager.consoles.chatRoomMessages) {
       // Create the message if it does not already exist
       if (!message) {
         rawText = '/leave';
@@ -201,12 +219,12 @@
 
       outMessageManager.ioManager.sendMessage(message);
 
-      outMessageManager.activeRoom.removeUser(outMessageManager.thisUser);
-      outMessageManager.activeRoom = null;
+      outMessageManager.consoleManager.activeRoom.removeUser(outMessageManager.thisUser);
+      outMessageManager.consoleManager.activeRoom = null;
     }
 
     // Hide the panel
-    util.toggleClass(console.elements.container, 'hidden', true);
+    util.toggleClass(console.elements.panel, 'hidden', true);
   }
 
   /**
@@ -218,6 +236,7 @@
   function quit(message, console) {
     var outMessageManager, rawText;
 
+    log.d('quit');
     outMessageManager = this;
 
     // Create the message if it does not already exist
@@ -232,7 +251,7 @@
     console.addMessage(message);
 
     // Notify the user that we did something
-    rawText = 'Goodbye ' + outMessageManager.thisUser + '!';
+    rawText = 'Goodbye ' + outMessageManager.consoleManager.thisUser + '!';
     message = outMessageManager.consoleManager.parseInternalSystemMessage(rawText);
     console.addMessage(message);
 
@@ -246,17 +265,17 @@
    *
    * @function OutMessageManager~sendRoomMessage
    * @param {Message} message
-   * @param {ChatConsole} console
    */
-  function sendRoomMessage(message, console) {
+  function sendRoomMessage(message) {
     var outMessageManager;
 
+    log.d('sendRoomMessage', 'message.htmlText=' + message.htmlText);
     outMessageManager = this;
 
     outMessageManager.ioManager.sendMessage(message);
 
     // Show the user-entered message
-    console.addMessage(message);
+    outMessageManager.consoleManager.consoles.chatRoomMessages.addMessage(message);
   }
 
   /**
@@ -269,6 +288,7 @@
   function parseOutGoingMessage(rawText, isPrivate) {
     var outMessageManager, htmlText, time, type, result, command, arguments;
 
+    log.d('parseOutGoingMessage', 'rawText=' + rawText);
     outMessageManager = this;
 
     if (!rawText) {
@@ -329,13 +349,13 @@
 
       if (isPrivate) {
         command = 'msg';
-        rawText = '/msg ' + outMessageManager.privateChatUser.name + ' (' + rawText + ')';
+        rawText = '/msg ' + outMessageManager.consoleManager.privateChatUser.name + ' (' + rawText + ')';
       } else { // Normal, public message
         command = 'none';
       }
     }
 
-    return new Message(rawText, htmlText, outMessageManager.thisUser, time, type, command, arguments);
+    return new Message(rawText, htmlText, outMessageManager.consoleManager.thisUser, time, type, command, arguments);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -344,9 +364,12 @@
   /**
    *
    * @function OutMessageManager#init
+   * @param {ConsoleManager} consoleManager
    */
-  function init() {
+  function init(consoleManager) {
     var outMessageManager = this;
+
+    outMessageManager.consoleManager = consoleManager;
   }
 
   /**
@@ -358,10 +381,15 @@
   function handleOutGoingMessage(rawText, chatTextBox) {
     var outMessageManager, message, isPrivateMessage, console;
 
+    log.d('handleOutGoingMessage', 'rawText=' + rawText);
     outMessageManager = this;
 
-    isPrivateMessage = chatTextBox === outMessageManager.textBoxes.privateMessages;
-    console = isPrivateMessage ? outMessageManager.consoles.privateMessages : outMessageManager.consoles.chatRoomMessages;
+    if (!rawText) {
+      return;
+    }
+
+    isPrivateMessage = chatTextBox === outMessageManager.ioManager.uiManager.textBoxes.privateMessages;
+    console = isPrivateMessage ? outMessageManager.consoleManager.consoles.privateMessages : outMessageManager.consoleManager.consoles.chatRoomMessages;
     message = parseOutGoingMessage.call(outMessageManager, rawText, isPrivateMessage);
 
     if (!message) {
@@ -371,9 +399,9 @@
     switch (message.command) {
       case 'none':
         if (isPrivateMessage) {
-          sendRoomMessage.call(outMessageManager, message);
-        } else {
           sendPrivateMessage.call(outMessageManager, message, console);
+        } else {
+          sendRoomMessage.call(outMessageManager, message, console);
         }
         break;
       case 'help':
@@ -416,9 +444,15 @@
    */
   function joinRoom(roomName, message) {
     var outMessageManager, room, rawText;
+
+    log.d('joinRoom', 'roomName=' + roomName);
     outMessageManager = this;
 
-    room = outMessageManager.consoleManager.getRoomFromName(message.arguments[0]);
+    if (!roomName) {
+      return;
+    }
+
+    room = outMessageManager.consoleManager.getRoomFromName(roomName);
 
     // Create a new room if a room of this name did not already exist
     if (!room) {
@@ -427,7 +461,7 @@
 
     // Create the message if it does not already exist
     if (!message) {
-      rawText = '/join ' + room.name;
+      rawText = '/join ' + roomName;
       message = parseOutGoingMessage.call(outMessageManager, rawText, false);
     }
 
@@ -435,46 +469,55 @@
 
     // --- Set up the room chat console for this new room --- //
 
-    outMessageManager.activeRoom = room;
-    room.users.push(outMessageManager.thisUser);
+    outMessageManager.consoleManager.activeRoom = room;
+    room.users.push(outMessageManager.consoleManager.thisUser);
 
-    outMessageManager.textBoxes.chatRoomMessages.focus();
-    outMessageManager.consoles.chatRoomMessages.setTitle('Room: ' + room.name);
-    outMessageManager.consoles.chatRoomMessages.clearMessages();
+    util.toggleClass(outMessageManager.ioManager.uiManager.panels.roomChat.container, 'closed', false);
+    util.toggleClass(outMessageManager.ioManager.uiManager.panels.roomChat.container, 'hidden', false);
+
+    outMessageManager.ioManager.uiManager.textBoxes.chatRoomMessages.textBox.focus();
+    outMessageManager.consoleManager.consoles.chatRoomMessages.setTitle('Room: ' + roomName);
+    outMessageManager.consoleManager.consoles.chatRoomMessages.clearMessages();
 
     // Show the user-entered command
-    outMessageManager.consoles.chatRoomMessages.addMessage(message);
+    outMessageManager.consoleManager.consoles.chatRoomMessages.addMessage(message);
 
-    rawText = 'Welcome ' + outMessageManager.thisUser.name + ' to room ' + room.name + '!';
+    rawText = 'Welcome ' + outMessageManager.consoleManager.thisUser.name + ' to room ' + roomName + '!';
     message = outMessageManager.consoleManager.parseInternalSystemMessage(rawText);
-    outMessageManager.consoles.chatRoomMessages.addMessage(message);
+    outMessageManager.consoleManager.consoles.chatRoomMessages.addMessage(message);
 
     rawText = 'There are ' + room.users.length + ' users in this room.';
     message = outMessageManager.consoleManager.parseInternalSystemMessage(rawText);
-    outMessageManager.consoles.chatRoomMessages.addMessage(message);
+    outMessageManager.consoleManager.consoles.chatRoomMessages.addMessage(message);
   }
 
   /**
    *
    * @function OutMessageManager#changeOwnNickname
-   * @param {String} nickName
+   * @param {String} nickname
    * @param {Message} message
    * @param {ChatConsole} console
    */
-  function changeOwnNickname(nickName, message, console) {
+  function changeOwnNickname(nickname, message, console) {
     var outMessageManager, rawText, oldName;
+
+    log.d('changeOwnNickname', 'nickname=' + nickname);
     outMessageManager = this;
+
+    if (!nickname) {
+      return;
+    }
 
     // Create the message if it does not already exist
     if (!message) {
-      rawText = '/nick ' + nickName;
+      rawText = '/nick ' + nickname;
       message = parseOutGoingMessage.call(outMessageManager, rawText, false);
     }
 
-    if (outMessageManager.consoleManager.getUserFromName(nickName) === null) {
+    if (outMessageManager.consoleManager.getUserFromName(nickname)) {
       // There is already a user with this name
 
-      rawText = 'There is already a user with the name ' + nickName;
+      rawText = 'There is already a user with the name ' + nickname;
     } else {
       // Change to this new nickname
 
@@ -483,11 +526,15 @@
       // TODO: need to actually get a response back from the server that the name change was successful
 
       // Update this client with the new name
-      oldName = outMessageManager.thisUser.name;
-      outMessageManager.thisUser.name = nickName;
+      oldName = outMessageManager.consoleManager.thisUser.name;
+      outMessageManager.consoleManager.thisUser.name = nickname;
 
-      rawText = 'You changed your name from ' + oldName + ' to ' + nickName;
+      outMessageManager.ioManager.uiManager.panels.textEntryDialogue.ownUserNameLabel.innerHTML = nickname;
+
+      rawText = 'You changed your name from ' + oldName + ' to ' + nickname;
     }
+
+    console = console || outMessageManager.consoleManager.consoles.chatRoomMessages;
 
     // Show the user-entered command
     console.addMessage(message);

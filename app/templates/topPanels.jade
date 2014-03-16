@@ -4,6 +4,11 @@
     img(class='emoticon wink' src='#{BASE_DIR}/images/empty.gif')
 
 #buttonsPanel
+  p#ownUserNameDisplay
+    | Your nickname is&nbsp;
+    code(id='ownUserNameLabel' class='user')
+      | user_name
+    | .
   button#changeNameButton
     | Change Name
   button#newRoomButton

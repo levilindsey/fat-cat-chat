@@ -6,7 +6,7 @@
   // ------------------------------------------------------------------------------------------- //
   // Private static variables
 
-  var params, util, log;
+  var params, util, log, User;
 
   // ------------------------------------------------------------------------------------------- //
   // Private dynamic functions
@@ -32,6 +32,7 @@
     params = app.params;
     util = app.util;
     log = new app.Log('ChatBot');
+    User = app.User;
     log.d('initStaticFields', 'Module initialized');
   }
 
@@ -41,12 +42,14 @@
   /**
    * @constructor
    * @global
+   * @param {String} name
    * @param {ConsoleManager} consoleManager
    */
-  function ChatBot(consoleManager) {
-    var ChatBot = this;
+  function ChatBot(name, consoleManager) {
+    var chatBot = this;
 
-    ChatBot.consoleManager = consoleManager;
+    chatBot.user = new User(name, Date.now());
+    chatBot.consoleManager = consoleManager;
   }
 
   // Expose this module

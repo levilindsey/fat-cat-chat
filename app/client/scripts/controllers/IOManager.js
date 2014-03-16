@@ -11,6 +11,19 @@
   // ------------------------------------------------------------------------------------------- //
   // Private dynamic functions
 
+  /**
+   *
+   * @function IOManager~receivedMessage
+   * @param message
+   */
+  function receivedMessage(message) {
+
+
+    log.i('receivedMessage', 'message.rawTex=' + message.rawText);
+
+    // TODO:
+  }
+
   // ------------------------------------------------------------------------------------------- //
   // Public dynamic functions
 
@@ -23,6 +36,8 @@
     var ioManager = this;
 
     ioManager.uiManager = uiManager;
+    ioManager.inMessageManager.init(uiManager.consoleManager);
+    ioManager.outMessageManager.init(uiManager.consoleManager);
   }
 
   /**
@@ -31,6 +46,10 @@
    * @param message
    */
   function sendMessage(message) {
+
+
+    log.i('sendMessage', 'message.rawTex=' + message.rawText);
+
     // TODO:
   }
 

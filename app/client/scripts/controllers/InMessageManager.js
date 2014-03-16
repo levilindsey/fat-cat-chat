@@ -20,6 +20,7 @@
   function receivedPrivateMessage(userName, message) {
     var inMessageManager, user, rawText;
 
+    log.d('receivedPrivateMessage');
     inMessageManager = this;
 
     // TODO: !!
@@ -35,6 +36,7 @@
   function receivedRoomMessage(userName, roomName, message) {
     var inMessageManager, user, room, rawText;
 
+    log.d('receivedRoomMessage');
     inMessageManager = this;
 
     // TODO: !!
@@ -49,6 +51,7 @@
   function userLeftRoom(userName, roomName) {
     var inMessageManager, user, rawText;
 
+    log.d('userLeftRoom');
     inMessageManager = this;
 
     // TODO: !!
@@ -63,6 +66,7 @@
   function userJoinedRoom(userName, roomName) {
     var inMessageManager, room, rawText;
 
+    log.d('userJoinedRoom');
     inMessageManager = this;
 
     // TODO: !!
@@ -76,6 +80,7 @@
   function userLeftServer(userName) {
     var inMessageManager, user;
 
+    log.d('userLeftServer');
     inMessageManager = this;
 
     // TODO: !!
@@ -89,6 +94,7 @@
   function userJoinedServer(userName) {
     var inMessageManager, room;
 
+    log.d('userJoinedServer');
     inMessageManager = this;
 
     // TODO: !!
@@ -103,6 +109,7 @@
   function userChangedName(oldName, newName) {
     var inMessageManager, user, rawText;
 
+    log.d('userChangedName');
     inMessageManager = this;
 
     // TODO: !!
@@ -116,6 +123,7 @@
   function roomCreated(roomName) {
     var inMessageManager, room;
 
+    log.d('roomCreated');
     inMessageManager = this;
 
     // TODO: !!
@@ -129,6 +137,7 @@
   function roomDestroyed(roomName) {
     var inMessageManager, room;
 
+    log.d('roomDestroyed');
     inMessageManager = this;
 
     // TODO: !!
@@ -143,6 +152,7 @@
   function parseInComingMessage(rawText) {
     var inMessageManager, htmlText;
 
+    log.d('parseInComingMessage');
     inMessageManager = this;
 
     // TODO: !!
@@ -156,9 +166,12 @@
   /**
    *
    * @function InMessageManager#init
+   * @param {ConsoleManager} consoleManager
    */
-  function init() {
+  function init(consoleManager) {
     var inMessageManager = this;
+
+    inMessageManager.consoleManager = consoleManager;
   }
 
   /**
@@ -169,6 +182,7 @@
   function handleInComingMessage(rawText) {
     var inMessageManager, message;
 
+    log.d('handleInComingMessage');
     inMessageManager = this;
 
     message = parseInComingMessage.call(inMessageManager, rawText);

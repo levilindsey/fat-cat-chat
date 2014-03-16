@@ -58,6 +58,7 @@
     ChatBot.initStaticFields();
 
     log.i('reset', 'All modules initialized');
+    log.i('reset', params.SEPARATOR_LINE);
 
     if (checkBrowserCompatibility()) {
       ioManager = new IOManager();

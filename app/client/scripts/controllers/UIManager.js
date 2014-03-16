@@ -8,7 +8,7 @@
 
   var AUTO_OPEN_DIRECTORY_PANEL_DELAY = 400;
 
-  var params, util, log, ChatConsole, ChatTextBox, ChatBot, ConsoleManager;
+  var params, util, log, ChatConsole, ChatTextBox, ConsoleManager;
 
   // ------------------------------------------------------------------------------------------- //
   // Private dynamic functions
@@ -29,10 +29,11 @@
    * @function UIManager~getReferencesToElements
    */
   function getReferencesToElements() {
-    var uiManager, changeNameButton, newRoomButton, addBotButton, confirmButton, cancelButton, roomChatContainer, directoryContainer, commandsContainer, emoticonsContainer, privateChatContainer, roomChatHeader, directoryHeader, commandsHeader, emoticonsHeader, privateChatHeader, roomChatBody, directoryBody, commandsBody, emoticonsBody, privateChatBody, roomsConsole, directoryUsersConsole, chatRoomMessagesConsole, chatRoomUsersConsole, privateMessagesConsole, chatRoomMessagesTextBox, privateMessagesTextBox, textEntryDialoguePanel, changeNameTextBox;
+    var uiManager, changeNameButton, newRoomButton, addBotButton, confirmButton, cancelButton, roomChatContainer, directoryContainer, commandsContainer, emoticonsContainer, privateChatContainer, roomChatHeader, directoryHeader, commandsHeader, emoticonsHeader, privateChatHeader, roomChatBody, directoryBody, commandsBody, emoticonsBody, privateChatBody, roomsConsole, directoryUsersConsole, chatRoomMessagesConsole, chatRoomUsersConsole, privateMessagesConsole, chatRoomMessagesTextBox, privateMessagesTextBox, ownUserNameLabel, textEntryDialoguePanel, changeNameTextBox;
 
     uiManager = this;
 
+    ownUserNameLabel = document.getElementById('ownUserNameLabel');
     textEntryDialoguePanel = document.getElementById('textEntryDialoguePanel');
     changeNameTextBox = document.getElementById('changeNameTextBox');
 
@@ -60,15 +61,15 @@
     emoticonsBody = emoticonsContainer.querySelector('.panelBody');
     privateChatBody = privateChatContainer.querySelector('.panelBody');
 
-    roomsConsole = new ChatConsole('directoryRoomsConsole', 'directoryHeader', uiManager);
+    roomsConsole = new ChatConsole('directoryRoomsConsole', 'directoryHeader', 'directoryPanel', uiManager);
     directoryUsersConsole =
-        new ChatConsole('directoryUsersConsole', 'directoryHeader', uiManager);
+        new ChatConsole('directoryUsersConsole', 'directoryHeader', 'directoryPanel', uiManager);
     chatRoomMessagesConsole =
-        new ChatConsole('roomChatMessagesConsole', 'roomChatHeader', uiManager);
+        new ChatConsole('roomChatMessagesConsole', 'roomChatHeader', 'roomChatPanel', uiManager);
     chatRoomUsersConsole =
-        new ChatConsole('roomChatUsersConsole', 'roomChatHeader', uiManager);
+        new ChatConsole('roomChatUsersConsole', 'roomChatHeader', 'roomChatPanel', uiManager);
     privateMessagesConsole =
-        new ChatConsole('privateChatMessagesConsole', 'privateChatHeader', uiManager);
+        new ChatConsole('privateChatMessagesConsole', 'privateChatHeader', 'privateChatPanel', uiManager);
 
     chatRoomMessagesTextBox = new ChatTextBox('roomChatMessagesTextBox', uiManager);
     privateMessagesTextBox = new ChatTextBox('privateChatMessagesTextBox', uiManager);
@@ -107,6 +108,7 @@
         body: privateChatBody
       },
       textEntryDialogue: {
+        ownUserNameLabel: ownUserNameLabel,
         container: textEntryDialoguePanel,
         textBox: changeNameTextBox
       }
@@ -164,6 +166,10 @@
     util.listen(uiManager.buttons.cancel, 'click', function () {
       onButtonClick.call(uiManager, uiManager.buttons.cancel);
     });
+
+    util.listen(uiManager.panels.textEntryDialogue.textBox, 'keydown', function(event) {
+      onDialogueTextBoxKeyDown.call(uiManager, event.keyCode);
+    });
   }
 
   /**
@@ -174,6 +180,8 @@
   function onPanelHeaderClick(panelContainer) {
     var uiManager = this;
 
+    log.i('onPanelHeaderClick', 'Panel container ID=' + panelContainer.id);
+
     util.toggleClass(panelContainer, 'closed');
   }
 
@@ -183,7 +191,10 @@
    * @param {HTMLElement} button
    */
   function onButtonClick(button) {
-    var uiManager, value;
+    var uiManager;
+
+    log.i('onButtonClick', 'Button ID=' + button.id);
+
     uiManager = this;
 
     switch (button) {
@@ -194,16 +205,10 @@
         openTextEntryDialogue.call(uiManager, true);
         break;
       case uiManager.buttons.addBot:
-        uiManager.bots.push(new ChatBot(uiManager));
+        uiManager.consoleManager.addChatBot();
         break;
       case uiManager.buttons.confirm:
-        value = uiManager.panels.textEntryDialogue.textBox.getAttribute('value');
-        if (uiManager.dialogueIsForNewRoom) {
-          uiManager.consoleManager.joinRoom(value);
-        } else {
-          uiManager.consoleManager.changeOwnNickname(value);
-        }
-        closeTextEntryDialogue.call(uiManager);
+        onDialogueConfimation.call(uiManager);
         break;
       case uiManager.buttons.cancel:
         closeTextEntryDialogue.call(uiManager);
@@ -211,6 +216,35 @@
       default:
         return;
     }
+  }
+
+  /**
+   *
+   * @function UIManager~onDialogueTextBoxKeyDown
+   * @param {Number} keyCode
+   */
+  function onDialogueTextBoxKeyDown(keyCode) {
+    var uiManager = this;
+    if (keyCode === params.ENTER_KEY_CODE) {
+      log.i('onKeyDown', 'User pressed ENTER');
+      onDialogueConfimation.call(uiManager);
+    }
+  }
+
+  /**
+   *
+   * @function UIManager~onDialogueConfimation
+   */
+  function onDialogueConfimation() {
+    var uiManager, value;
+    uiManager = this;
+    value = uiManager.panels.textEntryDialogue.textBox.value;
+    if (uiManager.dialogueIsForNewRoom) {
+      uiManager.ioManager.outMessageManager.joinRoom(value, null);
+    } else {
+      uiManager.ioManager.outMessageManager.changeOwnNickname(value, null);
+    }
+    closeTextEntryDialogue.call(uiManager);
   }
 
   /**
@@ -224,7 +258,7 @@
 
     uiManager.dialogueIsForNewRoom = dialogueIsForNewRoom;
     util.toggleClass(uiManager.panels.textEntryDialogue.container, 'hidden', false);
-    uiManager.panels.textEntryDialogue.textBox.setAttribute('value', '');
+    uiManager.panels.textEntryDialogue.textBox.value = '';
 
     placeholder = dialogueIsForNewRoom ? 'Room name' : 'Nickname';
     uiManager.panels.textEntryDialogue.textBox.setAttribute('placeholder', placeholder);
@@ -264,6 +298,8 @@
     });
 
     uiManager.consoleManager.init(ioManager);
+
+    uiManager.panels.textEntryDialogue.ownUserNameLabel.innerHTML = uiManager.consoleManager.thisUser.name;
 
     // Start the directory panel closed, but then show it sliding open
     setTimeout(function() {
@@ -315,7 +351,6 @@
     log = new app.Log('UIManager');
     ChatConsole = app.ChatConsole;
     ChatTextBox = app.ChatTextBox;
-    ChatBot = app.ChatBot;
     ConsoleManager = app.ConsoleManager;
     log.d('initStaticFields', 'Module initialized');
   }
