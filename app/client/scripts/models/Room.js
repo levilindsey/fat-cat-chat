@@ -9,6 +9,28 @@
   var params, util, log;
 
   // ------------------------------------------------------------------------------------------- //
+  // Public dynamic functions
+
+  /**
+   *
+   * @function Room#removeUser
+   * @param {User} user
+   */
+  function removeUser(user) {
+    var room, index;
+
+    room = this;
+
+    if (user) {
+      index = room.users.indexOf(user);
+
+      if (index >= 0) {
+        room.users.splice(index, 1);
+      }
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
   // Public static functions
 
   /**
@@ -38,6 +60,7 @@
     room.name = name;
     room.users = users;
     room.startTime = startTime;
+    room.removeUser = removeUser;
   }
 
   // Expose this module

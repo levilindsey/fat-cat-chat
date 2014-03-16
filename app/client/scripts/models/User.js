@@ -37,6 +37,7 @@
     user.name = name;
     user.startTime = startTime;
     user.isIgnored = false;
+    user.privateMessages = [];
   }
 
   // Expose this module

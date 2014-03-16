@@ -82,12 +82,12 @@
 
   params.COMMANDS = {
     help: {
-      regex: /^\/help/,
+      regex: /^\/help\b/,
       rawString: '/help',
       htmlElement: '<code class=\'command\'>/help</code>'
     },
     rooms: {
-      regex: /^\/rooms/,
+      regex: /^\/rooms\b/,
       rawString: '/rooms',
       htmlElement: '<code class=\'command\'>/rooms</code>'
     },
@@ -117,15 +117,21 @@
       htmlElement: '<code class=\'command\'>/ignore</code>'
     },
     leave: {
-      regex: /^\/leave/,
+      regex: /^\/leave\b/,
       rawString: '/leave',
       htmlElement: '<code class=\'command\'>/leave</code>'
     },
     quit: {
-      regex: /^\/quit/,
+      regex: /^\/quit\b/,
       rawString: '/quit',
       htmlElement: '<code class=\'command\'>/quit</code>'
     }
+  };
+
+  params.LINK_COMMAND = {
+    regex: /\/link (\S+) \((.*)\)/,
+    rawString: '/link',
+    htmlElement: '<code class=\'command\'>/link</code>'
   };
 
   params.EMOTICONS = {

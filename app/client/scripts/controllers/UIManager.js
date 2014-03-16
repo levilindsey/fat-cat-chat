@@ -8,7 +8,7 @@
 
   var AUTO_OPEN_DIRECTORY_PANEL_DELAY = 400;
 
-  var params, util, log, ChatConsole, ChatTextBox, ChatBot;
+  var params, util, log, ChatConsole, ChatTextBox, ChatBot, ConsoleManager;
 
   // ------------------------------------------------------------------------------------------- //
   // Private dynamic functions
@@ -248,13 +248,12 @@
   /**
    *
    * @function UIManager#init
-   * @param {ConsoleManager} consoleManager
+   * @param {IOManager} ioManager
    */
-  function init(consoleManager) {
+  function init(ioManager) {
     var uiManager = this;
 
-    uiManager.consoleManager = consoleManager;
-    consoleManager.uiManager = uiManager;
+    uiManager.ioManager = ioManager;
 
     setUpElements.call(uiManager);
     resize.call(uiManager);
@@ -264,7 +263,7 @@
       resize.call(uiManager);
     });
 
-    consoleManager.init();
+    uiManager.consoleManager.init(ioManager);
 
     // Start the directory panel closed, but then show it sliding open
     setTimeout(function() {
@@ -317,6 +316,7 @@
     ChatConsole = app.ChatConsole;
     ChatTextBox = app.ChatTextBox;
     ChatBot = app.ChatBot;
+    ConsoleManager = app.ConsoleManager;
     log.d('initStaticFields', 'Module initialized');
   }
 
@@ -330,7 +330,8 @@
   function UIManager() {
     var uiManager = this;
 
-    uiManager.consoleManager = null;
+    uiManager.ioManager = null;
+    uiManager.consoleManager = new ConsoleManager(uiManager);
     uiManager.dialogueIsForNewRoom = false;
     uiManager.buttons = null;
     uiManager.panels = null;

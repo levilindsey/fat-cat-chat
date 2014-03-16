@@ -473,11 +473,11 @@ img.emoticon.blank {
   color: #c06060;
 }
 
-.room, code.room {
+code.room {
   color: #c090d0;
 }
 
-.user, code.user {
+code.user {
   color: #e0a080;
 }
 
