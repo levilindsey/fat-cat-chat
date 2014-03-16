@@ -33,7 +33,7 @@ All commands&mdash;except the `/link` command&mdash;must be given as the first t
 
 Type anything not prefixed with `/` in order to send a normal message to everyone in the room.
 
-Any word that starts with "http[s]://[...]" will be shown as an active hyperlink within the console.
+Any word that starts with `http[s]://[...]` will be shown as an active hyperlink within the console.
 
 ### Technology stack
 
