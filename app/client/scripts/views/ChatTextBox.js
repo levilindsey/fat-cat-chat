@@ -42,7 +42,8 @@
     if (keyCode === params.ENTER_KEY_CODE) {
       log.i('onKeyDown', 'User pressed ENTER');
 
-      chatTextBox.consoleManager.ioManager.outMessageManager.handleOutGoingMessage(chatTextBox.textBox.value, chatTextBox);
+      chatTextBox.chatManager.ioManager.outMessageManager.handleOutGoingMessage(chatTextBox.textBox.value,
+          chatTextBox);
 
       chatTextBox.textBox.value = '';
     }
@@ -95,12 +96,12 @@
    * @constructor
    * @global
    * @param {String} textBoxId The ID of the input element for this ChatTextBox.
-   * @param {ConsoleManager} consoleManager
+   * @param {ChatManager} chatManager
    */
-  function ChatTextBox(textBoxId, consoleManager) {
+  function ChatTextBox(textBoxId, chatManager) {
     var chatTextBox = this;
 
-    chatTextBox.consoleManager = consoleManager;
+    chatTextBox.chatManager = chatManager;
     chatTextBox.entries = [];
     chatTextBox.resize = resize;
     chatTextBox.textBox = null;

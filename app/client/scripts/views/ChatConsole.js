@@ -36,6 +36,26 @@
     };
   }
 
+  /**
+   *
+   * @function ChatConsole~findEntryIndexByMessageRawText
+   * @param {String} rawText
+   * @returns {Number}
+   */
+  function findEntryIndexByMessageRawText(rawText) {
+    var chatConsole, i, count;
+
+    chatConsole = this;
+
+    for (i = 0, count = chatConsole.entries.length; i < count; i++) {
+      if (chatConsole.entries[i].message.rawText === rawText) {
+        return i;
+      }
+    }
+
+    return -1;
+  }
+
   // ------------------------------------------------------------------------------------------- //
   // Public dynamic functions
 
@@ -64,6 +84,52 @@
 
     entry = new ConsoleEntry(message, chatConsole.elements.list);
     chatConsole.entries.push(entry);
+
+    // Scroll to the bottom
+    chatConsole.elements.container.scrollTop = chatConsole.elements.container.scrollHeight;
+  }
+
+  /**
+   *
+   * @function ChatConsole#removeMessageByRawText
+   * @param {String} rawText The rawText value of the message to remove.
+   */
+  function removeMessageByRawText(rawText) {
+    var chatConsole, index, li;
+
+    log.d('removeMessageByRawText', 'rawText=' + rawText);
+    chatConsole = this;
+
+    index = findEntryIndexByMessageRawText.call(chatConsole, rawText);
+
+    if (index >= 0) {
+      li = chatConsole.entries[index].elements.li;
+      chatConsole.entries.splice(index, 1);
+      chatConsole.elements.list.removeChild(li);
+    }
+  }
+
+  /**
+   *
+   * @function ChatConsole#changeMessageRawText
+   * @param {String} oldRawText
+   * @param {String} newRawText
+   */
+  function changeMessageRawText(oldRawText, newRawText) {
+    var chatConsole, index, entry, newHtmlText;
+
+    log.d('changeMessageRawText', 'oldRawText=' + oldRawText + ', newRawText=' + newRawText);
+    chatConsole = this;
+
+    index = findEntryIndexByMessageRawText.call(chatConsole, oldRawText);
+
+    if (index >= 0) {
+      newHtmlText = chatConsole.chatManager.parseRawMessageTextForDom(rawText);
+      entry = chatConsole.entries[index];
+
+      entry.message.rawText = newRawText;
+      entry.elements.li.innerHTML = newHtmlText;
+    }
   }
 
   /**
@@ -114,15 +180,17 @@
    * @param {String} containerId The ID of the container element for this chatConsole.
    * @param {String} headerId The ID of the header element for this chatConsole.
    * @param {String} panelId The ID of the panel container element for this chatConsole.
-   * @param {ConsoleManager} consoleManager
+   * @param {ChatManager} chatManager
    */
-  function ChatConsole(containerId, headerId, panelId, consoleManager) {
+  function ChatConsole(containerId, headerId, panelId, chatManager) {
     var chatConsole = this;
 
-    chatConsole.consoleManager = consoleManager;
+    chatConsole.chatManager = chatManager;
     chatConsole.entries = [];
     chatConsole.resize = resize;
     chatConsole.addMessage = addMessage;
+    chatConsole.removeMessageByRawText = removeMessageByRawText;
+    chatConsole.changeMessageRawText = changeMessageRawText;
     chatConsole.setTitle = setTitle;
     chatConsole.clearMessages = clearMessages;
     chatConsole.elements = null;

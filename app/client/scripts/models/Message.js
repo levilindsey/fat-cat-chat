@@ -33,7 +33,7 @@
    * @param {User} fromUser The user who sent this message.
    * @param {Number} time The time this message arrived.
    * @param {'in'|'out'|'command'|'system'|'error'|'room'|'user'} type The message type.
-   * @param {'none'|'help'|'rooms'|'join'|'msg'|'nick'|'ping'|'ignore'|'leave'|'quit'} command The message command type.
+   * @param {'none'|'help'|'rooms'|'join'|'nick'|'ping'|'ignore'|'leave'|'quit'|'heartbeat'|'msg'|'pubmsg'|'userleftroom'|'userjoinedroom'|'userleftserver'|'userjoinedserver'|'userchangedname'|'roomcreated'|'roomdestroyed'|'nickinuse'|'pong'|'heartbeatrequest'} command The message command type.
    * @param {Array.<String>} arguments The different arguments used with this command.
    */
   function Message(rawText, htmlText, fromUser, time, type, command, arguments) {

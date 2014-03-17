@@ -8,7 +8,7 @@
 
   var AUTO_OPEN_DIRECTORY_PANEL_DELAY = 400;
 
-  var params, util, log, ChatConsole, ChatTextBox, ConsoleManager;
+  var params, util, log, ChatConsole, ChatTextBox, ChatManager;
 
   // ------------------------------------------------------------------------------------------- //
   // Private dynamic functions
@@ -61,7 +61,8 @@
     emoticonsBody = emoticonsContainer.querySelector('.panelBody');
     privateChatBody = privateChatContainer.querySelector('.panelBody');
 
-    roomsConsole = new ChatConsole('directoryRoomsConsole', 'directoryHeader', 'directoryPanel', uiManager);
+    roomsConsole =
+        new ChatConsole('directoryRoomsConsole', 'directoryHeader', 'directoryPanel', uiManager);
     directoryUsersConsole =
         new ChatConsole('directoryUsersConsole', 'directoryHeader', 'directoryPanel', uiManager);
     chatRoomMessagesConsole =
@@ -69,7 +70,8 @@
     chatRoomUsersConsole =
         new ChatConsole('roomChatUsersConsole', 'roomChatHeader', 'roomChatPanel', uiManager);
     privateMessagesConsole =
-        new ChatConsole('privateChatMessagesConsole', 'privateChatHeader', 'privateChatPanel', uiManager);
+        new ChatConsole('privateChatMessagesConsole', 'privateChatHeader', 'privateChatPanel',
+            uiManager);
 
     chatRoomMessagesTextBox = new ChatTextBox('roomChatMessagesTextBox', uiManager);
     privateMessagesTextBox = new ChatTextBox('privateChatMessagesTextBox', uiManager);
@@ -114,7 +116,7 @@
       }
     };
     uiManager.consoles = {
-      rooms: roomsConsole,
+      directoryRooms: roomsConsole,
       directoryUsers: directoryUsersConsole,
       chatRoomMessages: chatRoomMessagesConsole,
       chatRoomUsers: chatRoomUsersConsole,
@@ -167,7 +169,7 @@
       onButtonClick.call(uiManager, uiManager.buttons.cancel);
     });
 
-    util.listen(uiManager.panels.textEntryDialogue.textBox, 'keydown', function(event) {
+    util.listen(uiManager.panels.textEntryDialogue.textBox, 'keydown', function (event) {
       onDialogueTextBoxKeyDown.call(uiManager, event.keyCode);
     });
   }
@@ -205,7 +207,7 @@
         openTextEntryDialogue.call(uiManager, true);
         break;
       case uiManager.buttons.addBot:
-        uiManager.consoleManager.addChatBot();
+        uiManager.chatManager.chatBotManager.addChatBot();
         break;
       case uiManager.buttons.confirm:
         onDialogueConfimation.call(uiManager);
@@ -297,12 +299,13 @@
       resize.call(uiManager);
     });
 
-    uiManager.consoleManager.init(ioManager);
+    uiManager.chatManager.init(ioManager);
 
-    uiManager.panels.textEntryDialogue.ownUserNameLabel.innerHTML = uiManager.consoleManager.thisUser.name;
+    uiManager.panels.textEntryDialogue.ownUserNameLabel.innerHTML =
+        uiManager.chatManager.thisUser.name;
 
     // Start the directory panel closed, but then show it sliding open
-    setTimeout(function() {
+    setTimeout(function () {
       onPanelHeaderClick.call(uiManager, uiManager.panels.directory.container);
     }, AUTO_OPEN_DIRECTORY_PANEL_DELAY);
   }
@@ -323,7 +326,7 @@
     usersConsoleWidth = params.PANELS.USERS_CONSOLE_WIDTH;
     privateConsoleWidth = params.PANELS.PRIVATE_CONSOLE_WIDTH;
 
-    uiManager.consoles.rooms.resize(mainConsoleWidth);
+    uiManager.consoles.directoryRooms.resize(mainConsoleWidth);
     uiManager.consoles.directoryUsers.resize(usersConsoleWidth);
     uiManager.consoles.chatRoomMessages.resize(mainConsoleWidth);
     uiManager.consoles.chatRoomUsers.resize(usersConsoleWidth);
@@ -351,7 +354,7 @@
     log = new app.Log('UIManager');
     ChatConsole = app.ChatConsole;
     ChatTextBox = app.ChatTextBox;
-    ConsoleManager = app.ConsoleManager;
+    ChatManager = app.ChatManager;
     log.d('initStaticFields', 'Module initialized');
   }
 
@@ -366,7 +369,7 @@
     var uiManager = this;
 
     uiManager.ioManager = null;
-    uiManager.consoleManager = new ConsoleManager(uiManager);
+    uiManager.chatManager = new ChatManager(uiManager);
     uiManager.dialogueIsForNewRoom = false;
     uiManager.buttons = null;
     uiManager.panels = null;

@@ -40,7 +40,8 @@
   moduleParams.DEBUG = true;
   moduleParams.VERBOSE = true;
 
-  moduleParams.SEPARATOR_LINE = '********************************************************************************';
+  moduleParams.SEPARATOR_LINE =
+      '********************************************************************************';
 
   // --- Sprite parameters --- //
 
@@ -83,7 +84,7 @@
   params.SMALL_SCREEN_WIDTH_THRESHOLD = 900;
   params.SMALL_SCREEN_HEIGHT_THRESHOLD = 675;
 
-  params.COMMANDS = {
+  params.OUT_COMMANDS = {
     help: {
       regex: /^\/help\b/,
       rawString: '/help',
@@ -95,7 +96,7 @@
       htmlElement: '<code class=\'command\'>/rooms</code>'
     },
     join: {
-      regex: /^\/join (\S+)/,
+      regex: /^\/join (\S+)\b/,
       rawString: '/join',
       htmlElement: '<code class=\'command\'>/join</code>'
     },
@@ -105,17 +106,17 @@
       htmlElement: '<code class=\'command\'>/msg</code>'
     },
     nick: {
-      regex: /^\/nick (\S+)/,
+      regex: /^\/nick (\S+)\b/,
       rawString: '/nick',
       htmlElement: '<code class=\'command\'>/nick</code>'
     },
     ping: {
-      regex: /^\/ping (\S+)/,
+      regex: /^\/ping (\S+)\b/,
       rawString: '/ping',
       htmlElement: '<code class=\'command\'>/ping</code>'
     },
     ignore: {
-      regex: /^\/ignore (\S+)/,
+      regex: /^\/ignore (\S+)\b/,
       rawString: '/ignore',
       htmlElement: '<code class=\'command\'>/ignore</code>'
     },
@@ -131,6 +132,48 @@
     }
   };
 
+  params.IN_COMMANDS = {
+    msg: {
+      regex: /^\/msg (\S+) \((.*)\)/
+    },
+    pubmsg: {
+      regex: /^\/pubmsg (\S+) (\S+) \((.*)\)/
+    },
+    userleftroom: {
+      regex: /^\/userleftroom (\S+) (\S+)\b/
+    },
+    userjoinedroom: {
+      regex: /^\/userjoinedroom (\S+) (\S+)\b/
+    },
+    userleftserver: {
+      regex: /^\/userleftserver (\S+)\b/
+    },
+    userjoinedserver: {
+      regex: /^\/userjoinedserver (\S+)\b/
+    },
+    userchangedname: {
+      regex: /^\/userchangedname (\S+) (\S+)\b/
+    },
+    roomcreated: {
+      regex: /^\/roomcreated (\S+)\b/
+    },
+    roomdestroyed: {
+      regex: /^\/roomdestroyed (\S+)\b/
+    },
+    nickinuse: {
+      regex: /^\/nickinuse (\S+) (\S+)\b/
+    },
+    pong: {
+      regex: /^\/pong (\S+) (\S+) (\S+)\b/
+    },
+    heartbeatrequest: {
+      regex: /^\/heartbeatrequest (\S+)\b/
+    },
+    heartbeat: {
+      regex: /^\/heartbeat (\S+) \((.*)\) \((.*)\) (\S+) \((.*)\)\b/
+    }
+  };
+
   params.LINK_COMMAND = {
     regex: /\/link (\S+) \((.*)\)/,
     rawString: '/link',
@@ -140,51 +183,63 @@
   params.EMOTICONS = {
     happy: {
       raw: [ ':)', ':-)' ],
-      html: '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'emoticon happy\' alt=\'Happy emoticon\' />'
+      html: '<img src=\'' + params.TRANSPARENT_GIF_URL +
+          '\' class=\'emoticon happy\' alt=\'Happy emoticon\' />'
     },
     superHappy: {
       raw: [ ':D', ':-D' ],
-      html: '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'emoticon superHappy\' alt=\'Super happy emoticon\' />'
+      html: '<img src=\'' + params.TRANSPARENT_GIF_URL +
+          '\' class=\'emoticon superHappy\' alt=\'Super happy emoticon\' />'
     },
     wink: {
       raw: [ ';)', ';-)' ],
-      html: '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'emoticon wink\' alt=\'Wink emoticon\' />'
+      html: '<img src=\'' + params.TRANSPARENT_GIF_URL +
+          '\' class=\'emoticon wink\' alt=\'Wink emoticon\' />'
     },
     cry: {
       raw: [ ':\'(', ':\'-(', ':&#x27;(', ':&#x27;-(' ],
-      html: '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'emoticon cry\' alt=\'Cry emoticon\' />'
+      html: '<img src=\'' + params.TRANSPARENT_GIF_URL +
+          '\' class=\'emoticon cry\' alt=\'Cry emoticon\' />'
     },
     surprise: {
       raw: [ ':o', ':-o', ':O', ':-O' ],
-      html: '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'emoticon surprise\' alt=\'Surprise emoticon\' />'
+      html: '<img src=\'' + params.TRANSPARENT_GIF_URL +
+          '\' class=\'emoticon surprise\' alt=\'Surprise emoticon\' />'
     },
     uncertain: {
       raw: [ ':/', ':-/' ],
-      html: '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'emoticon uncertain\' alt=\'Uncertain emoticon\' />'
+      html: '<img src=\'' + params.TRANSPARENT_GIF_URL +
+          '\' class=\'emoticon uncertain\' alt=\'Uncertain emoticon\' />'
     },
     angry: {
       raw: [ 'x(', 'x-(', 'X(', 'X-(' ],
-      html: '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'emoticon angry\' alt=\'Angry emoticon\' />'
+      html: '<img src=\'' + params.TRANSPARENT_GIF_URL +
+          '\' class=\'emoticon angry\' alt=\'Angry emoticon\' />'
     },
     sad: {
       raw: [ ':(', ':-(' ],
-      html: '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'emoticon sad\' alt=\'Sad emoticon\' />'
+      html: '<img src=\'' + params.TRANSPARENT_GIF_URL +
+          '\' class=\'emoticon sad\' alt=\'Sad emoticon\' />'
     },
     sunglasses: {
       raw: [ 'B)', 'B-)' ],
-      html: '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'emoticon sunglasses\' alt=\'Sunglasses emoticon\' />'
+      html: '<img src=\'' + params.TRANSPARENT_GIF_URL +
+          '\' class=\'emoticon sunglasses\' alt=\'Sunglasses emoticon\' />'
     },
     tongue: {
       raw: [ ':P', ':-P', ':p', ':-p' ],
-      html: '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'emoticon tongue\' alt=\'Tongue emoticon\' />'
+      html: '<img src=\'' + params.TRANSPARENT_GIF_URL +
+          '\' class=\'emoticon tongue\' alt=\'Tongue emoticon\' />'
     },
     heart: {
       raw: [ '<3', '&#x3C;3' ],
-      html: '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'emoticon heart\' alt=\'Heart emoticon\' />'
+      html: '<img src=\'' + params.TRANSPARENT_GIF_URL +
+          '\' class=\'emoticon heart\' alt=\'Heart emoticon\' />'
     },
     blank: {
       raw: [ ':|', ':-|' ],
-      html: '<img src=\'' + params.TRANSPARENT_GIF_URL + '\' class=\'emoticon blank\' alt=\'Blank emoticon\' />'
+      html: '<img src=\'' + params.TRANSPARENT_GIF_URL +
+          '\' class=\'emoticon blank\' alt=\'Blank emoticon\' />'
     }
   };
 

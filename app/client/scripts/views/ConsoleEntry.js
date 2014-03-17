@@ -21,7 +21,9 @@
 
     consoleEntry = this;
 
-    li = util.createElement('li', consoleEntry.parent, null, ['consoleEntry', consoleEntry.message.type]);
+    li =
+        util.createElement('li', consoleEntry.parent, null,
+            ['consoleEntry', consoleEntry.message.type]);
     li.innerHTML = consoleEntry.message.htmlText;
 
     consoleEntry.elements = {

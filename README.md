@@ -16,7 +16,7 @@ Some of the features of this chat server/client application include:
 - Dynamic panels which can be expanded/collapsed by clicking on their headers.
 - Encodes user-entered text for safe insertion into the HTML document.
 
-### Client/server message protocol
+### Message syntax
 
 - **`/help`**: Type `/help` to see a list of the available commands.
 - **`/rooms`**: Type `/rooms` to see all of the current rooms.

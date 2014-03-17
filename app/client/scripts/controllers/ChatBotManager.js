@@ -1,22 +1,34 @@
 /**
- * This module defines a constructor for ChatBot objects.
- * @module ChatBot
+ * This module defines a constructor for ChatBotManager objects.
+ * @module ChatBotManager
  */
 (function () {
   // ------------------------------------------------------------------------------------------- //
   // Private static variables
 
-  var params, util, log, User;
+  var params, util, log, ChatBot;
 
   // ------------------------------------------------------------------------------------------- //
   // Private dynamic functions
 
-  function sendCatGif() {
-    // TODO:
-  }
-
   // ------------------------------------------------------------------------------------------- //
   // Public dynamic functions
+
+  /**
+   *
+   * @function ChatBotManager#addChatBot
+   */
+  function addChatBot() {
+    var chatBotManager, botName, bot;
+
+    chatBotManager = this;
+    botName = ChatManager.generateRandomUserName(true);
+
+    log.d('addChatBot', 'name=' + botName);
+
+    bot = new ChatBot(chatBotManager, botName);
+    chatBotManager.bots.push(bot);
+  }
 
   // ------------------------------------------------------------------------------------------- //
   // Private static functions
@@ -26,13 +38,13 @@
 
   /**
    * Initializes some static state for this module.
-   * @function ChatBot.initStaticFields
+   * @function ChatBotManager.initStaticFields
    */
   function initStaticFields() {
     params = app.params;
     util = app.util;
-    log = new app.Log('ChatBot');
-    User = app.User;
+    log = new app.Log('ChatBotManager');
+    ChatBot = app.ChatBot;
     log.d('initStaticFields', 'Module initialized');
   }
 
@@ -42,20 +54,20 @@
   /**
    * @constructor
    * @global
-   * @param {String} name
-   * @param {ConsoleManager} consoleManager
+   * @param {ChatManager} chatManager
    */
-  function ChatBot(name, consoleManager) {
-    var chatBot = this;
+  function ChatBotManager(chatManager) {
+    var chatBotManager = this;
 
-    chatBot.user = new User(name, Date.now());
-    chatBot.consoleManager = consoleManager;
+    chatBotManager.chatManager = chatManager;
+    chatBotManager.bots = [];
+    chatBotManager.addChatBot = addChatBot;
   }
 
   // Expose this module
   if (!window.app) window.app = {};
-  window.app.ChatBot = ChatBot;
-  ChatBot.initStaticFields = initStaticFields;
+  window.app.ChatBotManager = ChatBotManager;
+  ChatBotManager.initStaticFields = initStaticFields;
 
-  console.log('ChatBot module loaded');
+  console.log('ChatBotManager module loaded');
 })();

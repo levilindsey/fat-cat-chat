@@ -36,8 +36,8 @@
     var ioManager = this;
 
     ioManager.uiManager = uiManager;
-    ioManager.inMessageManager.init(uiManager.consoleManager);
-    ioManager.outMessageManager.init(uiManager.consoleManager);
+    ioManager.inMessageManager.init(uiManager.chatManager);
+    ioManager.outMessageManager.init(uiManager.chatManager);
   }
 
   /**

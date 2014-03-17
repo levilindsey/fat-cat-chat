@@ -38,6 +38,8 @@
     user.startTime = startTime;
     user.isIgnored = false;
     user.privateMessages = [];
+    user.activeRoom = null;
+    user.privateChatUser = null;
   }
 
   // Expose this module

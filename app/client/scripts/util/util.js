@@ -1118,7 +1118,7 @@
    * @returns {String}
    */
   function decodeHtmlEntities(text) {
-    return text.replace(/&#(\d+);/g, function(match, charCode) {
+    return text.replace(/&#(\d+);/g, function (match, charCode) {
       return String.fromCharCode(charCode);
     });
   }

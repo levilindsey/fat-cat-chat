@@ -4,7 +4,7 @@
  */
 (function () {
 
-  var params, util, log, User, Room, Message, ConsoleEntry, ChatConsole, ChatTextBox, InMessageManager, OutMessageManager, IOManager, ChatBot, UIManager, ConsoleManager, ioManager, uiManager;
+  var params, util, log, User, Room, Message, ConsoleEntry, ChatConsole, ChatTextBox, ChatBot, InMessageManager, OutMessageManager, IOManager, ChatBotManager, UIManager, ChatManager, ioManager, uiManager;
 
   // ------------------------------------------------------------------------------------------- //
   // Private static functions
@@ -37,12 +37,13 @@
     ConsoleEntry = app.ConsoleEntry;
     ChatConsole = app.ChatConsole;
     ChatTextBox = app.ChatTextBox;
+    ChatBot = app.ChatBot;
     InMessageManager = app.InMessageManager;
     OutMessageManager = app.OutMessageManager;
     IOManager = app.IOManager;
     UIManager = app.UIManager;
-    ConsoleManager = app.ConsoleManager;
-    ChatBot = app.ChatBot;
+    ChatManager = app.ChatManager;
+    ChatBotManager = app.ChatBotManager;
 
     User.initStaticFields();
     Room.initStaticFields();
@@ -50,12 +51,13 @@
     ConsoleEntry.initStaticFields();
     ChatConsole.initStaticFields();
     ChatTextBox.initStaticFields();
-    ConsoleManager.initStaticFields();
+    ChatBot.initStaticFields();
+    ChatManager.initStaticFields();
     InMessageManager.initStaticFields();
     OutMessageManager.initStaticFields();
     IOManager.initStaticFields();
     UIManager.initStaticFields();
-    ChatBot.initStaticFields();
+    ChatBotManager.initStaticFields();
 
     log.i('reset', 'All modules initialized');
     log.i('reset', params.SEPARATOR_LINE);

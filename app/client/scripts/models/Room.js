@@ -30,6 +30,26 @@
     }
   }
 
+  /**
+   *
+   * @function Room#getUserFromName
+   * @param {String} userName
+   * @returns {User}
+   */
+  function getUserFromName(userName) {
+    var room, i, count;
+
+    room = this;
+
+    for (i = 0, count = room.users.length; i < count; i++) {
+      if (room.users[i].name === userName) {
+        return room.users[i];
+      }
+    }
+
+    return null;
+  }
+
   // ------------------------------------------------------------------------------------------- //
   // Public static functions
 
@@ -61,6 +81,7 @@
     room.users = users;
     room.startTime = startTime;
     room.removeUser = removeUser;
+    room.getUserFromName = getUserFromName;
   }
 
   // Expose this module

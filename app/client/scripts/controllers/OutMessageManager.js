@@ -6,10 +6,31 @@
   // ------------------------------------------------------------------------------------------- //
   // Private static variables
 
-  var he, params, util, log, Room, User, Message, ConsoleManager, helpMessages;
+  var he, params, util, log, Room, User, Message, ChatManager, helpMessages;
 
   // ------------------------------------------------------------------------------------------- //
   // Private dynamic functions
+
+  /**
+   *
+   * @function OutMessageManager~printError
+   * @param {Message} message
+   * @param {ChatConsole} console
+   */
+  function printError(message, console) {
+    var outMessageManager;
+
+    log.d('printError', 'error message=' + message.arguments[0]);
+    outMessageManager = this;
+
+    // Show the user-entered message
+    console.addMessage(message);
+
+    // Notify the user that we did something
+    message = outMessageManager.chatManager.parseInternalSystemMessage(message.arguments[0]);
+    message.type = 'error';
+    console.addMessage(message);
+  }
 
   /**
    *
@@ -48,14 +69,14 @@
     message = parseOutGoingMessage.call(outMessageManager, rawText, false);
     console.addMessage(message);
 
-    if (outMessageManager.consoleManager.allRooms.length > 0) {
-      outMessageManager.consoleManager.allRooms.forEach(function (room) {
-        message = outMessageManager.consoleManager.parseInternalSystemMessage(room.name);
+    if (outMessageManager.chatManager.allRooms.length > 0) {
+      outMessageManager.chatManager.allRooms.forEach(function (room) {
+        message = outMessageManager.chatManager.parseInternalSystemMessage(room.name);
         console.addMessage(message);
       });
     } else {
       rawText = 'There are no open rooms right now.';
-      message = outMessageManager.consoleManager.parseInternalSystemMessage(rawText);
+      message = outMessageManager.chatManager.parseInternalSystemMessage(rawText);
       console.addMessage(message);
     }
   }
@@ -77,7 +98,7 @@
     }
 
     userName = message.arguments[0];
-    privateChatUser = outMessageManager.consoleManager.getUserFromName(userName);
+    privateChatUser = outMessageManager.chatManager.getUserFromName(userName);
 
     if (!privateChatUser) {
       // There is no user with this name
@@ -87,25 +108,12 @@
 
       // Notify the user that we did something
       rawText = 'There is no user with the name ' + userName;
-      message = outMessageManager.consoleManager.parseInternalSystemMessage(rawText);
+      message = outMessageManager.chatManager.parseInternalSystemMessage(rawText);
       console.addMessage(message);
     } else {
-      // TODO:
-      // - add the logic to position the private message console onResize
-      // - add the logic to toggle the private message console visibility
-      // - show the private message console here
-      // - make sure I add some way of closing the private message console (an 'X' button in the top-right corner?)
-      // - if this is a new private chat user, then show all of the messages contained the user's list
-
       outMessageManager.ioManager.sendMessage(message);
 
-      // Show the user-entered message
-      outMessageManager.consoleManager.consoles.privateMessages.addMessage(message);
-
-      outMessageManager.ioManager.uiManager.textBoxes.privateMessages.textBox.focus();
-
-      outMessageManager.consoleManager.privateChatUser = privateChatUser;
-      privateChatUser.privateMessages.push(message);
+      outMessageManager.chatManager.showPrivateMessage(message, privateChatUser);
     }
   }
 
@@ -126,7 +134,7 @@
       return;
     }
 
-    pingUser = outMessageManager.consoleManager.getUserFromName(userName);
+    pingUser = outMessageManager.chatManager.getUserFromName(userName);
 
     if (!pingUser) {
       // There is no user with this name
@@ -144,7 +152,7 @@
     console.addMessage(message);
 
     // Notify the user that we did something
-    message = outMessageManager.consoleManager.parseInternalSystemMessage(rawText);
+    message = outMessageManager.chatManager.parseInternalSystemMessage(rawText);
     console.addMessage(message);
   }
 
@@ -165,7 +173,7 @@
       return;
     }
 
-    ignoredUser = outMessageManager.consoleManager.getUserFromName(userName);
+    ignoredUser = outMessageManager.chatManager.getUserFromName(userName);
 
     if (!ignoredUser) {
       // There is no user with this name
@@ -193,7 +201,7 @@
     console.addMessage(message);
 
     // Notify the user that we did something
-    message = outMessageManager.consoleManager.parseInternalSystemMessage(rawText);
+    message = outMessageManager.chatManager.parseInternalSystemMessage(rawText);
     console.addMessage(message);
   }
 
@@ -210,7 +218,7 @@
     outMessageManager = this;
 
     // We do not need to inform the server when "leaving" a private chat
-    if (console === outMessageManager.consoleManager.consoles.chatRoomMessages) {
+    if (console === outMessageManager.chatManager.consoles.chatRoomMessages) {
       // Create the message if it does not already exist
       if (!message) {
         rawText = '/leave';
@@ -219,8 +227,8 @@
 
       outMessageManager.ioManager.sendMessage(message);
 
-      outMessageManager.consoleManager.activeRoom.removeUser(outMessageManager.thisUser);
-      outMessageManager.consoleManager.activeRoom = null;
+      outMessageManager.chatManager.thisUser.activeRoom.removeUser(outMessageManager.thisUser);
+      outMessageManager.chatManager.thisUser.activeRoom = null;
     }
 
     // Hide the panel
@@ -251,8 +259,8 @@
     console.addMessage(message);
 
     // Notify the user that we did something
-    rawText = 'Goodbye ' + outMessageManager.consoleManager.thisUser + '!';
-    message = outMessageManager.consoleManager.parseInternalSystemMessage(rawText);
+    rawText = 'Goodbye ' + outMessageManager.chatManager.thisUser.name + '!';
+    message = outMessageManager.chatManager.parseInternalSystemMessage(rawText);
     console.addMessage(message);
 
     // Close this window
@@ -275,7 +283,7 @@
     outMessageManager.ioManager.sendMessage(message);
 
     // Show the user-entered message
-    outMessageManager.consoleManager.consoles.chatRoomMessages.addMessage(message);
+    outMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
   }
 
   /**
@@ -286,7 +294,7 @@
    * @returns {Message}
    */
   function parseOutGoingMessage(rawText, isPrivate) {
-    var outMessageManager, htmlText, time, type, result, command, arguments;
+    var outMessageManager, htmlText, time, type, result, command, arguments, thisUserName;
 
     log.d('parseOutGoingMessage', 'rawText=' + rawText);
     outMessageManager = this;
@@ -295,19 +303,19 @@
       return null;
     }
 
-    htmlText = outMessageManager.consoleManager.parseRawMessageTextForDom(rawText);
-
+    htmlText = outMessageManager.chatManager.parseRawMessageTextForDom(rawText);
     time = Date.now();
+    thisUserName = outMessageManager.chatManager.thisUser.name;
 
     // Is this a command?
     if (rawText[0] === '/') {
       type = 'command';
 
-      if (params.COMMANDS.help.regex.exec(rawText)) {
+      if (params.OUT_COMMANDS.help.regex.exec(rawText)) {
         command = 'help';
-      } else if (params.COMMANDS.rooms.regex.exec(rawText)) {
+      } else if (params.OUT_COMMANDS.rooms.regex.exec(rawText)) {
         command = 'rooms';
-      } else if (result = params.COMMANDS.join.regex.exec(rawText)) {
+      } else if (result = params.OUT_COMMANDS.join.regex.exec(rawText)) {
         if (rawText.lastIndexOf(' ') > 5) {
           type = 'error';
           command = 'none';
@@ -315,11 +323,13 @@
         } else {
           command = 'join';
           arguments = [result[1]];
+          rawText = '/join ' + thisUserName + ' ' + arguments[0];
         }
-      } else if (result = params.COMMANDS.msg.regex.exec(rawText)) {
+      } else if (result = params.OUT_COMMANDS.msg.regex.exec(rawText)) {
         command = 'msg';
         arguments = [result[1], result[2]];
-      } else if (result = params.COMMANDS.nick.regex.exec(rawText)) {
+        rawText = '/msg ' + thisUserName + ' ' + arguments[0] + ' (' + arguments[1] + ')';
+      } else if (result = params.OUT_COMMANDS.nick.regex.exec(rawText)) {
         if (rawText.lastIndexOf(' ') > 5) {
           type = 'error';
           command = 'none';
@@ -327,16 +337,20 @@
         } else {
           command = 'nick';
           arguments = [result[1]];
+          rawText = '/nick ' + thisUserName + ' ' + arguments[0];
         }
-      } else if (result = params.COMMANDS.ping.regex.exec(rawText)) {
+      } else if (result = params.OUT_COMMANDS.ping.regex.exec(rawText)) {
         command = 'ping';
         arguments = [result[1]];
-      } else if (result = params.COMMANDS.ignore.regex.exec(rawText)) {
+        rawText = '/ping ' + thisUserName + ' ' + arguments[0];
+      } else if (result = params.OUT_COMMANDS.ignore.regex.exec(rawText)) {
         command = 'ignore';
         arguments = [result[1]];
-      } else if (params.COMMANDS.leave.regex.exec(rawText)) {
+      } else if (params.OUT_COMMANDS.leave.regex.exec(rawText)) {
         command = 'leave';
-      } else if (params.COMMANDS.quit.regex.exec(rawText)) {
+        rawText =
+            '/leave ' + thisUserName + ' ' + outMessageManager.chatManager.thisUser.activeRoom.name;
+      } else if (params.OUT_COMMANDS.quit.regex.exec(rawText)) {
         command = 'quit';
       } else {
         // Print an error message to the user, because she entered an invalid command
@@ -349,13 +363,19 @@
 
       if (isPrivate) {
         command = 'msg';
-        rawText = '/msg ' + outMessageManager.consoleManager.privateChatUser.name + ' (' + rawText + ')';
+        rawText =
+            '/msg ' + thisUserName + ' ' +
+                outMessageManager.chatManager.thisUser.privateChatUser.name + ' (' + rawText + ')';
       } else { // Normal, public message
-        command = 'none';
+        command = 'pubmsg';
+        rawText =
+            '/pubmsg ' + thisUserName + ' ' +
+                outMessageManager.chatManager.thisUser.activeRoom.name + ' (' + rawText + ')';
       }
     }
 
-    return new Message(rawText, htmlText, outMessageManager.consoleManager.thisUser, time, type, command, arguments);
+    return new Message(rawText, htmlText, outMessageManager.chatManager.thisUser, time, type,
+        command, arguments);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -364,12 +384,12 @@
   /**
    *
    * @function OutMessageManager#init
-   * @param {ConsoleManager} consoleManager
+   * @param {ChatManager} chatManager
    */
-  function init(consoleManager) {
+  function init(chatManager) {
     var outMessageManager = this;
 
-    outMessageManager.consoleManager = consoleManager;
+    outMessageManager.chatManager = chatManager;
   }
 
   /**
@@ -388,8 +408,11 @@
       return;
     }
 
-    isPrivateMessage = chatTextBox === outMessageManager.ioManager.uiManager.textBoxes.privateMessages;
-    console = isPrivateMessage ? outMessageManager.consoleManager.consoles.privateMessages : outMessageManager.consoleManager.consoles.chatRoomMessages;
+    isPrivateMessage =
+        chatTextBox === outMessageManager.ioManager.uiManager.textBoxes.privateMessages;
+    console =
+        isPrivateMessage ? outMessageManager.chatManager.consoles.privateMessages :
+            outMessageManager.chatManager.consoles.chatRoomMessages;
     message = parseOutGoingMessage.call(outMessageManager, rawText, isPrivateMessage);
 
     if (!message) {
@@ -397,7 +420,7 @@
     }
 
     switch (message.command) {
-      case 'none':
+      case 'pubmsg':
         if (isPrivateMessage) {
           sendPrivateMessage.call(outMessageManager, message, console);
         } else {
@@ -431,6 +454,9 @@
       case 'quit':
         quit.call(outMessageManager, message, console);
         break;
+      case 'none':
+        printError.call(outMessageManager, message, console);
+        break;
       default:
         break;
     }
@@ -452,7 +478,7 @@
       return;
     }
 
-    room = outMessageManager.consoleManager.getRoomFromName(roomName);
+    room = outMessageManager.chatManager.getRoomFromName(roomName);
 
     // Create a new room if a room of this name did not already exist
     if (!room) {
@@ -469,26 +495,29 @@
 
     // --- Set up the room chat console for this new room --- //
 
-    outMessageManager.consoleManager.activeRoom = room;
-    room.users.push(outMessageManager.consoleManager.thisUser);
+    outMessageManager.chatManager.thisUser.activeRoom = room;
+    outMessageManager.chatManager.addUserToRoom(outMessageManager.chatManager.thisUser, room);
 
-    util.toggleClass(outMessageManager.ioManager.uiManager.panels.roomChat.container, 'closed', false);
-    util.toggleClass(outMessageManager.ioManager.uiManager.panels.roomChat.container, 'hidden', false);
+    util.toggleClass(outMessageManager.ioManager.uiManager.panels.roomChat.container, 'closed',
+        false);
+    util.toggleClass(outMessageManager.ioManager.uiManager.panels.roomChat.container, 'hidden',
+        false);
 
     outMessageManager.ioManager.uiManager.textBoxes.chatRoomMessages.textBox.focus();
-    outMessageManager.consoleManager.consoles.chatRoomMessages.setTitle('Room: ' + roomName);
-    outMessageManager.consoleManager.consoles.chatRoomMessages.clearMessages();
+    outMessageManager.chatManager.consoles.chatRoomMessages.setTitle('Room: ' + roomName);
+    outMessageManager.chatManager.consoles.chatRoomMessages.clearMessages();
 
     // Show the user-entered command
-    outMessageManager.consoleManager.consoles.chatRoomMessages.addMessage(message);
+    outMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
 
-    rawText = 'Welcome ' + outMessageManager.consoleManager.thisUser.name + ' to room ' + roomName + '!';
-    message = outMessageManager.consoleManager.parseInternalSystemMessage(rawText);
-    outMessageManager.consoleManager.consoles.chatRoomMessages.addMessage(message);
+    rawText =
+        'Welcome ' + outMessageManager.chatManager.thisUser.name + ' to room ' + roomName + '!';
+    message = outMessageManager.chatManager.parseInternalSystemMessage(rawText);
+    outMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
 
     rawText = 'There are ' + room.users.length + ' users in this room.';
-    message = outMessageManager.consoleManager.parseInternalSystemMessage(rawText);
-    outMessageManager.consoleManager.consoles.chatRoomMessages.addMessage(message);
+    message = outMessageManager.chatManager.parseInternalSystemMessage(rawText);
+    outMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
   }
 
   /**
@@ -499,7 +528,7 @@
    * @param {ChatConsole} console
    */
   function changeOwnNickname(nickname, message, console) {
-    var outMessageManager, rawText, oldName;
+    var outMessageManager, rawText;
 
     log.d('changeOwnNickname', 'nickname=' + nickname);
     outMessageManager = this;
@@ -514,34 +543,77 @@
       message = parseOutGoingMessage.call(outMessageManager, rawText, false);
     }
 
-    if (outMessageManager.consoleManager.getUserFromName(nickname)) {
-      // There is already a user with this name
-
-      rawText = 'There is already a user with the name ' + nickname;
-    } else {
-      // Change to this new nickname
-
-      outMessageManager.ioManager.sendMessage(message);
-
-      // TODO: need to actually get a response back from the server that the name change was successful
-
-      // Update this client with the new name
-      oldName = outMessageManager.consoleManager.thisUser.name;
-      outMessageManager.consoleManager.thisUser.name = nickname;
-
-      outMessageManager.ioManager.uiManager.panels.textEntryDialogue.ownUserNameLabel.innerHTML = nickname;
-
-      rawText = 'You changed your name from ' + oldName + ' to ' + nickname;
-    }
-
-    console = console || outMessageManager.consoleManager.consoles.chatRoomMessages;
+    console = console || outMessageManager.chatManager.consoles.chatRoomMessages;
 
     // Show the user-entered command
     console.addMessage(message);
 
-    // Notify the user that we did something
-    message = outMessageManager.consoleManager.parseInternalSystemMessage(rawText);
-    console.addMessage(message);
+    if (outMessageManager.chatManager.getUserFromName(nickname)) {
+      // There is already a user with this name
+
+      // Notify the user that we did something
+      rawText = 'There is already a user with the name ' + nickname;
+      message = outMessageManager.chatManager.parseInternalSystemMessage(rawText);
+      console.addMessage(message);
+    } else {
+      // Change to this new nickname
+      outMessageManager.ioManager.sendMessage(message);
+    }
+  }
+
+  /**
+   *
+   * @function OutMessageManager#sendHeartbeat
+   * @param {User} user
+   */
+  function sendHeartbeat(user) {
+    var outMessageManager, room, userName, roomName, rawText, time, type, command, arguments, message;
+
+    log.d('sendHeartbeat');
+    outMessageManager = this;
+
+    if (!user) {
+      return;
+    }
+
+    room = outMessageManager.chatManager.thisUser.activeRoom;
+
+    userName = user.name;
+    roomName = room ? room.name : '/none';
+
+    rawText = '/heartbeat ' + userName + ' ' + roomName;
+
+    time = Date.now();
+    type = 'system';
+    command = 'heartbeat';
+    arguments = [userName, roomName];
+
+    message = new Message(rawText, null, user, time, type, command, arguments);
+
+    outMessageManager.ioManager.sendMessage(message);
+  }
+
+  /**
+   *
+   * @function OutMessageManager#sendHeartbeatRequest
+   */
+  function sendHeartbeatRequest() {
+    var outMessageManager, user, userName, rawText, time, type, command, arguments, message;
+
+    log.d('sendHeartbeatRequest');
+    outMessageManager = this;
+
+    user = outMessageManager.chatManager.thisUser;
+    userName = user.name;
+    rawText = '/heartbeatrequest ' + userName;
+    time = Date.now();
+    type = 'system';
+    command = 'heartbeatrequest';
+    arguments = [userName];
+
+    message = new Message(rawText, null, user, time, type, command, arguments);
+
+    outMessageManager.ioManager.sendMessage(message);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -556,8 +628,8 @@
     time = Date.now();
     helpMessages = [];
     params.L18N.EN.HELP_MESSAGES.forEach(function (rawText) {
-      htmlText = ConsoleManager.parseCommands(rawText);
-      htmlText = ConsoleManager.parseEmoticons(htmlText);
+      htmlText = ChatManager.parseCommands(rawText);
+      htmlText = ChatManager.parseEmoticons(htmlText);
       message = new Message(rawText, htmlText, null, time, 'system', null, null);
       helpMessages.push(message);
     });
@@ -578,7 +650,7 @@
     Room = app.Room;
     User = app.User;
     Message = app.Message;
-    ConsoleManager = app.ConsoleManager;
+    ChatManager = app.ChatManager;
     initHelpMessages();
     log.d('initStaticFields', 'Module initialized');
   }
@@ -595,12 +667,14 @@
     var outMessageManager = this;
 
     outMessageManager.ioManager = ioManager;
-    outMessageManager.consoleManager = null;
+    outMessageManager.chatManager = null;
 
     outMessageManager.init = init;
     outMessageManager.handleOutGoingMessage = handleOutGoingMessage;
     outMessageManager.joinRoom = joinRoom;
     outMessageManager.changeOwnNickname = changeOwnNickname;
+    outMessageManager.sendHeartbeat = sendHeartbeat;
+    outMessageManager.sendHeartbeatRequest = sendHeartbeatRequest;
   }
 
   // Expose this module
