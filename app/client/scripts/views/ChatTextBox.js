@@ -42,7 +42,7 @@
     if (keyCode === params.ENTER_KEY_CODE) {
       log.i('onKeyDown', 'User pressed ENTER');
 
-      chatTextBox.chatManager.ioManager.outMessageManager.handleOutGoingMessage(chatTextBox.textBox.value,
+      chatTextBox.chatManager.socketManager.outMessageManager.handleOutGoingMessage(chatTextBox.textBox.value,
           chatTextBox);
 
       chatTextBox.textBox.value = '';

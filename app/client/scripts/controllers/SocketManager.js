@@ -1,6 +1,6 @@
 /**
- * This module defines a constructor for IOManager objects.
- * @module IOManager
+ * This module defines a constructor for SocketManager objects.
+ * @module SocketManager
  */
 (function () {
   // ------------------------------------------------------------------------------------------- //
@@ -13,13 +13,13 @@
 
   /**
    *
-   * @function IOManager~receivedMessage
-   * @param message
+   * @function SocketManager~receivedMessage
+   * @param {Message} message
    */
   function receivedMessage(message) {
 
 
-    log.i('receivedMessage', 'message.rawTex=' + message.rawText);
+    log.i('receivedMessage', 'message.rawText=' + message.rawText);
 
     // TODO:
   }
@@ -29,26 +29,26 @@
 
   /**
    *
-   * @function IOManager#init
+   * @function SocketManager#init
    * @param {UIManager} uiManager
    */
   function init(uiManager) {
-    var ioManager = this;
+    var socketManager = this;
 
-    ioManager.uiManager = uiManager;
-    ioManager.inMessageManager.init(uiManager.chatManager);
-    ioManager.outMessageManager.init(uiManager.chatManager);
+    socketManager.uiManager = uiManager;
+    socketManager.inMessageManager.init(uiManager.chatManager);
+    socketManager.outMessageManager.init(uiManager.chatManager);
   }
 
   /**
    *
-   * @function IOManager#sendMessage
-   * @param message
+   * @function SocketManager#sendMessage
+   * @param {Message} message
    */
   function sendMessage(message) {
 
 
-    log.i('sendMessage', 'message.rawTex=' + message.rawText);
+    log.i('sendMessage', 'message.rawText=' + message.rawText);
 
     // TODO:
   }
@@ -61,12 +61,12 @@
 
   /**
    * Initializes some static state for this module.
-   * @function IOManager.initStaticFields
+   * @function SocketManager.initStaticFields
    */
   function initStaticFields() {
     params = app.params;
     util = app.util;
-    log = new app.Log('IOManager');
+    log = new app.Log('SocketManager');
     InMessageManager = app.InMessageManager;
     OutMessageManager = app.OutMessageManager;
     log.d('initStaticFields', 'Module initialized');
@@ -79,20 +79,20 @@
    * @constructor
    * @global
    */
-  function IOManager() {
-    var ioManager = this;
+  function SocketManager() {
+    var socketManager = this;
 
-    ioManager.uiManager = null;
-    ioManager.inMessageManager = new InMessageManager(ioManager);
-    ioManager.outMessageManager = new OutMessageManager(ioManager);
-    ioManager.init = init;
-    ioManager.sendMessage = sendMessage;
+    socketManager.uiManager = null;
+    socketManager.inMessageManager = new InMessageManager(socketManager);
+    socketManager.outMessageManager = new OutMessageManager(socketManager);
+    socketManager.init = init;
+    socketManager.sendMessage = sendMessage;
   }
 
   // Expose this module
   if (!window.app) window.app = {};
-  window.app.IOManager = IOManager;
-  IOManager.initStaticFields = initStaticFields;
+  window.app.SocketManager = SocketManager;
+  SocketManager.initStaticFields = initStaticFields;
 
-  console.log('IOManager module loaded');
+  console.log('SocketManager module loaded');
 })();

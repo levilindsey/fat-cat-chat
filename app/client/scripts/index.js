@@ -4,7 +4,7 @@
  */
 (function () {
 
-  var params, util, log, User, Room, Message, ConsoleEntry, ChatConsole, ChatTextBox, ChatBot, InMessageManager, OutMessageManager, IOManager, ChatBotManager, UIManager, ChatManager, ioManager, uiManager;
+  var params, util, log, User, Room, Message, ConsoleEntry, ChatConsole, ChatTextBox, ChatBot, InMessageManager, OutMessageManager, SocketManager, ChatBotManager, UIManager, ChatManager, socketManager, uiManager;
 
   // ------------------------------------------------------------------------------------------- //
   // Private static functions
@@ -40,7 +40,7 @@
     ChatBot = app.ChatBot;
     InMessageManager = app.InMessageManager;
     OutMessageManager = app.OutMessageManager;
-    IOManager = app.IOManager;
+    SocketManager = app.SocketManager;
     UIManager = app.UIManager;
     ChatManager = app.ChatManager;
     ChatBotManager = app.ChatBotManager;
@@ -55,7 +55,7 @@
     ChatManager.initStaticFields();
     InMessageManager.initStaticFields();
     OutMessageManager.initStaticFields();
-    IOManager.initStaticFields();
+    SocketManager.initStaticFields();
     UIManager.initStaticFields();
     ChatBotManager.initStaticFields();
 
@@ -63,10 +63,10 @@
     log.i('reset', params.SEPARATOR_LINE);
 
     if (checkBrowserCompatibility()) {
-      ioManager = new IOManager();
+      socketManager = new SocketManager();
       uiManager = new UIManager();
-      ioManager.init(uiManager);
-      uiManager.init(ioManager);
+      socketManager.init(uiManager);
+      uiManager.init(socketManager);
     }
   }
 

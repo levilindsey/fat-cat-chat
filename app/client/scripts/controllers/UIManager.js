@@ -242,9 +242,9 @@
     uiManager = this;
     value = uiManager.panels.textEntryDialogue.textBox.value;
     if (uiManager.dialogueIsForNewRoom) {
-      uiManager.ioManager.outMessageManager.joinRoom(value, null);
+      uiManager.socketManager.outMessageManager.joinRoom(value, null);
     } else {
-      uiManager.ioManager.outMessageManager.changeOwnNickname(value, null);
+      uiManager.socketManager.outMessageManager.changeOwnNickname(value, null);
     }
     closeTextEntryDialogue.call(uiManager);
   }
@@ -284,12 +284,12 @@
   /**
    *
    * @function UIManager#init
-   * @param {IOManager} ioManager
+   * @param {SocketManager} socketManager
    */
-  function init(ioManager) {
+  function init(socketManager) {
     var uiManager = this;
 
-    uiManager.ioManager = ioManager;
+    uiManager.socketManager = socketManager;
 
     setUpElements.call(uiManager);
     resize.call(uiManager);
@@ -299,7 +299,7 @@
       resize.call(uiManager);
     });
 
-    uiManager.chatManager.init(ioManager);
+    uiManager.chatManager.init(socketManager);
 
     uiManager.panels.textEntryDialogue.ownUserNameLabel.innerHTML =
         uiManager.chatManager.thisUser.name;
@@ -368,7 +368,7 @@
   function UIManager() {
     var uiManager = this;
 
-    uiManager.ioManager = null;
+    uiManager.socketManager = null;
     uiManager.chatManager = new ChatManager(uiManager);
     uiManager.dialogueIsForNewRoom = false;
     uiManager.buttons = null;

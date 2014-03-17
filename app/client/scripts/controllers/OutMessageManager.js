@@ -111,7 +111,7 @@
       message = outMessageManager.chatManager.parseInternalSystemMessage(rawText);
       console.addMessage(message);
     } else {
-      outMessageManager.ioManager.sendMessage(message);
+      outMessageManager.socketManager.sendMessage(message);
 
       outMessageManager.chatManager.showPrivateMessage(message, privateChatUser);
     }
@@ -143,7 +143,7 @@
     } else {
       // Ping the user
 
-      outMessageManager.ioManager.sendMessage(message);
+      outMessageManager.socketManager.sendMessage(message);
 
       rawText = 'Pinging ' + userName + '...';
     }
@@ -225,7 +225,7 @@
         message = parseOutGoingMessage.call(outMessageManager, rawText, false);
       }
 
-      outMessageManager.ioManager.sendMessage(message);
+      outMessageManager.socketManager.sendMessage(message);
 
       outMessageManager.chatManager.thisUser.activeRoom.removeUser(outMessageManager.thisUser);
       outMessageManager.chatManager.thisUser.activeRoom = null;
@@ -253,7 +253,7 @@
       message = parseOutGoingMessage.call(outMessageManager, rawText, false);
     }
 
-    outMessageManager.ioManager.sendMessage(message);
+    outMessageManager.socketManager.sendMessage(message);
 
     // Show the user-entered command
     console.addMessage(message);
@@ -280,7 +280,7 @@
     log.d('sendRoomMessage', 'message.htmlText=' + message.htmlText);
     outMessageManager = this;
 
-    outMessageManager.ioManager.sendMessage(message);
+    outMessageManager.socketManager.sendMessage(message);
 
     // Show the user-entered message
     outMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
@@ -409,7 +409,7 @@
     }
 
     isPrivateMessage =
-        chatTextBox === outMessageManager.ioManager.uiManager.textBoxes.privateMessages;
+        chatTextBox === outMessageManager.socketManager.uiManager.textBoxes.privateMessages;
     console =
         isPrivateMessage ? outMessageManager.chatManager.consoles.privateMessages :
             outMessageManager.chatManager.consoles.chatRoomMessages;
@@ -491,19 +491,19 @@
       message = parseOutGoingMessage.call(outMessageManager, rawText, false);
     }
 
-    outMessageManager.ioManager.sendMessage(message);
+    outMessageManager.socketManager.sendMessage(message);
 
     // --- Set up the room chat console for this new room --- //
 
     outMessageManager.chatManager.thisUser.activeRoom = room;
     outMessageManager.chatManager.addUserToRoom(outMessageManager.chatManager.thisUser, room);
 
-    util.toggleClass(outMessageManager.ioManager.uiManager.panels.roomChat.container, 'closed',
+    util.toggleClass(outMessageManager.socketManager.uiManager.panels.roomChat.container, 'closed',
         false);
-    util.toggleClass(outMessageManager.ioManager.uiManager.panels.roomChat.container, 'hidden',
+    util.toggleClass(outMessageManager.socketManager.uiManager.panels.roomChat.container, 'hidden',
         false);
 
-    outMessageManager.ioManager.uiManager.textBoxes.chatRoomMessages.textBox.focus();
+    outMessageManager.socketManager.uiManager.textBoxes.chatRoomMessages.textBox.focus();
     outMessageManager.chatManager.consoles.chatRoomMessages.setTitle('Room: ' + roomName);
     outMessageManager.chatManager.consoles.chatRoomMessages.clearMessages();
 
@@ -557,7 +557,7 @@
       console.addMessage(message);
     } else {
       // Change to this new nickname
-      outMessageManager.ioManager.sendMessage(message);
+      outMessageManager.socketManager.sendMessage(message);
     }
   }
 
@@ -590,7 +590,7 @@
 
     message = new Message(rawText, null, user, time, type, command, arguments);
 
-    outMessageManager.ioManager.sendMessage(message);
+    outMessageManager.socketManager.sendMessage(message);
   }
 
   /**
@@ -613,7 +613,7 @@
 
     message = new Message(rawText, null, user, time, type, command, arguments);
 
-    outMessageManager.ioManager.sendMessage(message);
+    outMessageManager.socketManager.sendMessage(message);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -661,12 +661,12 @@
   /**
    * @constructor
    * @global
-   * @param {IOManager} ioManager
+   * @param {SocketManager} socketManager
    */
-  function OutMessageManager(ioManager) {
+  function OutMessageManager(socketManager) {
     var outMessageManager = this;
 
-    outMessageManager.ioManager = ioManager;
+    outMessageManager.socketManager = socketManager;
     outMessageManager.chatManager = null;
 
     outMessageManager.init = init;

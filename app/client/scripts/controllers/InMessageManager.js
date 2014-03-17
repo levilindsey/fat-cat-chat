@@ -229,7 +229,7 @@
 
       if (user === inMessageManager.chatManager.thisUser) {
         // This user changed her own name
-        inMessageManager.ioManager.uiManager.panels.textEntryDialogue.ownUserNameLabel.innerHTML =
+        inMessageManager.socketManager.uiManager.panels.textEntryDialogue.ownUserNameLabel.innerHTML =
             newName;
 
         rawText = 'Your name changed from ' + oldName + ' to ' + newName + '.';
@@ -313,7 +313,7 @@
 
     user = inMessageManager.chatManager.getUserFromName(userName);
 
-    inMessageManager.ioManager.outMessageManager.sendHeartbeat(user);
+    inMessageManager.socketManager.outMessageManager.sendHeartbeat(user);
   }
 
   /**
@@ -525,12 +525,12 @@
   /**
    * @constructor
    * @global
-   * @param {IOManager} ioManager
+   * @param {SocketManager} socketManager
    */
-  function InMessageManager(ioManager) {
+  function InMessageManager(socketManager) {
     var inMessageManager = this;
 
-    inMessageManager.ioManager = ioManager;
+    inMessageManager.socketManager = socketManager;
     inMessageManager.chatManager = null;
 
     inMessageManager.init = init;

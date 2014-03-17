@@ -87,12 +87,12 @@
   /**
    *
    * @function ChatManager#init
-   * @param {IOManager} ioManager
+   * @param {SocketManager} socketManager
    */
-  function init(ioManager) {
+  function init(socketManager) {
     var chatManager = this;
 
-    chatManager.ioManager = ioManager;
+    chatManager.socketManager = socketManager;
 
     setUpElements.call(chatManager);
   }
@@ -488,7 +488,7 @@
     var chatManager = this;
 
     chatManager.uiManager = uiManager;
-    chatManager.ioManager = null;
+    chatManager.socketManager = null;
     chatManager.thisUser = new User(generateRandomUserName(false), Date.now());
     chatManager.allUsers = [];
     chatManager.allRooms = [];

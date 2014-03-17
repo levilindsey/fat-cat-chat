@@ -124,7 +124,7 @@
     index = findEntryIndexByMessageRawText.call(chatConsole, oldRawText);
 
     if (index >= 0) {
-      newHtmlText = chatConsole.chatManager.parseRawMessageTextForDom(rawText);
+      newHtmlText = chatConsole.chatManager.parseRawMessageTextForDom(newRawText);
       entry = chatConsole.entries[index];
 
       entry.message.rawText = newRawText;
