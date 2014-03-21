@@ -41,7 +41,7 @@
     socketManager.inMessageManager.init(uiManager.chatManager);
     socketManager.outMessageManager.init(uiManager.chatManager);
 
-    socketManager.socket = io.connect('127.0.0.1:3000');//socketManager.server.address);// TODO: !!!
+    socketManager.socket = io.connect(socketManager.server.address);
     socketManager.socket.on('message', receivedMessage);
   }
 
@@ -77,6 +77,19 @@
     log.d('initStaticFields', 'Module initialized');
   }
 
+  /**
+   *
+   * @function SocketManager.extractHostNameFromUrl
+   * @param {String} url
+   */
+  function extractHostNameFromUrl(url) {
+    var index;
+
+    index = url.indexOf(':');
+
+    return index >= 0 ? url.substr(0, index) : url;
+  }
+
   // ------------------------------------------------------------------------------------------- //
   // Expose this module's constructor
 
@@ -90,7 +103,7 @@
     var socketManager = this;
 
     socketManager.server = {
-      address: address,
+      address: extractHostNameFromUrl(address),
       port: port
     };
     socketManager.socket = null;
