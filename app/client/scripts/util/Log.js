@@ -139,7 +139,7 @@
     util = app.util;
     recentEntries = [];
     log = new app.Log('log');
-    log.i('initStaticFields', params.SEPARATOR_LINE);
+    log.i('initStaticFields', params.LOG.SEPARATOR_LINE);
     writeAppInfo(dateObj);
     log.d('initStaticFields', 'Module initialized');
   }

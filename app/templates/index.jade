@@ -29,6 +29,15 @@ html(lang='en')
           | Fork it on GitHub
         | !
 
+    script.
+      var app = {};
+      app.server = {
+        address: '#{address}',
+        port: '#{port}'
+      };
+
+    script(src='//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js')
+
     script(src='#{BASE_DIR}/scripts/lib/he.js#{currentVersion}')
 
     script(src='#{BASE_DIR}/scripts/util/params.js#{currentVersion}')

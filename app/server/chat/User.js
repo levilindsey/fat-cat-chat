@@ -2,32 +2,30 @@
  * This module defines a constructor for User objects.
  * @module User
  */
-(function () {
-  // ------------------------------------------------------------------------------------------- //
-  // Private static variables
 
-  // ------------------------------------------------------------------------------------------- //
-  // Public static functions
+// ------------------------------------------------------------------------------------------- //
+// Private static variables
 
-  // ------------------------------------------------------------------------------------------- //
-  // Expose this module's constructor
+// ------------------------------------------------------------------------------------------- //
+// Public static functions
 
-  /**
-   * @constructor
-   * @global
-   * @param {String} name The name of this user.
-   */
-  function User(name) {
-    var user = this;
+// ------------------------------------------------------------------------------------------- //
+// Expose this module's constructor
 
-    user.name = name;
-    user.activeRoom = null;
-    user.latency = Number.POSITIVE_INFINITY;
-  }
+/**
+ * @constructor
+ * @global
+ * @param {String} name The name of this user.
+ */
+function User(name) {
+  var user = this;
 
-  // Expose this module
-  if (!window.app) window.app = {};
-  window.app.User = User;
+  user.name = name;
+  user.activeRoom = null;
+  user.latency = Number.POSITIVE_INFINITY;
+}
 
-  console.log('User module loaded');
-})();
+// Expose this module
+exports = User;
+
+console.log('User module loaded');

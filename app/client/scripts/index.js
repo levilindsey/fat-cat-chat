@@ -19,7 +19,7 @@
     app.Log.initStaticFields();
     log = new app.Log('index');
 
-    log.d('init');
+    log.d('init', 'server=' + app.server.address + ':' + app.server.port);
 
     util.init();
 
@@ -60,10 +60,10 @@
     ChatBotManager.initStaticFields();
 
     log.i('reset', 'All modules initialized');
-    log.i('reset', params.SEPARATOR_LINE);
+    log.i('reset', params.LOG.SEPARATOR_LINE);
 
     if (checkBrowserCompatibility()) {
-      socketManager = new SocketManager();
+      socketManager = new SocketManager(app.server.address, app.server.port);
       uiManager = new UIManager();
       socketManager.init(uiManager);
       uiManager.init(socketManager);

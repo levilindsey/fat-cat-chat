@@ -1,29 +1,34 @@
-// This module exposes the createServer function, which creates the server 
-// instance, sets up the middleware, and attaches the route handlers.
+// This module exposes the run function, which creates the server
+// instance, sets up the middleware, attaches the route handlers, and starts
+// the server listening.
 
-var BASE_DIR = 'app';
+var BASE_DIR, express, aws, server, sockets, chatManager;
 
-var express = require('express');
-var aws = require('aws-sdk');
+BASE_DIR = 'app';
 
-var routes = require('./routes');
-var middleware = require('./middleware');
+express = require('express');
+aws = require('aws-sdk');
+sockets = require('./sockets');
 
-// Sets up the server.
-exports.createServer = function createServer() {
-  var server;
+chatManager = require('./chat/chatManager');
+chatManager.messageManager.broadcast = sockets.broadcast;
+chatManager.messageManager.unicast = sockets.unicast;
 
+// Sets up and starts the server.
+module.exports.run = function run(port) {
   // Initialize the HTTP server
   server = express();
 
   // Set up middleware
-  middleware.setMiddleware(BASE_DIR, server, express);
+  require('./middleware').setMiddleware(BASE_DIR, server, express);
 
   // Configure AWS
   aws.config.loadFromPath(BASE_DIR + '/server/aws_config.json');
 
   // Attach route handlers
-  routes.attachHandlers(BASE_DIR, server);
+  require('./routes').attachHandlers(BASE_DIR, server, port);
+
+  sockets.run(server, port, chatManager.messageManager.connectionHandler);
 
   return server;
 };

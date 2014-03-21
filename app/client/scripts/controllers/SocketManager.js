@@ -14,12 +14,14 @@
   /**
    *
    * @function SocketManager~receivedMessage
-   * @param {Message} message
+   * @param {Object} message
    */
   function receivedMessage(message) {
+    var rawText;
 
+    rawText = message.message;
 
-    log.i('receivedMessage', 'message.rawText=' + message.rawText);
+    log.i('receivedMessage', 'rawText=' + rawText);
 
     // TODO:
   }
@@ -38,6 +40,9 @@
     socketManager.uiManager = uiManager;
     socketManager.inMessageManager.init(uiManager.chatManager);
     socketManager.outMessageManager.init(uiManager.chatManager);
+
+    socketManager.socket = io.connect('127.0.0.1:3000');//socketManager.server.address);// TODO: !!!
+    socketManager.socket.on('message', receivedMessage);
   }
 
   /**
@@ -46,11 +51,11 @@
    * @param {Message} message
    */
   function sendMessage(message) {
-
+    var socketManager = this;
 
     log.i('sendMessage', 'message.rawText=' + message.rawText);
 
-    // TODO:
+    socketManager.socket.emit('message', { message: message.rawText });
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -78,10 +83,17 @@
   /**
    * @constructor
    * @global
+   * @param {String} address The server's IP address.
+   * @param {String} port The server's port.
    */
-  function SocketManager() {
+  function SocketManager(address, port) {
     var socketManager = this;
 
+    socketManager.server = {
+      address: address,
+      port: port
+    };
+    socketManager.socket = null;
     socketManager.uiManager = null;
     socketManager.inMessageManager = new InMessageManager(socketManager);
     socketManager.outMessageManager = new OutMessageManager(socketManager);

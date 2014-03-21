@@ -4,7 +4,7 @@
 var BASE_DIR = '../../';
 
 // Sets up the middleware for the server.
-exports.setMiddleware = function setMiddleware(workingDirectory, server, express) {
+module.exports.setMiddleware = function setMiddleware(workingDirectory, server, express) {
   // Set up the templating engine
   server.set('views', __dirname);
   server.set('view engine', 'jade');
