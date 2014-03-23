@@ -26,7 +26,7 @@ The client parses all commands entered by the user and transforms some of them s
 - `/userchangedname <old_name> <new_name>`
 - `/roomcreated <room_name>`
 - `/roomdestroyed <room_name>`
-- `/nickinuse <old_name> <new_name>`
 - `/pong <from_user> <to_user> <time_in_millis>`
 - `/heartbeatrequest <user_name>`
-- `/heartbeat <to_user_name> (<room_name_1> ...) (<user_name_1> ...) <room_of_user> (<user_in_room_1> ...)`
+- `/heartbeat <to_user_name> (<room_name_1> ...) (<user_name_1> ...) [<room_of_user>|/none] (<user_in_room_1> ...)`
+- `/error [<user_name>|/all] (<message>)`

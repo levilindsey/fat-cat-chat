@@ -15,7 +15,6 @@
   // Public dynamic functions
 
   /**
-   *
    * @function ChatBotManager#addChatBot
    */
   function addChatBot() {

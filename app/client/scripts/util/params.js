@@ -134,7 +134,7 @@
 
   params.IN_COMMANDS = {
     msg: {
-      regex: /^\/msg (\S+) \((.*)\)/
+      regex: /^\/msg (\S+) (\S+) \((.*)\)/
     },
     pubmsg: {
       regex: /^\/pubmsg (\S+) (\S+) \((.*)\)/
@@ -160,9 +160,6 @@
     roomdestroyed: {
       regex: /^\/roomdestroyed (\S+)\b/
     },
-    nickinuse: {
-      regex: /^\/nickinuse (\S+) (\S+)\b/
-    },
     pong: {
       regex: /^\/pong (\S+) (\S+) (\S+)\b/
     },
@@ -171,6 +168,9 @@
     },
     heartbeat: {
       regex: /^\/heartbeat (\S+) \((.*)\) \((.*)\) (\S+) \((.*)\)\b/
+    },
+    error: {
+      regex: /^\/error (\S+) \((.*)\)\b/
     }
   };
 

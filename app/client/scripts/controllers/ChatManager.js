@@ -22,7 +22,6 @@
   }
 
   /**
-   *
    * @function ChatManager~parseRooms
    * @param {String} text
    * @returns {String}
@@ -36,7 +35,6 @@
   }
 
   /**
-   *
    * @function ChatManager~parseUsers
    * @param {String} text
    * @returns {String}
@@ -50,7 +48,6 @@
   }
 
   /**
-   *
    * @function ChatManager~parseUserMessage
    * @param {String} rawText
    * @returns {Message}
@@ -66,7 +63,6 @@
   }
 
   /**
-   *
    * @function ChatManager~parseRoomMessage
    * @param {String} rawText
    * @returns {Message}
@@ -85,7 +81,6 @@
   // Public dynamic functions
 
   /**
-   *
    * @function ChatManager#init
    * @param {SocketManager} socketManager
    */
@@ -98,7 +93,6 @@
   }
 
   /**
-   *
    * @function ChatManager#parseRawMessageTextForDom
    * @param {String} text
    * @returns {String}
@@ -126,7 +120,6 @@
   }
 
   /**
-   *
    * @function ChatManager#getRoomFromName
    * @param {String} roomName
    * @returns {Room}
@@ -146,7 +139,6 @@
   }
 
   /**
-   *
    * @function ChatManager#getUserFromName
    * @param {String} userName
    * @returns {User}
@@ -166,7 +158,6 @@
   }
 
   /**
-   *
    * @function ChatManager#parseInternalSystemMessage
    * @param {String} rawText
    * @returns {Message}
@@ -182,7 +173,6 @@
   }
 
   /**
-   *
    * @function ChatManager#showPrivateMessage
    * @param {Message} message
    * @param {User} privateChatUser
@@ -211,7 +201,6 @@
   }
 
   /**
-   *
    * @function ChatManager#matchLocalStateToServer
    * @param {Array.<String>} allRoomNames
    * @param {Array.<String>} allUserNames
@@ -248,7 +237,6 @@
   }
 
   /**
-   *
    * @function ChatManager#addRoom
    * @param {Room} room
    */
@@ -266,7 +254,6 @@
   }
 
   /**
-   *
    * @function ChatManager#removeRoom
    * @param {Room} room
    */
@@ -286,7 +273,6 @@
   }
 
   /**
-   *
    * @function ChatManager#addUser
    * @param {User} user
    */
@@ -304,7 +290,6 @@
   }
 
   /**
-   *
    * @function ChatManager#removeUser
    * @param {User} user
    */
@@ -324,7 +309,6 @@
   }
 
   /**
-   *
    * @function ChatManager#addUserToRoom
    * @param {User} user
    * @param {Room} room
@@ -343,7 +327,6 @@
   }
 
   /**
-   *
    * @function ChatManager#removeUserFromRoom
    * @param {User} user
    * @param {Room} room
@@ -364,7 +347,6 @@
   }
 
   /**
-   *
    * @function ChatManager#changeUserName
    * @param {User} user
    * @param {String} newName
@@ -386,7 +368,6 @@
   // Private static functions
 
   /**
-   *
    * @function ChatManager~findIndexByPropertyValue
    * @param {Array.<Object>} array
    * @param {String} key
@@ -425,7 +406,6 @@
   }
 
   /**
-   *
    * @function ChatManager.parseCommands
    * @param {String} text
    * @returns {String}
@@ -445,7 +425,6 @@
   }
 
   /**
-   *
    * @function ChatManager.parseEmoticons
    * @param {String} text
    * @returns {String}
@@ -466,7 +445,6 @@
   }
 
   /**
-   *
    * @function ChatManager.generateRandomUserName
    * @param {Boolean} isBot
    * @returns {String}

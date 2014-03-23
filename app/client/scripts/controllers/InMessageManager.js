@@ -12,7 +12,6 @@
   // Private dynamic functions
 
   /**
-   *
    * @function InMessageManager~receivedPrivateMessage
    * @param {Message} message
    */
@@ -37,7 +36,6 @@
   }
 
   /**
-   *
    * @function InMessageManager~receivedRoomMessage
    * @param {Message} message
    */
@@ -62,7 +60,6 @@
   }
 
   /**
-   *
    * @function InMessageManager~userLeftRoom
    * @param {Message} message
    */
@@ -91,7 +88,6 @@
   }
 
   /**
-   *
    * @function InMessageManager~userJoinedRoom
    * @param {Message} message
    */
@@ -120,7 +116,6 @@
   }
 
   /**
-   *
    * @function InMessageManager~userLeftServer
    * @param {Message} message
    */
@@ -140,7 +135,6 @@
   }
 
   /**
-   *
    * @function InMessageManager~userJoinedServer
    * @param {Message} message
    */
@@ -162,7 +156,6 @@
   }
 
   /**
-   *
    * @function InMessageManager~roomCreated
    * @param {Message} message
    */
@@ -189,7 +182,6 @@
   }
 
   /**
-   *
    * @function InMessageManager~roomDestroyed
    * @param {Message} message
    */
@@ -209,7 +201,6 @@
   }
 
   /**
-   *
    * @function InMessageManager~userChangedName
    * @param {Message} message
    */
@@ -245,31 +236,6 @@
   }
 
   /**
-   *
-   * @function InMessageManager~handleNickInUse
-   * @param {Message} message
-   */
-  function handleNickInUse(message) {
-    var inMessageManager, oldName, newName, user, rawText;
-
-    inMessageManager = this;
-    oldName = message.arguments[0];
-    newName = message.arguments[1];
-
-    log.d('handleNickInUse', 'oldName=' + oldName + ', newName=' + newName);
-
-    user = inMessageManager.chatManager.getRoomFromName(oldName);
-
-    if (user && user === inMessageManager.chatManager.thisUser) {
-      // Notify the user that something happened
-      rawText = 'Unable to change your name to ' + newName;
-      message = inMessageManager.chatManager.parseInternalSystemMessage(rawText);
-      inMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
-    }
-  }
-
-  /**
-   *
    * @function InMessageManager~handlePong
    * @param {Message} message
    */
@@ -299,7 +265,6 @@
   }
 
   /**
-   *
    * @function InMessageManager~handleHeartbeatRequest
    * @param {Message} message
    */
@@ -317,7 +282,6 @@
   }
 
   /**
-   *
    * @function InMessageManager~handleHeartbeat
    * @param {Message} message
    */
@@ -347,7 +311,34 @@
   }
 
   /**
-   *
+   * @function InMessageManager~handleError
+   * @param {Message} message
+   */
+  function handleError(message) {
+    var inMessageManager, userName, user, rawText;
+
+    inMessageManager = this;
+    userName = message.arguments[0];
+    rawText = message.arguments[1];
+
+    log.w('handleError', 'rawText=' + message.rawText);
+
+    if (userName === '/all') {
+      user = inMessageManager.chatManager.thisUser;
+    } else {
+      user = inMessageManager.chatManager.getUserFromName(userName);
+    }
+
+    if (user === inMessageManager.chatManager.thisUser) {
+      // Notify the user that something happened
+      message = inMessageManager.chatManager.parseInternalSystemMessage(rawText);
+      message.type = 'error';
+      inMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
+      inMessageManager.chatManager.consoles.privateMessages.addMessage(message);
+    }
+  }
+
+  /**
    * @function InMessageManager~parseInComingMessage
    * @param {String} rawText
    * @returns {Message}
@@ -359,6 +350,7 @@
     inMessageManager = this;
 
     if (!rawText) {
+      log.e('parseInComingMessage', 'No rawText');
       return null;
     }
 
@@ -371,7 +363,7 @@
       if (result = params.IN_COMMANDS.msg.regex.exec(rawText)) {
         type = 'in';
         command = 'msg';
-        arguments = [result[1], result[2]];
+        arguments = [result[1], result[2], result[3]];
       } else if (result = params.IN_COMMANDS.pubmsg.regex.exec(rawText)) {
         type = 'in';
         command = 'pubmsg';
@@ -397,18 +389,19 @@
       } else if (result = params.IN_COMMANDS.roomdestroyed.regex.exec(rawText)) {
         command = 'roomdestroyed';
         arguments = [result[1]];
-      } else if (result = params.IN_COMMANDS.nickinuse.regex.exec(rawText)) {
-        command = 'nickinuse';
-        arguments = [result[1], result[2]];
       } else if (result = params.IN_COMMANDS.pong.regex.exec(rawText)) {
         command = 'pong';
         arguments = [result[1], result[2], result[3]];
-      } else if (params.IN_COMMANDS.heartbeatrequest.regex.exec(rawText)) {
+      } else if (result = params.IN_COMMANDS.heartbeatrequest.regex.exec(rawText)) {
         command = 'heartbeatrequest';
-        arguments = [];
-      } else if (params.IN_COMMANDS.heartbeat.regex.exec(rawText)) {
+        arguments = [result[1]];
+      } else if (result = params.IN_COMMANDS.heartbeat.regex.exec(rawText)) {
         command = 'heartbeat';
         arguments = [result[1], result[2], result[3], result[4], result[5]];
+      } else if (result = params.IN_COMMANDS.error.regex.exec(rawText)) {
+        type = 'error';
+        command = 'error';
+        arguments = [result[1], result[2]];
       } else {
         log.e('parseInComingMessage', 'Unknown message format: rawText=' + rawText);
         return null;
@@ -425,7 +418,6 @@
   // Public dynamic functions
 
   /**
-   *
    * @function InMessageManager#init
    * @param {ChatManager} chatManager
    */
@@ -436,7 +428,6 @@
   }
 
   /**
-   *
    * @function InMessageManager#handleInComingMessage
    * @param {String} rawText
    */
@@ -449,6 +440,7 @@
     message = parseInComingMessage.call(inMessageManager, rawText);
 
     if (!message) {
+      log.e('handleInComingMessage', 'No message');
       return;
     }
 
@@ -480,9 +472,6 @@
       case 'roomdestroyed':
         roomDestroyed.call(inMessageManager, message);
         break;
-      case 'nickinuse':
-        handleNickInUse.call(inMessageManager, message);
-        break;
       case 'pong':
         handlePong.call(inMessageManager, message);
         break;
@@ -491,6 +480,9 @@
         break;
       case 'heartbeat':
         handleHeartbeat.call(inMessageManager, message);
+        break;
+      case 'error':
+        handleError.call(inMessageManager, message);
         break;
       default:
         break;

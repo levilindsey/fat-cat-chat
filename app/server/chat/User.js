@@ -3,29 +3,35 @@
  * @module User
  */
 
-// ------------------------------------------------------------------------------------------- //
-// Private static variables
-
-// ------------------------------------------------------------------------------------------- //
-// Public static functions
-
-// ------------------------------------------------------------------------------------------- //
-// Expose this module's constructor
-
 /**
  * @constructor
  * @global
  * @param {String} name The name of this user.
+ * @param {Number} socketId The socket ID of this user.
  */
-function User(name) {
-  var user = this;
+module.exports = function User(name, socketId) {
+  var user, heartbeatRequestSentTime, heartbeatReceivedTime, latency;
+
+  user = this;
+  heartbeatRequestSentTime = Number.NEGATIVE_INFINITY;
+  heartbeatReceivedTime = Number.NEGATIVE_INFINITY;
+  latency = Number.POSITIVE_INFINITY;
 
   user.name = name;
-  user.activeRoom = null;
-  user.latency = Number.POSITIVE_INFINITY;
-}
+  user.socketId = socketId;
+  user.roomId = -1;
+  user.id = -1;
 
-// Expose this module
-exports = User;
+  user.onHeartbeatRequestSent = function() {
+    heartbeatRequestSentTime = Date.now();
+  };
+  user.onHeartbeatReceived = function() {
+    heartbeatReceivedTime = Date.now();
+    latency = (heartbeatReceivedTime - heartbeatRequestSentTime) / 2;
+  };
+  user.getLatency = function() {
+    return latency;
+  };
+}
 
 console.log('User module loaded');

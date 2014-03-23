@@ -35,7 +35,6 @@
   // Public dynamic functions
 
   /**
-   *
    * @function ConsoleEntry#removeFromDOM
    */
   function removeFromDom() {

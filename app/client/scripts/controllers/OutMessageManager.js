@@ -12,7 +12,6 @@
   // Private dynamic functions
 
   /**
-   *
    * @function OutMessageManager~printError
    * @param {Message} message
    * @param {ChatConsole} console
@@ -33,7 +32,6 @@
   }
 
   /**
-   *
    * @function OutMessageManager~printHelp
    * @param {ChatConsole} console
    */
@@ -54,7 +52,6 @@
   }
 
   /**
-   *
    * @function OutMessageManager~printRooms
    * @param {ChatConsole} console
    */
@@ -82,7 +79,6 @@
   }
 
   /**
-   *
    * @function OutMessageManager~sendPrivateMessage
    * @param {Message} message
    * @param {ChatConsole} console
@@ -94,6 +90,7 @@
     outMessageManager = this;
 
     if (!message) {
+      log.e('sendPrivateMessage', 'No message');
       return;
     }
 
@@ -118,7 +115,6 @@
   }
 
   /**
-   *
    * @function OutMessageManager~pingUser
    * @param {String} userName
    * @param {Message} message
@@ -131,6 +127,7 @@
     outMessageManager = this;
 
     if (!userName) {
+      log.e('pingUser', 'No userName');
       return;
     }
 
@@ -157,7 +154,6 @@
   }
 
   /**
-   *
    * @function OutMessageManager~ignoreUser
    * @param {String} userName
    * @param {Message} message
@@ -170,6 +166,7 @@
     outMessageManager = this;
 
     if (!userName) {
+      log.e('ignoreUser', 'No userName');
       return;
     }
 
@@ -206,7 +203,6 @@
   }
 
   /**
-   *
    * @function OutMessageManager~leaveRoom
    * @param {Message} message
    * @param {ChatConsole} console
@@ -236,7 +232,6 @@
   }
 
   /**
-   *
    * @function OutMessageManager~quit
    * @param {Message} message
    * @param {ChatConsole} console
@@ -270,7 +265,6 @@
   }
 
   /**
-   *
    * @function OutMessageManager~sendRoomMessage
    * @param {Message} message
    */
@@ -287,7 +281,6 @@
   }
 
   /**
-   *
    * @function OutMessageManager~parseOutGoingMessage
    * @param {String} rawText
    * @param {Boolean} isPrivate
@@ -300,6 +293,7 @@
     outMessageManager = this;
 
     if (!rawText) {
+      log.e('parseOutGoingMessage', 'No rawText');
       return null;
     }
 
@@ -382,7 +376,6 @@
   // Public dynamic functions
 
   /**
-   *
    * @function OutMessageManager#init
    * @param {ChatManager} chatManager
    */
@@ -393,7 +386,6 @@
   }
 
   /**
-   *
    * @function OutMessageManager#handleOutGoingMessage
    * @param {String} rawText
    * @param {ChatTextBox} chatTextBox
@@ -405,6 +397,7 @@
     outMessageManager = this;
 
     if (!rawText) {
+      log.e('handleOutGoingMessage', 'No rawText');
       return;
     }
 
@@ -416,6 +409,7 @@
     message = parseOutGoingMessage.call(outMessageManager, rawText, isPrivateMessage);
 
     if (!message) {
+      log.e('handleOutGoingMessage', 'No message');
       return;
     }
 
@@ -463,7 +457,6 @@
   }
 
   /**
-   *
    * @function OutMessageManager#joinRoom
    * @param {String} roomName
    * @param {Message} message
@@ -475,6 +468,7 @@
     outMessageManager = this;
 
     if (!roomName) {
+      log.e('joinRoom', 'No roomName');
       return;
     }
 
@@ -521,7 +515,6 @@
   }
 
   /**
-   *
    * @function OutMessageManager#changeOwnNickname
    * @param {String} nickname
    * @param {Message} message
@@ -534,6 +527,7 @@
     outMessageManager = this;
 
     if (!nickname) {
+      log.e('changeOwnNickname', 'No nickname');
       return;
     }
 
@@ -562,7 +556,6 @@
   }
 
   /**
-   *
    * @function OutMessageManager#sendHeartbeat
    * @param {User} user
    */
@@ -573,6 +566,7 @@
     outMessageManager = this;
 
     if (!user) {
+      log.e('sendHeartbeat', 'No user');
       return;
     }
 
@@ -594,7 +588,6 @@
   }
 
   /**
-   *
    * @function OutMessageManager#sendHeartbeatRequest
    */
   function sendHeartbeatRequest() {
@@ -620,7 +613,6 @@
   // Private static functions
 
   /**
-   *
    * @function OutMessageManager~initHelpMessages
    */
   function initHelpMessages() {

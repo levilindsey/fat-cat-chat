@@ -37,7 +37,6 @@
   }
 
   /**
-   *
    * @function ChatConsole~findEntryIndexByMessageRawText
    * @param {String} rawText
    * @returns {Number}
@@ -60,7 +59,6 @@
   // Public dynamic functions
 
   /**
-   *
    * @function ChatConsole#resize
    * @param {Number} width The width to assign this console.
    */
@@ -72,7 +70,6 @@
   }
 
   /**
-   *
    * @function ChatConsole#addMessage
    * @param {Message} message The new message to add.
    */
@@ -90,7 +87,6 @@
   }
 
   /**
-   *
    * @function ChatConsole#removeMessageByRawText
    * @param {String} rawText The rawText value of the message to remove.
    */
@@ -110,7 +106,6 @@
   }
 
   /**
-   *
    * @function ChatConsole#changeMessageRawText
    * @param {String} oldRawText
    * @param {String} newRawText
@@ -124,7 +119,7 @@
     index = findEntryIndexByMessageRawText.call(chatConsole, oldRawText);
 
     if (index >= 0) {
-      newHtmlText = chatConsole.chatManager.parseRawMessageTextForDom(newRawText);
+      newHtmlText = chatConsole.uiManager.chatManager.parseRawMessageTextForDom(newRawText);
       entry = chatConsole.entries[index];
 
       entry.message.rawText = newRawText;
@@ -133,7 +128,6 @@
   }
 
   /**
-   *
    * @function ChatConsole#clearMessages
    */
   function clearMessages() {
@@ -144,7 +138,6 @@
   }
 
   /**
-   *
    * @function ChatConsole#setTitle
    * @param {String} title The title to give to this console.
    */
@@ -180,12 +173,12 @@
    * @param {String} containerId The ID of the container element for this chatConsole.
    * @param {String} headerId The ID of the header element for this chatConsole.
    * @param {String} panelId The ID of the panel container element for this chatConsole.
-   * @param {ChatManager} chatManager
+   * @param {UIManager} uiManager
    */
-  function ChatConsole(containerId, headerId, panelId, chatManager) {
+  function ChatConsole(containerId, headerId, panelId, uiManager) {
     var chatConsole = this;
 
-    chatConsole.chatManager = chatManager;
+    chatConsole.uiManager = uiManager;
     chatConsole.entries = [];
     chatConsole.resize = resize;
     chatConsole.addMessage = addMessage;

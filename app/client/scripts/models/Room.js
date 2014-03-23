@@ -12,7 +12,6 @@
   // Public dynamic functions
 
   /**
-   *
    * @function Room#removeUser
    * @param {User} user
    */
@@ -31,7 +30,6 @@
   }
 
   /**
-   *
    * @function Room#getUserFromName
    * @param {String} userName
    * @returns {User}

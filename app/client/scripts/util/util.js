@@ -590,7 +590,6 @@
   }
 
   /**
-   *
    * @function util.loadImageViaXHR
    * @param {String} src
    * @param {Image} imageElement
@@ -1112,7 +1111,6 @@
   }
 
   /**
-   *
    * @function util.decodeHtmlEntities
    * @param {String} text
    * @returns {String}
@@ -1124,7 +1122,6 @@
   }
 
   /**
-   *
    * @function util.encodeHtmlEntities
    * @param {String} text
    * @returns {String}

@@ -33,7 +33,6 @@
   }
 
   /**
-   *
    * @function ChatTextBox~onKeyDown
    * @param {Number} keyCode
    */
@@ -50,7 +49,6 @@
   }
 
   /**
-   *
    * @function ChatTextBox~onTextChanged
    * @param {String} newText
    */
@@ -64,7 +62,6 @@
   // Public dynamic functions
 
   /**
-   *
    * @function ChatTextBox#resize
    * @param {Number} width The width to assign this console.
    */

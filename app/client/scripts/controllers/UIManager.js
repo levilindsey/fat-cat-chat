@@ -25,7 +25,6 @@
   }
 
   /**
-   *
    * @function UIManager~getReferencesToElements
    */
   function getReferencesToElements() {
@@ -129,7 +128,6 @@
   }
 
   /**
-   *
    * @function UIManager~hookUpEventListeners
    */
   function hookUpEventListeners() {
@@ -175,7 +173,6 @@
   }
 
   /**
-   *
    * @function UIManager~onPanelHeaderClick
    * @param {HTMLElement} panelContainer
    */
@@ -188,7 +185,6 @@
   }
 
   /**
-   *
    * @function UIManager~onButtonClick
    * @param {HTMLElement} button
    */
@@ -221,7 +217,6 @@
   }
 
   /**
-   *
    * @function UIManager~onDialogueTextBoxKeyDown
    * @param {Number} keyCode
    */
@@ -234,7 +229,6 @@
   }
 
   /**
-   *
    * @function UIManager~onDialogueConfimation
    */
   function onDialogueConfimation() {
@@ -250,7 +244,6 @@
   }
 
   /**
-   *
    * @function UIManager~openTextEntryDialogue
    * @param {Boolean} dialogueIsForNewRoom
    */
@@ -269,7 +262,6 @@
   }
 
   /**
-   *
    * @function UIManager~closeTextEntryDialogue
    */
   function closeTextEntryDialogue() {
@@ -282,7 +274,6 @@
   // Public dynamic functions
 
   /**
-   *
    * @function UIManager#init
    * @param {SocketManager} socketManager
    */
@@ -311,7 +302,6 @@
   }
 
   /**
-   *
    * @function UIManager#resize
    */
   function resize() {

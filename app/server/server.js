@@ -11,8 +11,8 @@ aws = require('aws-sdk');
 sockets = require('./sockets');
 
 chatManager = require('./chat/chatManager');
-chatManager.messageManager.broadcast = sockets.broadcast;
-chatManager.messageManager.unicast = sockets.unicast;
+chatManager.socketManager.setBroadcastFunction(sockets.broadcast);
+chatManager.socketManager.setUnicastFunction(sockets.unicast);
 
 // Sets up and starts the server.
 module.exports.run = function run(port) {
@@ -28,7 +28,7 @@ module.exports.run = function run(port) {
   // Attach route handlers
   require('./routes').attachHandlers(BASE_DIR, server, port);
 
-  sockets.run(server, port, chatManager.messageManager.connectionHandler);
+  sockets.run(server, port, chatManager.socketManager.connectionHandler);
 
   return server;
 };

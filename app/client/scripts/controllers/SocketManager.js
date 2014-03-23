@@ -12,25 +12,23 @@
   // Private dynamic functions
 
   /**
-   *
    * @function SocketManager~receivedMessage
    * @param {Object} message
    */
   function receivedMessage(message) {
-    var rawText;
+    var socketManager, rawText;
 
+    log.i('receivedMessage', 'message=' + message);
+    socketManager = this;
     rawText = message.message;
 
-    log.i('receivedMessage', 'rawText=' + rawText);
-
-    // TODO:
+    socketManager.inMessageManager.handleInComingMessage(rawText);
   }
 
   // ------------------------------------------------------------------------------------------- //
   // Public dynamic functions
 
   /**
-   *
    * @function SocketManager#init
    * @param {UIManager} uiManager
    */
@@ -42,11 +40,16 @@
     socketManager.outMessageManager.init(uiManager.chatManager);
 
     socketManager.socket = io.connect(socketManager.server.address);
-    socketManager.socket.on('message', receivedMessage);
+    socketManager.socket.on('message', function(message) {
+      receivedMessage.call(socketManager, message)
+    });
+    socketManager.socket.on('connect', function() {
+      // Send the initial heartbeat to the server
+      socketManager.outMessageManager.sendHeartbeat(socketManager.uiManager.chatManager.thisUser);
+    });
   }
 
   /**
-   *
    * @function SocketManager#sendMessage
    * @param {Message} message
    */
@@ -78,7 +81,6 @@
   }
 
   /**
-   *
    * @function SocketManager.extractHostNameFromUrl
    * @param {String} url
    */
