@@ -80,18 +80,6 @@
     log.d('initStaticFields', 'Module initialized');
   }
 
-  /**
-   * @function SocketManager.extractHostNameFromUrl
-   * @param {String} url
-   */
-  function extractHostNameFromUrl(url) {
-    var index;
-
-    index = url.indexOf(':');
-
-    return index >= 0 ? url.substr(0, index) : url;
-  }
-
   // ------------------------------------------------------------------------------------------- //
   // Expose this module's constructor
 
@@ -105,7 +93,7 @@
     var socketManager = this;
 
     socketManager.server = {
-      address: extractHostNameFromUrl(address),
+      address: address,
       port: port
     };
     socketManager.socket = null;

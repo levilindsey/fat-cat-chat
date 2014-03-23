@@ -16,7 +16,7 @@
    * @param {Message} message
    */
   function receivedPrivateMessage(message) {
-    var inMessageManager, fromUserName, toUserName, fromUser, toUser, messageText;
+    var inMessageManager, fromUserName, toUserName, fromUser, toUser, messageText, prefix, htmlText;
 
     inMessageManager = this;
     fromUserName = message.arguments[0];
@@ -31,6 +31,10 @@
     toUser = inMessageManager.chatManager.getUserFromName(toUserName);
 
     if (toUser === inMessageManager.chatManager.thisUser) {
+      // Parse message to display in console
+      prefix = fromUserName + ': ';
+      htmlText = inMessageManager.chatManager.parseRawMessageTextForDom(prefix + messageText);
+      message = new Message(messageText, htmlText, fromUser, Date.now(), 'in', null, null);
       inMessageManager.chatManager.showPrivateMessage(message, fromUser);
     } else {
       log.w('receivedPrivateMessage', 'User doesn\'t match current user');
@@ -42,7 +46,7 @@
    * @param {Message} message
    */
   function receivedRoomMessage(message) {
-    var inMessageManager, userName, roomName, user, room, messageText;
+    var inMessageManager, userName, roomName, user, room, messageText, prefix, htmlText;
 
     inMessageManager = this;
     userName = message.arguments[0];
@@ -55,8 +59,11 @@
     user = inMessageManager.chatManager.getUserFromName(userName);
     room = inMessageManager.chatManager.getRoomFromName(roomName);
 
-    if (user === inMessageManager.chatManager.thisUser && room === user.activeRoom) {
-      // Show the message
+    if (user && room === user.activeRoom && user !== inMessageManager.chatManager.thisUser) {
+      // Parse message to display in console
+      prefix = userName + ': ';
+      htmlText = inMessageManager.chatManager.parseRawMessageTextForDom(prefix + messageText);
+      message = new Message(messageText, htmlText, user, Date.now(), 'in', null, null);
       inMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
     } else {
       log.w('receivedRoomMessage', 'User or room doesn\'t match current user or room');
@@ -85,7 +92,7 @@
       if (room === inMessageManager.chatManager.thisUser.activeRoom) {
         // Notify the user that something happened
         rawText = userName + ' left the room.';
-        message = inMessageManager.chatManager.parseInternalSystemMessage(rawText);
+        message = inMessageManager.chatManager.parseInternalMessage(rawText, false);
         inMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
       } else {
         log.w('userLeftRoom', 'Not in room');
@@ -117,7 +124,7 @@
       if (room === inMessageManager.chatManager.thisUser.activeRoom) {
         // Notify the user that something happened
         rawText = userName + ' joined the room.';
-        message = inMessageManager.chatManager.parseInternalSystemMessage(rawText);
+        message = inMessageManager.chatManager.parseInternalMessage(rawText, false);
         inMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
       }
     } else {
@@ -193,7 +200,7 @@
     if (inMessageManager.chatManager.thisUser.activeRoom) {
       // Notify the user that something happened
       rawText = 'Room ' + roomName + ' was created.';
-      message = inMessageManager.chatManager.parseInternalSystemMessage(rawText);
+      message = inMessageManager.chatManager.parseInternalMessage(rawText, false);
       inMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
     }
   }
@@ -249,7 +256,7 @@
       }
 
       // Notify the user that something happened
-      message = inMessageManager.chatManager.parseInternalSystemMessage(rawText);
+      message = inMessageManager.chatManager.parseInternalMessage(rawText, false);
       inMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
     } else {
       log.w('userChangedName', 'No matching user');
@@ -280,7 +287,7 @@
       rawText =
           'There is a delay of ' + timeInSeconds + ' seconds between you and ' + fromUser.name +
               '.';
-      message = inMessageManager.chatManager.parseInternalSystemMessage(rawText);
+      message = inMessageManager.chatManager.parseInternalMessage(rawText, false);
       inMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
     } else {
       log.w('handlePong', 'User doesn\'t match current user');
@@ -356,8 +363,7 @@
 
     if (user === inMessageManager.chatManager.thisUser) {
       // Notify the user that something happened
-      message = inMessageManager.chatManager.parseInternalSystemMessage(rawText);
-      message.type = 'error';
+      message = inMessageManager.chatManager.parseInternalMessage(rawText, true);
       inMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
       inMessageManager.chatManager.consoles.privateMessages.addMessage(message);
     } else {
@@ -371,7 +377,7 @@
    * @returns {Message}
    */
   function parseInComingMessage(rawText) {
-    var inMessageManager, htmlText, time, type, result, command, arguments;
+    var inMessageManager, time, type, result, command, arguments;
 
     log.d('parseInComingMessage', 'rawText=' + rawText);
     inMessageManager = this;
@@ -381,18 +387,15 @@
       return null;
     }
 
-    htmlText = inMessageManager.chatManager.parseRawMessageTextForDom(rawText);
     time = Date.now();
     type = 'system';
 
     // Is this a command?
     if (rawText[0] === '/') {
       if (result = params.IN_COMMANDS.msg.regex.exec(rawText)) {
-        type = 'in';
         command = 'msg';
         arguments = [result[1], result[2], result[3]];
       } else if (result = params.IN_COMMANDS.pubmsg.regex.exec(rawText)) {
-        type = 'in';
         command = 'pubmsg';
         arguments = [result[1], result[2], result[3]];
       } else if (result = params.IN_COMMANDS.userleftroom.regex.exec(rawText)) {
@@ -438,7 +441,7 @@
       return null;
     }
 
-    return new Message(rawText, htmlText, null, time, type, command, arguments);
+    return new Message(rawText, null, null, time, type, command, arguments);
   }
 
   // ------------------------------------------------------------------------------------------- //

@@ -161,18 +161,20 @@
   }
 
   /**
-   * @function ChatManager#parseInternalSystemMessage
+   * @function ChatManager#parseInternalMessage
    * @param {String} rawText
+   * @param {Boolean} isError
    * @returns {Message}
    */
-  function parseInternalSystemMessage(rawText) {
-    var chatManager, time, htmlText;
+  function parseInternalMessage(rawText, isError) {
+    var chatManager, time, htmlText, type;
 
     chatManager = this;
     time = Date.now();
     htmlText = chatManager.parseRawMessageTextForDom(rawText);
+    type = isError ? 'error' : 'system';
 
-    return new Message(rawText, htmlText, null, time, 'system', null, null);
+    return new Message(rawText, htmlText, null, time, type, null, null);
   }
 
   /**
@@ -486,7 +488,7 @@
     chatManager.getRoomFromName = getRoomFromName;
     chatManager.getUserFromName = getUserFromName;
     chatManager.parseRawMessageTextForDom = parseRawMessageTextForDom;
-    chatManager.parseInternalSystemMessage = parseInternalSystemMessage;
+    chatManager.parseInternalMessage = parseInternalMessage;
     chatManager.showPrivateMessage = showPrivateMessage;
     chatManager.matchLocalStateToServer = matchLocalStateToServer;
     chatManager.addRoom = addRoom;

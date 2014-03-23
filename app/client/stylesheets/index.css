@@ -325,17 +325,6 @@ ul {
   text-align: center;
 }
 
-.roomChatMsg {
-  background-color: #202020;
-  color: #e0e0d0;
-}
-
-.privateChatMsg {
-  background-color: #102804;
-  color: #99aaee;
-  font-weight: bold;
-}
-
 .hint {
   font-style: italic;
 }
@@ -466,12 +455,23 @@ img.emoticon.blank {
   padding-top: 8px;
 }
 
+.roomChatMsg {
+  background-color: #202020;
+  color: #e0e0d0;
+}
+
+.privateChatMsg {
+  background-color: #102804;
+  color: #99aaee;
+  font-weight: bold;
+}
+
 .in {
-  color: #e8e8d8;
+  color: #f8f8e8;
 }
 
 .out {
-  color: #b0b0a0;
+  color: #d0d0c0;
 }
 
 .command {
@@ -479,23 +479,24 @@ img.emoticon.blank {
 }
 
 .system {
-  color: #b0c0f0;
+  color: #a0d0ff;
 }
 
 .error {
-  color: #c06060;
+  color: #ff7070;
 }
 
 code.room {
-  color: #c090d0;
+  color: #f0f080;
 }
 
 code.user {
-  color: #e0a080;
+  color: #ffb080;
 }
 
 .emoticon {
-  color: #dddd99;
+  /*color: #f0a0d0;*/
+  color: #b0b0a0;
 }
 
 code.command {

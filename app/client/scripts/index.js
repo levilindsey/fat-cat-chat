@@ -19,6 +19,7 @@
     app.Log.initStaticFields();
     log = new app.Log('index');
 
+    app.server.address = extractHostNameFromUrl(app.server.address);
     log.d('init', 'server=' + app.server.address + ':' + app.server.port);
 
     util.init();
@@ -96,6 +97,7 @@
   /**
    * Adds an error message ribbon overtop of the document body. This message can be closed by
    * tapping on it.
+   * @function index~showErrorMessage
    * @param {String} message The text to show in the error display.
    */
   function showErrorMessage(message) {
@@ -108,6 +110,18 @@
     errorMessageElement.onclick = function () {
       body.removeChild(errorMessageElement);
     };
+  }
+
+  /**
+   * @function index~extractHostNameFromUrl
+   * @param {String} url
+   */
+  function extractHostNameFromUrl(url) {
+    var index;
+
+    index = url.indexOf(':');
+
+    return index >= 0 ? url.substr(0, index) : url;
   }
 
   // ------------------------------------------------------------------------------------------- //
