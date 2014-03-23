@@ -77,6 +77,27 @@
     return new Message(rawText, htmlText, null, time, 'room', null, null);
   }
 
+  /**
+   * @function ChatManager~monitorHeartbeat
+   */
+  function monitorHeartbeat() {
+    var chatManager, currentTime, message;
+
+    chatManager = this;
+    currentTime = Date.now();
+
+    // Check whether our connection has timed out
+    if (currentTime - chatManager.lastServerHeartbeatTime > params.HEARTBEAT_TIMEOUT_DELAY) {
+      // Notify the user
+      message = chatManager.parseInternalMessage('Server connection lost', true);
+      chatManager.consoles.chatRoomMessages.addMessage(message);
+      chatManager.consoles.privateMessages.addMessage(message);
+
+      // Send a request for a new heartbeat
+      chatManager.socketManager.outMessageManager.sendHeartbeatRequest();
+    }
+  }
+
   // ------------------------------------------------------------------------------------------- //
   // Public dynamic functions
 
@@ -93,6 +114,11 @@
 
     chatManager.thisUser = new User(generateRandomUserName(false), Date.now());
     chatManager.addUser(chatManager.thisUser);
+
+    chatManager.lastServerHeartbeatTime = Date.now();
+    setInterval(function() {
+      monitorHeartbeat.call(chatManager);
+    }, params.HEARTBEAT_REQUEST_INTERVAL);
   }
 
   /**
@@ -232,7 +258,7 @@
       }
     }
 
-    if (chatManager.thisUser.activeRoom.name === currentRoomName) {
+    if (chatManager.thisUser.activeRoom && chatManager.thisUser.activeRoom.name === currentRoomName) {
       currentRoom = chatManager.getRoomFromName(currentRoomName);
 
       for (i = 0, count = userNamesInRoom.length; i < count; i++) {
@@ -483,6 +509,7 @@
     chatManager.allUsers = [];
     chatManager.allRooms = [];
     chatManager.consoles = null;
+    chatManager.lastServerHeartbeatTime = Number.NEGATIVE_INFINITY;
 
     chatManager.init = init;
     chatManager.getRoomFromName = getRoomFromName;

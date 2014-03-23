@@ -19,6 +19,7 @@ module.exports = function User(name, socketId) {
 
   user.name = name;
   user.socketId = socketId;
+  user.lastHeartbeatTime = Date.now();
   user.roomId = -1;
   user.id = -1;
 

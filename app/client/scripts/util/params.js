@@ -84,49 +84,52 @@
   params.SMALL_SCREEN_WIDTH_THRESHOLD = 900;
   params.SMALL_SCREEN_HEIGHT_THRESHOLD = 675;
 
+  params.HEARTBEAT_REQUEST_INTERVAL = 8000;
+  params.HEARTBEAT_TIMEOUT_DELAY = params.HEARTBEAT_REQUEST_INTERVAL * 4 + 100;
+
   params.OUT_COMMANDS = {
     help: {
-      regex: /^\/help\b/,
+      regex: /^\/help$/,
       rawString: '/help',
       htmlElement: '<code class=\'command\'>/help</code>'
     },
     rooms: {
-      regex: /^\/rooms\b/,
+      regex: /^\/rooms$/,
       rawString: '/rooms',
       htmlElement: '<code class=\'command\'>/rooms</code>'
     },
     join: {
-      regex: /^\/join (\S+)\b/,
+      regex: /^\/join (\S+)$/,
       rawString: '/join',
       htmlElement: '<code class=\'command\'>/join</code>'
     },
     msg: {
-      regex: /^\/msg (\S+) \((.*)\)/,
+      regex: /^\/msg (\S+) \((.*)\)$/,
       rawString: '/msg',
       htmlElement: '<code class=\'command\'>/msg</code>'
     },
     nick: {
-      regex: /^\/nick (\S+)\b/,
+      regex: /^\/nick (\S+)$/,
       rawString: '/nick',
       htmlElement: '<code class=\'command\'>/nick</code>'
     },
     ping: {
-      regex: /^\/ping (\S+)\b/,
+      regex: /^\/ping (\S+)$/,
       rawString: '/ping',
       htmlElement: '<code class=\'command\'>/ping</code>'
     },
     ignore: {
-      regex: /^\/ignore (\S+)\b/,
+      regex: /^\/ignore (\S+)$/,
       rawString: '/ignore',
       htmlElement: '<code class=\'command\'>/ignore</code>'
     },
     leave: {
-      regex: /^\/leave\b/,
+      regex: /^\/leave$/,
       rawString: '/leave',
       htmlElement: '<code class=\'command\'>/leave</code>'
     },
     quit: {
-      regex: /^\/quit\b/,
+      regex: /^\/quit$/,
       rawString: '/quit',
       htmlElement: '<code class=\'command\'>/quit</code>'
     }
@@ -134,43 +137,43 @@
 
   params.IN_COMMANDS = {
     msg: {
-      regex: /^\/msg (\S+) (\S+) \((.*)\)/
+      regex: /^\/msg (\S+) (\S+) \((.*)\)$/
     },
     pubmsg: {
-      regex: /^\/pubmsg (\S+) (\S+) \((.*)\)/
+      regex: /^\/pubmsg (\S+) (\S+) \((.*)\)$/
     },
     userleftroom: {
-      regex: /^\/userleftroom (\S+) (\S+)\b/
+      regex: /^\/userleftroom (\S+) (\S+)$/
     },
     userjoinedroom: {
-      regex: /^\/userjoinedroom (\S+) (\S+)\b/
+      regex: /^\/userjoinedroom (\S+) (\S+)$/
     },
     userleftserver: {
-      regex: /^\/userleftserver (\S+)\b/
+      regex: /^\/userleftserver (\S+)$/
     },
     userjoinedserver: {
-      regex: /^\/userjoinedserver (\S+)\b/
+      regex: /^\/userjoinedserver (\S+)$/
     },
     userchangedname: {
-      regex: /^\/userchangedname (\S+) (\S+)\b/
+      regex: /^\/userchangedname (\S+) (\S+)$/
     },
     roomcreated: {
-      regex: /^\/roomcreated (\S+)\b/
+      regex: /^\/roomcreated (\S+)$/
     },
     roomdestroyed: {
-      regex: /^\/roomdestroyed (\S+)\b/
+      regex: /^\/roomdestroyed (\S+)$/
     },
     pong: {
-      regex: /^\/pong (\S+) (\S+) (\S+)\b/
+      regex: /^\/pong (\S+) (\S+) (\S+)$/
     },
     heartbeatrequest: {
-      regex: /^\/heartbeatrequest (\S+)\b/
+      regex: /^\/heartbeatrequest (\S+)$/
     },
     heartbeat: {
-      regex: /^\/heartbeat (\S+) \((.*)\) \((.*)\) (\S+) \((.*)\)\b/
+      regex: /^\/heartbeat (\S+) \((.*)\) \((.*)\) (\/?\S+) \((.*)\)$/
     },
     error: {
-      regex: /^\/error (\S+) \((.*)\)\b/
+      regex: /^\/error (\/?\S+) \((.*)\)$/
     }
   };
 

@@ -330,6 +330,8 @@
             allUsersString + ', currentRoomName=' + currentRoomName + ', usersInRoomString=' +
             usersInRoomString);
 
+    inMessageManager.chatManager.lastServerHeartbeatTime = Date.now();
+
     user = inMessageManager.chatManager.getUserFromName(userName);
     allRooms = allRoomsString.split(' ');
     allUsers = allUsersString.split(' ');

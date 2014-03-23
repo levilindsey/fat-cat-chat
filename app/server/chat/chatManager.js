@@ -7,6 +7,7 @@
 // Private static variables
 
 var HEARTBEAT_REQUEST_INTERVAL = 8000, // in milliseconds
+    HEARTBEAT_TIMEOUT_DELAY = HEARTBEAT_REQUEST_INTERVAL * 4 + 100,
     IN_COMING_COMMANDS = {
       msg: {
         // /msg <from_user> <to_user> (<message>)
@@ -42,7 +43,7 @@ var HEARTBEAT_REQUEST_INTERVAL = 8000, // in milliseconds
       },
       heartbeat: {
         // /heartbeat <user_name> [<room_name>|/none]
-        regex: /^\/heartbeat (\S+) (\S+)$/
+        regex: /^\/heartbeat (\S+) (\/?\S+)$/
       }
     };
 
@@ -263,6 +264,7 @@ function handleHeartbeat(userId, roomId, userName, roomName, socketId) {
   }
 
   user = chatManager.allUsers[userId];
+  user.lastHeartbeatTime = Date.now();
 
   // If the user is mentioning a room that does not yet exist, then create it
   if (roomId < 0 && roomName !== '/none') {
@@ -704,19 +706,29 @@ function recordOutGoingMessage(message) {
 }
 
 /**
- * chatManager~requestHeartbeats
+ * chatManager~monitorHeartbeats
  */
-function requestHeartbeats() {
-  var i, count, user;
+function monitorHeartbeats() {
+  var i, count, user, currentTime;
 
   console.log('   requestHeartbeats');
+
+  currentTime = Date.now();
 
   try
   {
     for (i = 0, count = chatManager.allUsers.length; i < count; i++) {
       user = chatManager.allUsers[i];
       if (user) {
+        // Check whether our connection has timed out
+        if (currentTime - user.lastHeartbeatTime > HEARTBEAT_TIMEOUT_DELAY) {
+          console.log('   requestHeartbeats: user heartbeat timeout: ' + user.name);
+          removeUser(user.id, user.socketId);
+        }
+
+        // Send and request new heartbeats
         sendHeartbeatRequest(user.id, user.socketId);
+        sendHeartbeat(user.id, user.socketId);
       }
     }
   }
@@ -818,7 +830,7 @@ var chatManager = {
 
 chatManager.socketManager.init(chatManager);
 
-setInterval(requestHeartbeats, HEARTBEAT_REQUEST_INTERVAL);
+setInterval(monitorHeartbeats, HEARTBEAT_REQUEST_INTERVAL);
 
 // Expose this module
 module.exports = chatManager;
