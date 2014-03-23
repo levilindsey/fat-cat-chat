@@ -70,7 +70,10 @@
     ' * /ignore: Type /ignore &lt;user_name&gt; to ignore all messages from a user.',
     ' * /leave: Type /leave to leave the chat room. If you are the last user to leave the channel, it will be removed.',
     ' * /quit: Type /quit to be removed from the chat server.',
-    ' * Type anything not prefixed with / in order to send a message to everyone in the room.'
+    ' * /link: Type /link &lt;http[s]://somelink.com&gt; (&lt;message&gt;) anywhere within a message to indicate that the given message should be shown as a hyperlink pointing to the given URL.',
+    ' * All commands&mdash;except the /link command&mdash;must be given as the first text in the message.',
+    ' * Type anything not prefixed with / in order to send a message to everyone in the room.',
+    ' * Any word that starts with "http[s]://[...]" will be shown as an active hyperlink within the console.'
   ];
 
   // --- Miscellaneous parameters --- //

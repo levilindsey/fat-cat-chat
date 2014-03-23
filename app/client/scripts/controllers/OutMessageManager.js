@@ -516,16 +516,13 @@
     outMessageManager.socketManager.uiManager.textBoxes.chatRoomMessages.textBox.focus();
     outMessageManager.chatManager.consoles.chatRoomMessages.setTitle('Room: ' + roomName);
     outMessageManager.chatManager.consoles.chatRoomMessages.clearMessages();
+    outMessageManager.chatManager.consoles.chatRoomUsers.clearMessages();
 
     // Show the user-entered command
     outMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
 
     rawText =
-        'Welcome ' + outMessageManager.chatManager.thisUser.name + ' to room ' + roomName + '!';
-    message = outMessageManager.chatManager.parseInternalMessage(rawText, false);
-    outMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
-
-    rawText = 'There are ' + room.users.length + ' users in this room.';
+        ':) Welcome ' + outMessageManager.chatManager.thisUser.name + ' to room ' + roomName + '!';
     message = outMessageManager.chatManager.parseInternalMessage(rawText, false);
     outMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
   }
@@ -637,7 +634,6 @@
     helpMessages = [];
     params.L18N.EN.HELP_MESSAGES.forEach(function (rawText) {
       htmlText = ChatManager.parseCommands(rawText);
-      htmlText = ChatManager.parseEmoticons(htmlText);
       message = new Message(rawText, htmlText, null, time, 'system', null, null);
       helpMessages.push(message);
     });

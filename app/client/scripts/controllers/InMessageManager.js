@@ -59,7 +59,7 @@
     user = inMessageManager.chatManager.getUserFromName(userName);
     room = inMessageManager.chatManager.getRoomFromName(roomName);
 
-    if (user && room === user.activeRoom && user !== inMessageManager.chatManager.thisUser) {
+    if (user && room === inMessageManager.chatManager.thisUser.activeRoom && user !== inMessageManager.chatManager.thisUser) {
       // Parse message to display in console
       prefix = userName + ': ';
       htmlText = inMessageManager.chatManager.parseRawMessageTextForDom(prefix + messageText);
@@ -119,13 +119,15 @@
     room = inMessageManager.chatManager.getRoomFromName(roomName);
 
     if (user && room) {
-      inMessageManager.chatManager.addUserToRoom(user, room);
+      if (user !== inMessageManager.chatManager.thisUser) {
+        inMessageManager.chatManager.addUserToRoom(user, room);
 
-      if (room === inMessageManager.chatManager.thisUser.activeRoom) {
-        // Notify the user that something happened
-        rawText = userName + ' joined the room.';
-        message = inMessageManager.chatManager.parseInternalMessage(rawText, false);
-        inMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
+        if (room === inMessageManager.chatManager.thisUser.activeRoom) {
+          // Notify the user that something happened
+          rawText = userName + ' joined the room.';
+          message = inMessageManager.chatManager.parseInternalMessage(rawText, false);
+          inMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
+        }
       }
     } else {
       log.w('userJoinedRoom', 'No matching user or room');
@@ -197,7 +199,7 @@
       log.w('roomCreated', 'Room already exists');
     }
 
-    if (inMessageManager.chatManager.thisUser.activeRoom) {
+    if (inMessageManager.chatManager.thisUser.activeRoom && inMessageManager.chatManager.thisUser.activeRoom !== room) {
       // Notify the user that something happened
       rawText = 'Room ' + roomName + ' was created.';
       message = inMessageManager.chatManager.parseInternalMessage(rawText, false);
@@ -333,12 +335,12 @@
     inMessageManager.chatManager.lastServerHeartbeatTime = Date.now();
 
     user = inMessageManager.chatManager.getUserFromName(userName);
-    allRooms = allRoomsString.split(' ');
-    allUsers = allUsersString.split(' ');
-    usersInRoom = usersInRoomString.split(' ');
+    allRooms = allRoomsString ? allRoomsString.split(' ') : [];
+    allUsers = allUsersString ? allUsersString.split(' ') : [];
+    usersInRoom = usersInRoomString ? usersInRoomString.split(' ') : [];
 
     if (user === inMessageManager.chatManager.thisUser) {
-      inMessageManager.chatManager.matchLocalStateToServer(allRooms, allUsers, currentRoomName, usersInRoom);
+      inMessageManager.chatManager.syncLocalStateToServer(allRooms, allUsers, currentRoomName, usersInRoom);
     } else {
       log.w('handleHeartbeat', 'User doesn\'t match current user');
     }

@@ -59,7 +59,7 @@ function connectionHandler(socket) {
 function unicastMessage(socket, text) {
   var message;
 
-  console.log('<--unicastMessage: socketId=' + socket.fatCatChatSocketId + ', text=' + text);
+  console.log('<--unicastMessage: text=' + text + ', socketId=' + socket.fatCatChatSocketId);
 
   message = {
     message: text

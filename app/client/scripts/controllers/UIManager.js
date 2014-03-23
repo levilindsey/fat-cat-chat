@@ -61,13 +61,13 @@
     privateChatBody = privateChatContainer.querySelector('.panelBody');
 
     roomsConsole =
-        new ChatConsole('directoryRoomsConsole', 'directoryHeader', 'directoryPanel', uiManager);
+        new ChatConsole('directoryRoomsConsole', 'directoryRoomsHeader', 'directoryPanel', uiManager);
     directoryUsersConsole =
-        new ChatConsole('directoryUsersConsole', 'directoryHeader', 'directoryPanel', uiManager);
+        new ChatConsole('directoryUsersConsole', 'directoryUsersHeader', 'directoryPanel', uiManager);
     chatRoomMessagesConsole =
         new ChatConsole('roomChatMessagesConsole', 'roomChatHeader', 'roomChatPanel', uiManager);
     chatRoomUsersConsole =
-        new ChatConsole('roomChatUsersConsole', 'roomChatHeader', 'roomChatPanel', uiManager);
+        new ChatConsole('roomChatUsersConsole', 'roomChatUsersHeader', 'roomChatPanel', uiManager);
     privateMessagesConsole =
         new ChatConsole('privateChatMessagesConsole', 'privateChatHeader', 'privateChatPanel',
             uiManager);

@@ -232,39 +232,76 @@
   }
 
   /**
-   * @function ChatManager#matchLocalStateToServer
+   * @function ChatManager#syncLocalStateToServer
    * @param {Array.<String>} allRoomNames
    * @param {Array.<String>} allUserNames
    * @param {String} currentRoomName
    * @param {Array.<String>} userNamesInRoom
    */
-  function matchLocalStateToServer(allRoomNames, allUserNames, currentRoomName, userNamesInRoom) {
+  function syncLocalStateToServer(allRoomNames, allUserNames, currentRoomName, userNamesInRoom) {
     var chatManager, i, count, time, currentRoom;
 
     chatManager = this;
     time = Date.now();
 
+    // --- Sync rooms in server --- //
+
+    // Add any rooms the client is missing
     for (i = 0, count = allRoomNames.length; i < count; i++) {
       if (!chatManager.getRoomFromName(allRoomNames[i])) {
-        log.d('matchLocalStateToServer', 'Adding room: ' + allRoomNames[i]);
+        log.d('syncLocalStateToServer', 'Adding room: ' + allRoomNames[i]);
         chatManager.addRoom(new Room(allRoomNames[i], time));
       }
     }
 
+    // Remove any extra rooms the client has
+    for (i = 0; i < chatManager.allRooms.length; i++) {
+      if (allRoomNames.indexOf(chatManager.allRooms[i].name) < 0 &&
+          chatManager.allRooms[i] !== chatManager.thisUser.activeRoom) {
+        log.d('syncLocalStateToServer', 'Removing room: ' + chatManager.allRooms[i]);
+        chatManager.removeRoom(chatManager.allRooms[i]);
+      }
+    }
+
+    // --- Sync users in server --- //
+
+    // Add any users the client is missing
     for (i = 0, count = allUserNames.length; i < count; i++) {
       if (!chatManager.getUserFromName(allUserNames[i])) {
-        log.d('matchLocalStateToServer', 'Adding user: ' + allUserNames[i]);
+        log.d('syncLocalStateToServer', 'Adding user: ' + allUserNames[i]);
         chatManager.addUser(new User(allUserNames[i], time));
       }
     }
 
+    // Remove any extra users the client has
+    for (i = 0; i < chatManager.allUsers.length; i++) {
+      if (allUserNames.indexOf(chatManager.allUsers[i].name) < 0 &&
+          chatManager.allUsers[i] !== chatManager.thisUser) {
+        log.d('syncLocalStateToServer', 'Removing user: ' + chatManager.allUsers[i]);
+        chatManager.removeUser(chatManager.allUsers[i]);
+      }
+    }
+
+    // --- Sync users in room --- //
+
+    // Check whether the rooms match
     if (chatManager.thisUser.activeRoom && chatManager.thisUser.activeRoom.name === currentRoomName) {
       currentRoom = chatManager.getRoomFromName(currentRoomName);
 
+      // Add any users the client is missing to the room
       for (i = 0, count = userNamesInRoom.length; i < count; i++) {
         if (!currentRoom.getUserFromName(userNamesInRoom[i])) {
-          log.d('matchLocalStateToServer', 'Adding user to room: userName=' + userNamesInRoom[i] + ', roomName=' + currentRoomName);
-          chatManager.addUserToRoom(userNamesInRoom[i], currentRoom);
+          log.d('syncLocalStateToServer', 'Adding user to room: userName=' + userNamesInRoom[i] + ', roomName=' + currentRoomName);
+          chatManager.addUserToRoom(new User(userNamesInRoom[i], time), currentRoom);
+        }
+      }
+
+      // Remove any extra users the client has in the room
+      for (i = 0; i < currentRoom.users.length; i++) {
+        if (userNamesInRoom.indexOf(currentRoom.users[i].name) < 0 &&
+            currentRoom.users[i] !== chatManager.thisUser) {
+          log.d('syncLocalStateToServer', 'Removing user from room: userName=' + currentRoom.users[i].name + ', roomName=' + currentRoomName);
+          chatManager.removeUserFromRoom(currentRoom.users[i], currentRoom);
         }
       }
     }
@@ -285,6 +322,7 @@
     message = parseRoomMessage.call(chatManager, room.name);
 
     chatManager.consoles.directoryRooms.addMessage(message);
+    chatManager.consoles.directoryRooms.setTitle('Rooms (' + chatManager.allRooms.length + ')');
   }
 
   /**
@@ -304,6 +342,7 @@
     }
 
     chatManager.consoles.directoryRooms.removeMessageByRawText(room.name);
+    chatManager.consoles.directoryRooms.setTitle('Rooms (' + chatManager.allRooms.length + ')');
   }
 
   /**
@@ -321,6 +360,7 @@
     message = parseUserMessage.call(chatManager, user.name);
 
     chatManager.consoles.directoryUsers.addMessage(message);
+    chatManager.consoles.directoryUsers.setTitle('Users (' + chatManager.allUsers.length + ')');
   }
 
   /**
@@ -340,6 +380,7 @@
     }
 
     chatManager.consoles.directoryUsers.removeMessageByRawText(user.name);
+    chatManager.consoles.directoryUsers.setTitle('Users (' + chatManager.allUsers.length + ')');
   }
 
   /**
@@ -359,6 +400,7 @@
       message = parseUserMessage.call(chatManager, user.name);
 
       chatManager.consoles.chatRoomUsers.addMessage(message);
+      chatManager.consoles.chatRoomUsers.setTitle('Users (' + room.users.length + ')');
     } else {
       log.w('addUserToRoom', 'Room already contained user');
     }
@@ -382,6 +424,7 @@
     }
 
     chatManager.consoles.chatRoomUsers.removeMessageByRawText(user.name);
+    chatManager.consoles.chatRoomUsers.setTitle('Users (' + room.users.length + ')');
   }
 
   /**
@@ -517,7 +560,7 @@
     chatManager.parseRawMessageTextForDom = parseRawMessageTextForDom;
     chatManager.parseInternalMessage = parseInternalMessage;
     chatManager.showPrivateMessage = showPrivateMessage;
-    chatManager.matchLocalStateToServer = matchLocalStateToServer;
+    chatManager.syncLocalStateToServer = syncLocalStateToServer;
     chatManager.addRoom = addRoom;
     chatManager.removeRoom = removeRoom;
     chatManager.addUser = addUser;

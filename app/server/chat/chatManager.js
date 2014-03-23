@@ -419,9 +419,15 @@ function addUserToRoom(userId, roomId, roomName, socketId) {
     roomId = addNewRoom(roomName);
   }
 
-  // Add the user to the room
   user = chatManager.allUsers[userId];
   room = chatManager.allRooms[roomId];
+
+  // Remove the user from any room she was previously in
+  if (user.roomId > 0) {
+    removeUserFromRoom(userId, user.roomId, socketId);
+  }
+
+  // Add the user to the room
   user.roomId = roomId;
   room.addUser(userId);
 
@@ -724,11 +730,11 @@ function monitorHeartbeats() {
         if (currentTime - user.lastHeartbeatTime > HEARTBEAT_TIMEOUT_DELAY) {
           console.log('   requestHeartbeats: user heartbeat timeout: ' + user.name);
           removeUser(user.id, user.socketId);
+        } else {
+          // Send and request new heartbeats
+          sendHeartbeatRequest(user.id, user.socketId);
+          sendHeartbeat(user.id, user.socketId);
         }
-
-        // Send and request new heartbeats
-        sendHeartbeatRequest(user.id, user.socketId);
-        sendHeartbeat(user.id, user.socketId);
       }
     }
   }
