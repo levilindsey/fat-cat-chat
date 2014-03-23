@@ -48,7 +48,7 @@ function multicastMessageToUsers(message, userIds, chatManager) {
   for (i = 0, count = userIds.length; i < count; i++) {
     user = chatManager.allUsers[userIds[i]];
     socket = chatManager.allSockets[user.socketId];
-    chatManager.messageManager.unicast(socket, message.text)
+    chatManager.socketManager.unicastMessage(socket, message.text);
   }
 }
 

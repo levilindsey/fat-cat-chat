@@ -32,6 +32,8 @@
 
     if (toUser === inMessageManager.chatManager.thisUser) {
       inMessageManager.chatManager.showPrivateMessage(message, fromUser);
+    } else {
+      log.w('receivedPrivateMessage', 'User doesn\'t match current user');
     }
   }
 
@@ -56,6 +58,8 @@
     if (user === inMessageManager.chatManager.thisUser && room === user.activeRoom) {
       // Show the message
       inMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
+    } else {
+      log.w('receivedRoomMessage', 'User or room doesn\'t match current user or room');
     }
   }
 
@@ -83,7 +87,11 @@
         rawText = userName + ' left the room.';
         message = inMessageManager.chatManager.parseInternalSystemMessage(rawText);
         inMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
+      } else {
+        log.w('userLeftRoom', 'Not in room');
       }
+    } else {
+      log.w('userLeftRoom', 'No matching user or room');
     }
   }
 
@@ -112,6 +120,8 @@
         message = inMessageManager.chatManager.parseInternalSystemMessage(rawText);
         inMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
       }
+    } else {
+      log.w('userJoinedRoom', 'No matching user or room');
     }
   }
 
@@ -131,6 +141,8 @@
 
     if (user) {
       inMessageManager.chatManager.removeUser(user);
+    } else {
+      log.w('userLeftServer', 'No matching user');
     }
   }
 
@@ -150,9 +162,10 @@
 
     if (!user) {
       user = new User(userName, Date.now());
+      inMessageManager.chatManager.addUser(user);
+    } else {
+      log.w('userJoinedServer', 'User already exists');
     }
-
-    inMessageManager.chatManager.addUser(user);
   }
 
   /**
@@ -169,15 +182,19 @@
 
     room = inMessageManager.chatManager.getRoomFromName(roomName);
 
-    if (room) {
+    // Create a new room if a room of this name did not already exist
+    if (!room) {
+      room = new Room(roomName, [], Date.now());
       inMessageManager.chatManager.addRoom(room);
+    } else {
+      log.w('roomCreated', 'Room already exists');
+    }
 
-      if (inMessageManager.chatManager.thisUser.activeRoom) {
-        // Notify the user that something happened
-        rawText = 'Room ' + roomName + ' was created.';
-        message = inMessageManager.chatManager.parseInternalSystemMessage(rawText);
-        inMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
-      }
+    if (inMessageManager.chatManager.thisUser.activeRoom) {
+      // Notify the user that something happened
+      rawText = 'Room ' + roomName + ' was created.';
+      message = inMessageManager.chatManager.parseInternalSystemMessage(rawText);
+      inMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
     }
   }
 
@@ -197,6 +214,8 @@
 
     if (room) {
       inMessageManager.chatManager.removeRoom(room);
+    } else {
+      log.w('roomDestroyed', 'No matching room');
     }
   }
 
@@ -232,6 +251,8 @@
       // Notify the user that something happened
       message = inMessageManager.chatManager.parseInternalSystemMessage(rawText);
       inMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
+    } else {
+      log.w('userChangedName', 'No matching user');
     }
   }
 
@@ -261,6 +282,8 @@
               '.';
       message = inMessageManager.chatManager.parseInternalSystemMessage(rawText);
       inMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
+    } else {
+      log.w('handlePong', 'User doesn\'t match current user');
     }
   }
 
@@ -307,6 +330,8 @@
 
     if (user === inMessageManager.chatManager.thisUser) {
       inMessageManager.chatManager.matchLocalStateToServer(allRooms, allUsers, currentRoomName, usersInRoom);
+    } else {
+      log.w('handleHeartbeat', 'User doesn\'t match current user');
     }
   }
 
@@ -335,6 +360,8 @@
       message.type = 'error';
       inMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
       inMessageManager.chatManager.consoles.privateMessages.addMessage(message);
+    } else {
+      log.w('handleError', 'User doesn\'t match current user');
     }
   }
 

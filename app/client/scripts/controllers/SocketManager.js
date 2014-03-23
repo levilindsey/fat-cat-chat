@@ -18,7 +18,7 @@
   function receivedMessage(message) {
     var socketManager, rawText;
 
-    log.i('receivedMessage', 'message=' + message);
+    log.socketIn('receivedMessage', 'message=' + message.message);
     socketManager = this;
     rawText = message.message;
 
@@ -56,7 +56,7 @@
   function sendMessage(message) {
     var socketManager = this;
 
-    log.i('sendMessage', 'message.rawText=' + message.rawText);
+    log.socketOut('sendMessage', 'message.rawText=' + message.rawText);
 
     socketManager.socket.emit('message', { message: message.rawText });
   }

@@ -10,39 +10,39 @@ var HEARTBEAT_REQUEST_INTERVAL = 8000, // in milliseconds
     IN_COMING_COMMANDS = {
       msg: {
         // /msg <from_user> <to_user> (<message>)
-        regex: /^\/msg (\S+) (\S+) \((.*)\)/
+        regex: /^\/msg (\S+) (\S+) \((.*)\)$/
       },
       pubmsg: {
         // /pubmsg <user_name> <room_name> (<message>)
-        regex: /^\/pubmsg (\S+) (\S+) \((.*)\)/
+        regex: /^\/pubmsg (\S+) (\S+) \((.*)\)$/
       },
       join: {
         // /join <user_name> <room_name>
-        regex: /^\/join (\S+) (\S+)\b/
+        regex: /^\/join (\S+) (\S+)$/
       },
       nick: {
         // /nick <old_name> <new_name>
-        regex: /^\/nick (\S+) (\S+)\b/
+        regex: /^\/nick (\S+) (\S+)$/
       },
       ping: {
         // /ping <from_user> <to_user>
-        regex: /^\/ping (\S+) (\S+)\b/
+        regex: /^\/ping (\S+) (\S+)$/
       },
       leave: {
         // /leave <user_name> <room_name>
-        regex: /^\/leave (\S+) (\S+)\b/
+        regex: /^\/leave (\S+) (\S+)$/
       },
       quit: {
         // /quit <user_name>
-        regex: /^\/quit (\S+)\b/
+        regex: /^\/quit (\S+)$/
       },
       heartbeatrequest: {
         // /heartbeatrequest <user_name>
-        regex: /^\/heartbeatrequest (\S+)\b/
+        regex: /^\/heartbeatrequest (\S+)$/
       },
       heartbeat: {
         // /heartbeat <user_name> [<room_name>|/none]
-        regex: /^\/heartbeat (\S+) (\S+)\b/
+        regex: /^\/heartbeat (\S+) (\S+)$/
       }
     };
 
@@ -484,7 +484,7 @@ function addNewRoom(roomName) {
   console.log('   addNewRoom: roomName=' + roomName);
 
   // Add the room
-  room = new Room(roomName);
+  room = new Room(roomName, chatManager);
   room.id = nextRoomId++;
   chatManager.allRooms[room.id] = room;
   updateRoomsString();

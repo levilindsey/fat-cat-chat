@@ -22,7 +22,7 @@
    */
   function write(severity, methodName, message) {
     message =
-        '[' + severity + ']; ' + this.moduleName + '.' + methodName + '; ' + (message || '--') +
+        severity + '; ' + this.moduleName + '.' + methodName + '; ' + (message || '--') +
             '; ' + util.millisToTimeString(getCurrentRunTime());
 
     // Record each entry in a queue of fixed-size
@@ -58,7 +58,7 @@
    */
   function v(methodName, message) {
     if (params.LOG.VERBOSE) {
-      write.call(this, 'V', methodName, message);
+      write.call(this, '[V]', methodName, message);
     }
   }
 
@@ -71,7 +71,7 @@
    */
   function d(methodName, message) {
     if (params.LOG.DEBUG) {
-      write.call(this, 'D', methodName, message);
+      write.call(this, '[D]', methodName, message);
     }
   }
 
@@ -83,7 +83,7 @@
    * @param {string} [message] The message for this log entry.
    */
   function i(methodName, message) {
-    write.call(this, 'I', methodName, message);
+    write.call(this, '[I]', methodName, message);
   }
 
   /**
@@ -94,7 +94,7 @@
    * @param {string} [message] The message for this log entry.
    */
   function w(methodName, message) {
-    write.call(this, 'W', methodName, message);
+    write.call(this, '[W]', methodName, message);
   }
 
   /**
@@ -107,13 +107,21 @@
    * after uploading an error report.
    */
   function e(methodName, message, forceQuit) {
-    write.call(this, 'E', methodName, message);
+    write.call(this, '***[E]', methodName, message);
 
     // TODO: upload an error report
 
     if (forceQuit) {
       // TODO: force quit the app
     }
+  }
+
+  function socketIn(methodName, message) {
+    write.call(this, '-->', methodName, message);
+  }
+
+  function socketOut(methodName, message) {
+    write.call(this, '<--', methodName, message);
   }
 
   /**
@@ -163,6 +171,8 @@
       i: i,
       w: w,
       e: e,
+      socketIn: socketIn,
+      socketOut: socketOut,
       getCurrentRunTime: getCurrentRunTime
     };
   }

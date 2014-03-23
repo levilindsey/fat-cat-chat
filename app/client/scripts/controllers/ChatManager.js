@@ -90,6 +90,9 @@
     chatManager.socketManager = socketManager;
 
     setUpElements.call(chatManager);
+
+    chatManager.thisUser = new User(generateRandomUserName(false), Date.now());
+    chatManager.addUser(chatManager.thisUser);
   }
 
   /**
@@ -214,14 +217,16 @@
     time = Date.now();
 
     for (i = 0, count = allRoomNames.length; i < count; i++) {
-      if (!chatManager.getRoomFromName(allRoomNames[i].name)) {
-        chatManager.addRoom(new User(allRoomNames[i].name, time));
+      if (!chatManager.getRoomFromName(allRoomNames[i])) {
+        log.d('matchLocalStateToServer', 'Adding room: ' + allRoomNames[i]);
+        chatManager.addRoom(new Room(allRoomNames[i], time));
       }
     }
 
     for (i = 0, count = allUserNames.length; i < count; i++) {
-      if (!chatManager.getUserFromName(allUserNames[i].name)) {
-        chatManager.addUser(new User(allUserNames[i].name, time));
+      if (!chatManager.getUserFromName(allUserNames[i])) {
+        log.d('matchLocalStateToServer', 'Adding user: ' + allUserNames[i]);
+        chatManager.addUser(new User(allUserNames[i], time));
       }
     }
 
@@ -229,7 +234,8 @@
       currentRoom = chatManager.getRoomFromName(currentRoomName);
 
       for (i = 0, count = userNamesInRoom.length; i < count; i++) {
-        if (!currentRoom.getUserFromName(userNamesInRoom[i].name)) {
+        if (!currentRoom.getUserFromName(userNamesInRoom[i])) {
+          log.d('matchLocalStateToServer', 'Adding user to room: userName=' + userNamesInRoom[i] + ', roomName=' + currentRoomName);
           chatManager.addUserToRoom(userNamesInRoom[i], currentRoom);
         }
       }
@@ -319,11 +325,15 @@
     chatManager = this;
     log.d('addUserToRoom', 'userName=' + user.name + ', roomName=' + room.name);
 
-    room.users.push(user);
+    if (room.users.indexOf(user) < 0) {
+      room.users.push(user);
 
-    message = parseUserMessage.call(chatManager, user.name);
+      message = parseUserMessage.call(chatManager, user.name);
 
-    chatManager.consoles.chatRoomUsers.addMessage(message);
+      chatManager.consoles.chatRoomUsers.addMessage(message);
+    } else {
+      log.w('addUserToRoom', 'Room already contained user');
+    }
   }
 
   /**
@@ -467,7 +477,7 @@
 
     chatManager.uiManager = uiManager;
     chatManager.socketManager = null;
-    chatManager.thisUser = new User(generateRandomUserName(false), Date.now());
+    chatManager.thisUser = null;
     chatManager.allUsers = [];
     chatManager.allRooms = [];
     chatManager.consoles = null;

@@ -477,6 +477,7 @@
     // Create a new room if a room of this name did not already exist
     if (!room) {
       room = new Room(roomName, [], Date.now());
+      outMessageManager.chatManager.addRoom(room);
     }
 
     // Create the message if it does not already exist
