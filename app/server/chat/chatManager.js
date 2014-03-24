@@ -7,7 +7,7 @@
 // Private static variables
 
 var HEARTBEAT_REQUEST_INTERVAL = 8000, // in milliseconds
-    HEARTBEAT_TIMEOUT_DELAY = HEARTBEAT_REQUEST_INTERVAL * 4 + 100,
+    HEARTBEAT_TIMEOUT_DELAY = HEARTBEAT_REQUEST_INTERVAL * 3 + 100,
     IN_COMING_COMMANDS = {
       msg: {
         // /msg <from_user> <to_user> (<message>)
@@ -326,7 +326,7 @@ function addNewUser(userName, socketId) {
  * @param {Number} socketId
  */
 function removeUser(userId, socketId) {
-  var user, room, text, message;
+  var user, text, message;
 
   console.log('   removeUser: userId=' + userId + ', socketId=' + socketId);
 
@@ -337,17 +337,16 @@ function removeUser(userId, socketId) {
     return;
   }
 
-  // Remove the user
   user = chatManager.allUsers[userId];
-  chatManager.allUsers[userId] = null;
-  updateUsersString();
 
   // Remove the user from the room she was in (if there was a room)
   if (user.roomId > 0) {
-    room = chatManager.allRooms[user.roomId];
-    user.roomId = -1;
-    room.removeUser(userId);
+    removeUserFromRoom(userId, user.roomId, socketId);
   }
+
+  // Remove the user
+  chatManager.allUsers[userId] = null;
+  updateUsersString();
 
   // Send a message to the clients
   text = '/userleftserver ' + user.name;
@@ -462,9 +461,10 @@ function removeUserFromRoom(userId, roomId, socketId) {
     return;
   }
 
-  // Remove the user from the room
   user = chatManager.allUsers[userId];
   room = chatManager.allRooms[roomId];
+
+  // Remove the user from the room
   user.roomId = -1;
   room.removeUser(userId);
 
@@ -684,7 +684,7 @@ function parseAndRecordInComingMessage(text, socketId) {
     roomId = getRoomIdFromName(arguments[1]);
   } else {
     text = 'Unknown message format: ' + text;
-    console.log('***ERROR: parseAndRecordInComingMessage: ' + text);
+    console.log('!!!ERROR: parseAndRecordInComingMessage: ' + text);
     sendErrorMessage(text, chatManager.allSockets[socketId]);
     return null;
   }
@@ -740,8 +740,8 @@ function monitorHeartbeats() {
   }
   catch (e)
   {
-    console.log('***ERROR THROWN: requestHeartbeats: ' + e);
-    console.log('***ERROR STACK: ' + e.stack);
+    console.log('!!!ERROR THROWN: requestHeartbeats: ' + e);
+    console.log('!!!ERROR STACK: ' + e.stack);
   }
 }
 
@@ -806,15 +806,15 @@ function handleNewMessage(socketId, text) {
         break;
       default:
         text = 'Invalid message command: ' + message.command;
-        console.log('***ERROR: handleNewMessage: ' + text);
+        console.log('!!!ERROR: handleNewMessage: ' + text);
         sendErrorMessage(text, chatManager.allSockets[socketId]);
         return;
     }
   }
   catch (e)
   {
-    console.log('***ERROR THROWN: handleNewMessage: ' + e);
-    console.log('***ERROR STACK: ' + e.stack);
+    console.log('!!!ERROR THROWN: handleNewMessage: ' + e);
+    console.log('!!!ERROR STACK: ' + e.stack);
   }
 }
 

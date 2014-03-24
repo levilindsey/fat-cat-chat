@@ -67,7 +67,7 @@
 
     if (outMessageManager.chatManager.allRooms.length > 0) {
       outMessageManager.chatManager.allRooms.forEach(function (room) {
-        message = outMessageManager.chatManager.parseInternalMessage(room.name, false);
+        message = outMessageManager.chatManager.parseInternalMessage(' * ' + room.name, false);
         console.addMessage(message);
       });
     } else {
@@ -505,9 +505,6 @@
 
     // --- Set up the room chat console for this new room --- //
 
-    outMessageManager.chatManager.thisUser.activeRoom = room;
-    outMessageManager.chatManager.addUserToRoom(outMessageManager.chatManager.thisUser, room);
-
     util.toggleClass(outMessageManager.socketManager.uiManager.panels.roomChat.container, 'closed',
         false);
     util.toggleClass(outMessageManager.socketManager.uiManager.panels.roomChat.container, 'hidden',
@@ -518,11 +515,14 @@
     outMessageManager.chatManager.consoles.chatRoomMessages.clearMessages();
     outMessageManager.chatManager.consoles.chatRoomUsers.clearMessages();
 
+    outMessageManager.chatManager.thisUser.activeRoom = room;
+    outMessageManager.chatManager.addUserToRoom(outMessageManager.chatManager.thisUser, room);
+
     // Show the user-entered command
     outMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
 
     rawText =
-        ':) Welcome ' + outMessageManager.chatManager.thisUser.name + ' to room ' + roomName + '!';
+        'Welcome ' + outMessageManager.chatManager.thisUser.name + ' to room ' + roomName + '! :)';
     message = outMessageManager.chatManager.parseInternalMessage(rawText, false);
     outMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
   }

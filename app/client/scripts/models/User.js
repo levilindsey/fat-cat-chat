@@ -34,12 +34,20 @@
   function User(name, startTime) {
     var user = this;
 
-    user.name = name;
+    user.name = null;
+    user.nameRegex = null;
     user.startTime = startTime;
     user.isIgnored = false;
     user.privateMessages = [];
     user.activeRoom = null;
     user.privateChatUser = null;
+
+    user.setName = function(name) {
+      user.name = name;
+      user.nameRegex = new RegExp('\\b' + name + '\\b', 'g');
+    };
+
+    user.setName(name);
   }
 
   // Expose this module

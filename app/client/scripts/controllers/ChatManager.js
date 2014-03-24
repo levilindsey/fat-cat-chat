@@ -29,7 +29,7 @@
   function parseRooms(text) {
     var chatManager = this;
     chatManager.allRooms.forEach(function (room) {
-      text = text.replace(room.name, '<code class=\'room\'>' + room.name + '</code>');
+      text = text.replace(room.nameRegex, '<code class=\'room\'>' + room.name + '</code>');
     });
     return text;
   }
@@ -42,8 +42,19 @@
   function parseUsers(text) {
     var chatManager = this;
     chatManager.allUsers.forEach(function (user) {
-      text = text.replace(user.name, '<code class=\'user\'>' + user.name + '</code>');
+      text = text.replace(user.nameRegex, '<code class=\'user\'>' + user.name + '</code>');
     });
+    return text;
+  }
+
+  /**
+   * @function ChatManager~parseOwnName
+   * @param {String} text
+   * @returns {String}
+   */
+  function parseOwnName(text) {
+    var chatManager = this;
+    text = text.replace(chatManager.thisUser.nameRegex, '*' + chatManager.thisUser.name);
     return text;
   }
 
@@ -138,6 +149,7 @@
     text = parseEmoticons(text);
     text = parseRooms.call(chatManager, text);
     text = parseUsers.call(chatManager, text);
+    text = parseOwnName.call(chatManager, text);
     // TODO: parseURLs
 
     // TODO: add an additional class, 'thisUser':
@@ -250,7 +262,7 @@
     for (i = 0, count = allRoomNames.length; i < count; i++) {
       if (!chatManager.getRoomFromName(allRoomNames[i])) {
         log.d('syncLocalStateToServer', 'Adding room: ' + allRoomNames[i]);
-        chatManager.addRoom(new Room(allRoomNames[i], time));
+        chatManager.addRoom(new Room(allRoomNames[i], [], time));
       }
     }
 
@@ -437,7 +449,7 @@
 
     chatManager = this;
     oldName = user.name;
-    user.name = newName;
+    user.setName(newName);
 
     log.d('changeUserName', 'oldName=' + oldName + ', newName=' + newName);
 

@@ -6,6 +6,8 @@
   // ------------------------------------------------------------------------------------------- //
   // Private static variables
 
+  var SCROLL_BOTTOM_CLOSE_ENOUGH_DISTANCE = 20;
+
   var params, util, log, ConsoleEntry;
 
   // ------------------------------------------------------------------------------------------- //
@@ -55,6 +57,22 @@
     return -1;
   }
 
+  /**
+   * @function ChatConsole~checkIsScrolledToBottom
+   */
+  function checkIsScrolledToBottom() {
+    var chatConsole = this;
+    return chatConsole.elements.container.scrollTop >= chatConsole.elements.container.scrollHeight - chatConsole.elements.container.clientHeight - SCROLL_BOTTOM_CLOSE_ENOUGH_DISTANCE;
+  }
+
+  /**
+   * @function ChatConsole~scrollToBottom
+   */
+  function scrollToBottom() {
+    var chatConsole = this;
+    chatConsole.elements.container.scrollTop = chatConsole.elements.container.scrollHeight;
+  }
+
   // ------------------------------------------------------------------------------------------- //
   // Public dynamic functions
 
@@ -74,16 +92,18 @@
    * @param {Message} message The new message to add.
    */
   function addMessage(message) {
-    var chatConsole, entry;
+    var chatConsole, entry, wasScrolledToBottom;
 
     log.d('addMessage', 'message.htmlText=' + message.htmlText);
     chatConsole = this;
+    wasScrolledToBottom = checkIsScrolledToBottom.call(chatConsole);
 
     entry = new ConsoleEntry(message, chatConsole.elements.list);
     chatConsole.entries.push(entry);
 
-    // Scroll to the bottom
-    chatConsole.elements.container.scrollTop = chatConsole.elements.container.scrollHeight;
+    if (wasScrolledToBottom) {
+      scrollToBottom.call(chatConsole);
+    }
   }
 
   /**

@@ -76,6 +76,7 @@
     var room = this;
 
     room.name = name;
+    room.nameRegex = new RegExp('\\b' + name + '\\b', 'g');
     room.users = users;
     room.startTime = startTime;
     room.removeUser = removeUser;

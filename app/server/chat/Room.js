@@ -14,7 +14,7 @@ function computeUsersInRoomString(userIds, allUsers) {
 
   if (userIds.length > 0) {
     usersInRoomString = allUsers[userIds[0]].name;
-    for (i = 1, count = userIds; i < count; i++) {
+    for (i = 1, count = userIds.length; i < count; i++) {
       usersInRoomString += ' ' + allUsers[userIds[i]].name;
     }
     return usersInRoomString;
