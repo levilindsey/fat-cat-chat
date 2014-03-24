@@ -67,7 +67,7 @@
 
     if (outMessageManager.chatManager.allRooms.length > 0) {
       outMessageManager.chatManager.allRooms.forEach(function (room) {
-        message = outMessageManager.chatManager.parseInternalMessage(' * ' + room.name, false);
+        message = outMessageManager.chatManager.parseInternalMessage('&nbsp;- ' + room.name, false);
         console.addMessage(message);
       });
     } else {
@@ -370,7 +370,8 @@
     } else {
       if (isPrivate) {
         command = 'msg';
-        arguments = [thisUserName, outMessageManager.chatManager.thisUser.privateChatUser.name, rawText];
+        arguments =
+            [thisUserName, outMessageManager.chatManager.thisUser.privateChatUser.name, rawText];
         rawText = '/msg ' + arguments[0] + ' ' + arguments[1] + ' (' + arguments[2] + ')';
         htmlTextPrefix = thisUserName + ': ';
         htmlTextPrefix = outMessageManager.chatManager.parseRawMessageTextForDom(htmlTextPrefix);
@@ -381,7 +382,7 @@
             '/pubmsg ' + thisUserName + ' ' +
                 outMessageManager.chatManager.thisUser.activeRoom.name + ' (' + rawText + ')';
         htmlTextPrefix = thisUserName + ': ';
-            htmlTextPrefix = outMessageManager.chatManager.parseRawMessageTextForDom(htmlTextPrefix);
+        htmlTextPrefix = outMessageManager.chatManager.parseRawMessageTextForDom(htmlTextPrefix);
         htmlText = htmlTextPrefix + htmlText;
       }
     }
@@ -442,7 +443,7 @@
         printRooms.call(outMessageManager, console);
         break;
       case 'join':
-        joinRoom.call(outMessageManager, message.arguments[0], message);
+        joinRoom.call(outMessageManager, message.arguments[0], message, console);
         break;
       case 'msg':
         enteredAsACommand = rawText.length > 4 && rawText.substr(0, 4) === '/msg';
@@ -475,16 +476,28 @@
    * @function OutMessageManager#joinRoom
    * @param {String} roomName
    * @param {Message} message
+   * @param {ChatConsole} [console]
+   * @returns {Boolean}
    */
-  function joinRoom(roomName, message) {
+  function joinRoom(roomName, message, console) {
     var outMessageManager, room, rawText;
 
     log.d('joinRoom', 'roomName=' + roomName);
     outMessageManager = this;
+    console = console || outMessageManager.chatManager.consoles.chatRoomMessages;
 
     if (!roomName) {
       log.e('joinRoom', 'No roomName');
-      return;
+      return false;
+    }
+
+    // Validate the characters in the room name
+    if (!roomName.match(params.NAME_VALIDATION.regex)) {
+      // Notify the user that we did something
+      rawText = 'Names can only contain the characters ' + params.NAME_VALIDATION.validChars;
+      message = outMessageManager.chatManager.parseInternalMessage(rawText, true);
+      console.addMessage(message);
+      return false;
     }
 
     room = outMessageManager.chatManager.getRoomFromName(roomName);
@@ -525,23 +538,36 @@
         'Welcome ' + outMessageManager.chatManager.thisUser.name + ' to room ' + roomName + '! :)';
     message = outMessageManager.chatManager.parseInternalMessage(rawText, false);
     outMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
+
+    return true;
   }
 
   /**
    * @function OutMessageManager#changeOwnNickname
    * @param {String} nickname
    * @param {Message} message
-   * @param {ChatConsole} console
+   * @param {ChatConsole} [console]
+   * @returns {Boolean}
    */
   function changeOwnNickname(nickname, message, console) {
     var outMessageManager, rawText;
 
     log.d('changeOwnNickname', 'nickname=' + nickname);
     outMessageManager = this;
+    console = console || outMessageManager.chatManager.consoles.chatRoomMessages;
 
     if (!nickname) {
       log.e('changeOwnNickname', 'No nickname');
-      return;
+      return false;
+    }
+
+    // Validate the characters in the nickname
+    if (!nickname.match(params.NAME_VALIDATION.regex)) {
+      // Notify the user that we did something
+      rawText = 'Names can only contain the characters ' + params.NAME_VALIDATION.validChars;
+      message = outMessageManager.chatManager.parseInternalMessage(rawText, true);
+      console.addMessage(message);
+      return false;
     }
 
     // Create the message if it does not already exist
@@ -549,8 +575,6 @@
       rawText = '/nick ' + nickname;
       message = parseOutGoingMessage.call(outMessageManager, rawText, false);
     }
-
-    console = console || outMessageManager.chatManager.consoles.chatRoomMessages;
 
     // Show the user-entered command
     console.addMessage(message);
@@ -562,9 +586,12 @@
       rawText = 'There is already a user with the name ' + nickname;
       message = outMessageManager.chatManager.parseInternalMessage(rawText, true);
       console.addMessage(message);
+
+      return false;
     } else {
       // Change to this new nickname
       outMessageManager.socketManager.sendMessage(message);
+      return true;
     }
   }
 

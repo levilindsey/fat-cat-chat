@@ -40,10 +40,10 @@
     socketManager.outMessageManager.init(uiManager.chatManager);
 
     socketManager.socket = io.connect(socketManager.server.address);
-    socketManager.socket.on('message', function(message) {
+    socketManager.socket.on('message', function (message) {
       receivedMessage.call(socketManager, message)
     });
-    socketManager.socket.on('connect', function() {
+    socketManager.socket.on('connect', function () {
       // Send the initial heartbeat to the server
       socketManager.outMessageManager.sendHeartbeat(socketManager.uiManager.chatManager.thisUser);
     });

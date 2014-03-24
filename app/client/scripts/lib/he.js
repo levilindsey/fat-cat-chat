@@ -149,7 +149,7 @@ if (!window.app) window.app = {};
       if (useNamedReferences) {
         string =
             string.replace(/&gt;\u20D2/g, '&nvgt;').replace(/&lt;\u20D2/g,
-                    '&nvlt;').replace(/&#x66;&#x6A;/g, '&fjlig;');
+                '&nvlt;').replace(/&#x66;&#x6A;/g, '&fjlig;');
       }
       // Encode non-ASCII symbols
       if (useNamedReferences) {

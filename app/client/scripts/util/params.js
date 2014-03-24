@@ -61,19 +61,19 @@
       ':( Sorry, but some of the fancy features of this app may not work on your browser. You should really upgrade to a newer version.';
 
   moduleParams.HELP_MESSAGES = [
-    ' * /help: Type /help to see a list of the available commands.',
-    ' * /rooms: Type /rooms to see all of the current rooms.',
-    ' * /join: Type /join #&lt;channel_name&gt; to join a new channel. If the channel did not previously exist, it will be created.',
-    ' * /msg: Type /msg &lt;user_name&gt; (&lt;message&gt;) to send a private message to a user.',
-    ' * /nick: Type /nick &lt;new_nickname&gt; to change your nickname.',
-    ' * /ping: Type /ping &lt;user_name&gt; to get the lag time between you and another user.',
-    ' * /ignore: Type /ignore &lt;user_name&gt; to ignore all messages from a user.',
-    ' * /leave: Type /leave to leave the chat room. If you are the last user to leave the channel, it will be removed.',
-    ' * /quit: Type /quit to be removed from the chat server.',
-    ' * /link: Type /link &lt;http[s]://somelink.com&gt; (&lt;message&gt;) anywhere within a message to indicate that the given message should be shown as a hyperlink pointing to the given URL.',
-    ' * All commands&mdash;except the /link command&mdash;must be given as the first text in the message.',
-    ' * Type anything not prefixed with / in order to send a message to everyone in the room.',
-    ' * Any word that starts with "http[s]://[...]" will be shown as an active hyperlink within the console.'
+    '&nbsp;- /help: Type /help to see a list of the available commands.',
+    '&nbsp;- /rooms: Type /rooms to see all of the current rooms.',
+    '&nbsp;- /join: Type /join #&lt;channel_name&gt; to join a new channel. If the channel did not previously exist, it will be created.',
+    '&nbsp;- /msg: Type /msg &lt;user_name&gt; (&lt;message&gt;) to send a private message to a user.',
+    '&nbsp;- /nick: Type /nick &lt;new_nickname&gt; to change your nickname.',
+    '&nbsp;- /ping: Type /ping &lt;user_name&gt; to get the lag time between you and another user.',
+    '&nbsp;- /ignore: Type /ignore &lt;user_name&gt; to ignore all messages from a user.',
+    '&nbsp;- /leave: Type /leave to leave the chat room. If you are the last user to leave the channel, it will be removed.',
+    '&nbsp;- /quit: Type /quit to be removed from the chat server.',
+    '&nbsp;- /link: Type /link &lt;http[s]://somelink.com&gt; (&lt;message&gt;) anywhere within a message to indicate that the given message should be shown as a hyperlink pointing to the given URL.',
+    '&nbsp;- All commands&mdash;except the /link command&mdash;must be given as the first text in the message.',
+    '&nbsp;- Type anything not prefixed with / in order to send a message to everyone in the room.',
+    '&nbsp;- Any word that starts with "http[s]://[...]" will be shown as an active hyperlink within the console.'
   ];
 
   // --- Miscellaneous parameters --- //
@@ -93,47 +93,47 @@
   params.OUT_COMMANDS = {
     help: {
       regex: /^\/help$/,
-      rawString: '/help',
+      replacementRegex: /\/help/g,
       htmlElement: '<code class=\'command\'>/help</code>'
     },
     rooms: {
       regex: /^\/rooms$/,
-      rawString: '/rooms',
+      replacementRegex: /\/rooms/g,
       htmlElement: '<code class=\'command\'>/rooms</code>'
     },
     join: {
       regex: /^\/join (\S+)$/,
-      rawString: '/join',
+      replacementRegex: /\/join/g,
       htmlElement: '<code class=\'command\'>/join</code>'
     },
     msg: {
       regex: /^\/msg (\S+) \((.*)\)$/,
-      rawString: '/msg',
+      replacementRegex: /\/msg/g,
       htmlElement: '<code class=\'command\'>/msg</code>'
     },
     nick: {
       regex: /^\/nick (\S+)$/,
-      rawString: '/nick',
+      replacementRegex: /\/nick/g,
       htmlElement: '<code class=\'command\'>/nick</code>'
     },
     ping: {
       regex: /^\/ping (\S+)$/,
-      rawString: '/ping',
+      replacementRegex: /\/ping/g,
       htmlElement: '<code class=\'command\'>/ping</code>'
     },
     ignore: {
       regex: /^\/ignore (\S+)$/,
-      rawString: '/ignore',
+      replacementRegex: /\/ignore/g,
       htmlElement: '<code class=\'command\'>/ignore</code>'
     },
     leave: {
       regex: /^\/leave$/,
-      rawString: '/leave',
+      replacementRegex: /\/leave/g,
       htmlElement: '<code class=\'command\'>/leave</code>'
     },
     quit: {
       regex: /^\/quit$/,
-      rawString: '/quit',
+      replacementRegex: /\/quit/g,
       htmlElement: '<code class=\'command\'>/quit</code>'
     }
   };
@@ -186,64 +186,69 @@
     htmlElement: '<code class=\'command\'>/link</code>'
   };
 
+  params.NAME_VALIDATION = {
+    regex: /^[a-z0-9_]+$/i,
+    validChars: 'a-z A-Z 0-9 _'
+  };
+
   params.EMOTICONS = {
     happy: {
-      raw: [ ':)', ':-)' ],
+      replacementRegexes: [ /\:\)/g, /\:\-\)/g ],
       html: '<img src=\'' + params.TRANSPARENT_GIF_URL +
           '\' class=\'emoticon happy\' alt=\'Happy emoticon\' />'
     },
     superHappy: {
-      raw: [ ':D', ':-D' ],
+      replacementRegexes: [ /\:D/g, /\:\-D/g ],
       html: '<img src=\'' + params.TRANSPARENT_GIF_URL +
           '\' class=\'emoticon superHappy\' alt=\'Super happy emoticon\' />'
     },
     wink: {
-      raw: [ ';)', ';-)' ],
+      replacementRegexes: [ /;\)/g, /;\-\)/g ],
       html: '<img src=\'' + params.TRANSPARENT_GIF_URL +
           '\' class=\'emoticon wink\' alt=\'Wink emoticon\' />'
     },
     cry: {
-      raw: [ ':\'(', ':\'-(', ':&#x27;(', ':&#x27;-(' ],
+      replacementRegexes: [ /\:\'\(/g, /\:\'-\(/g, /\:&#x27;\(/g, /\:&#x27;-\(/g ],
       html: '<img src=\'' + params.TRANSPARENT_GIF_URL +
           '\' class=\'emoticon cry\' alt=\'Cry emoticon\' />'
     },
     surprise: {
-      raw: [ ':o', ':-o', ':O', ':-O' ],
+      replacementRegexes: [ /\:o/g, /\:\-o/g, /\:O/g, /\:\-O/g ],
       html: '<img src=\'' + params.TRANSPARENT_GIF_URL +
           '\' class=\'emoticon surprise\' alt=\'Surprise emoticon\' />'
     },
     uncertain: {
-      raw: [ ':/', ':-/' ],
+      replacementRegexes: [ /\:\//g, /\:\-\//g ],
       html: '<img src=\'' + params.TRANSPARENT_GIF_URL +
           '\' class=\'emoticon uncertain\' alt=\'Uncertain emoticon\' />'
     },
     angry: {
-      raw: [ 'x(', 'x-(', 'X(', 'X-(' ],
+      replacementRegexes: [ /x\(/g, /x\-\(/g, /X\(/g, /X\-\(/g ],
       html: '<img src=\'' + params.TRANSPARENT_GIF_URL +
           '\' class=\'emoticon angry\' alt=\'Angry emoticon\' />'
     },
     sad: {
-      raw: [ ':(', ':-(' ],
+      replacementRegexes: [ /\:\(/g, /\:\-\(/g ],
       html: '<img src=\'' + params.TRANSPARENT_GIF_URL +
           '\' class=\'emoticon sad\' alt=\'Sad emoticon\' />'
     },
     sunglasses: {
-      raw: [ 'B)', 'B-)' ],
+      replacementRegexes: [ /B\)/g, /B-\)/g ],
       html: '<img src=\'' + params.TRANSPARENT_GIF_URL +
           '\' class=\'emoticon sunglasses\' alt=\'Sunglasses emoticon\' />'
     },
     tongue: {
-      raw: [ ':P', ':-P', ':p', ':-p' ],
+      replacementRegexes: [ /\:P/g, /\:\-P/g, /\:p/g, /\:\-p/g ],
       html: '<img src=\'' + params.TRANSPARENT_GIF_URL +
           '\' class=\'emoticon tongue\' alt=\'Tongue emoticon\' />'
     },
     heart: {
-      raw: [ '<3', '&#x3C;3' ],
+      replacementRegexes: [ /<3/g, /&#x3C;3/g ],
       html: '<img src=\'' + params.TRANSPARENT_GIF_URL +
           '\' class=\'emoticon heart\' alt=\'Heart emoticon\' />'
     },
     blank: {
-      raw: [ ':|', ':-|' ],
+      replacementRegexes: [ /\:\|/g, /\:\-\|/g ],
       html: '<img src=\'' + params.TRANSPARENT_GIF_URL +
           '\' class=\'emoticon blank\' alt=\'Blank emoticon\' />'
     }

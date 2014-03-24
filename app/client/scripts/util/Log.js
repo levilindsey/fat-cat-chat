@@ -22,8 +22,8 @@
    */
   function write(severity, methodName, message) {
     message =
-        severity + '; ' + this.moduleName + '.' + methodName + '; ' + (message || '--') +
-            '; ' + util.millisToTimeString(getCurrentRunTime());
+        severity + '; ' + this.moduleName + '.' + methodName + '; ' + (message || '--') + '; ' +
+            util.millisToTimeString(getCurrentRunTime());
 
     // Record each entry in a queue of fixed-size
     recentEntries.push(message);

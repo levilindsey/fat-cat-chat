@@ -42,7 +42,7 @@
     user.activeRoom = null;
     user.privateChatUser = null;
 
-    user.setName = function(name) {
+    user.setName = function (name) {
       user.name = name;
       user.nameRegex = new RegExp('\\b' + name + '\\b', 'g');
     };

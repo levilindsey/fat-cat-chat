@@ -103,6 +103,8 @@
   function showErrorMessage(message) {
     var body, errorMessageElement;
 
+    log.w('showErrorMessage', 'message=' + message);
+
     body = document.getElementsByTagName('body')[0];
 
     errorMessageElement = util.createElement('div', body, null, ['errorMessage']);
@@ -127,6 +129,7 @@
   // ------------------------------------------------------------------------------------------- //
 
   if (!window.app) window.app = {};
+  app.showErrorMessage = showErrorMessage;
 
   console.log('index module loaded');
 

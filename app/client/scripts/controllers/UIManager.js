@@ -61,9 +61,11 @@
     privateChatBody = privateChatContainer.querySelector('.panelBody');
 
     roomsConsole =
-        new ChatConsole('directoryRoomsConsole', 'directoryRoomsHeader', 'directoryPanel', uiManager);
+        new ChatConsole('directoryRoomsConsole', 'directoryRoomsHeader', 'directoryPanel',
+            uiManager);
     directoryUsersConsole =
-        new ChatConsole('directoryUsersConsole', 'directoryUsersHeader', 'directoryPanel', uiManager);
+        new ChatConsole('directoryUsersConsole', 'directoryUsersHeader', 'directoryPanel',
+            uiManager);
     chatRoomMessagesConsole =
         new ChatConsole('roomChatMessagesConsole', 'roomChatHeader', 'roomChatPanel', uiManager);
     chatRoomUsersConsole =
@@ -232,15 +234,22 @@
    * @function UIManager~onDialogueConfimation
    */
   function onDialogueConfimation() {
-    var uiManager, value;
+    var uiManager, value, succeeded;
+
     uiManager = this;
     value = uiManager.panels.textEntryDialogue.textBox.value;
+
     if (uiManager.dialogueIsForNewRoom) {
-      uiManager.socketManager.outMessageManager.joinRoom(value, null);
+      succeeded = uiManager.socketManager.outMessageManager.joinRoom(value, null, null);
     } else {
-      uiManager.socketManager.outMessageManager.changeOwnNickname(value, null);
+      succeeded = uiManager.socketManager.outMessageManager.changeOwnNickname(value, null, null);
     }
-    closeTextEntryDialogue.call(uiManager);
+
+    if (succeeded) {
+      closeTextEntryDialogue.call(uiManager);
+    } else {
+      app.showErrorMessage(':( Names cannot already be in use and can only contain the characters ' + params.NAME_VALIDATION.validChars);
+    }
   }
 
   /**

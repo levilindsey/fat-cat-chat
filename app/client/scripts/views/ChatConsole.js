@@ -62,7 +62,9 @@
    */
   function checkIsScrolledToBottom() {
     var chatConsole = this;
-    return chatConsole.elements.container.scrollTop >= chatConsole.elements.container.scrollHeight - chatConsole.elements.container.clientHeight - SCROLL_BOTTOM_CLOSE_ENOUGH_DISTANCE;
+    return chatConsole.elements.container.scrollTop >=
+        chatConsole.elements.container.scrollHeight - chatConsole.elements.container.clientHeight -
+            SCROLL_BOTTOM_CLOSE_ENOUGH_DISTANCE;
   }
 
   /**

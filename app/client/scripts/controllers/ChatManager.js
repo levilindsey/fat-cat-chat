@@ -127,7 +127,7 @@
     chatManager.addUser(chatManager.thisUser);
 
     chatManager.lastServerHeartbeatTime = Date.now();
-    setInterval(function() {
+    setInterval(function () {
       monitorHeartbeat.call(chatManager);
     }, params.HEARTBEAT_REQUEST_INTERVAL);
   }
@@ -297,13 +297,16 @@
     // --- Sync users in room --- //
 
     // Check whether the rooms match
-    if (chatManager.thisUser.activeRoom && chatManager.thisUser.activeRoom.name === currentRoomName) {
+    if (chatManager.thisUser.activeRoom &&
+        chatManager.thisUser.activeRoom.name === currentRoomName) {
       currentRoom = chatManager.getRoomFromName(currentRoomName);
 
       // Add any users the client is missing to the room
       for (i = 0, count = userNamesInRoom.length; i < count; i++) {
         if (!currentRoom.getUserFromName(userNamesInRoom[i])) {
-          log.d('syncLocalStateToServer', 'Adding user to room: userName=' + userNamesInRoom[i] + ', roomName=' + currentRoomName);
+          log.d('syncLocalStateToServer',
+              'Adding user to room: userName=' + userNamesInRoom[i] + ', roomName=' +
+                  currentRoomName);
           chatManager.addUserToRoom(new User(userNamesInRoom[i], time), currentRoom);
         }
       }
@@ -312,7 +315,9 @@
       for (i = 0; i < currentRoom.users.length; i++) {
         if (userNamesInRoom.indexOf(currentRoom.users[i].name) < 0 &&
             currentRoom.users[i] !== chatManager.thisUser) {
-          log.d('syncLocalStateToServer', 'Removing user from room: userName=' + currentRoom.users[i].name + ', roomName=' + currentRoomName);
+          log.d('syncLocalStateToServer',
+              'Removing user from room: userName=' + currentRoom.users[i].name + ', roomName=' +
+                  currentRoomName);
           chatManager.removeUserFromRoom(currentRoom.users[i], currentRoom);
         }
       }
@@ -510,7 +515,7 @@
 
     for (property in params.OUT_COMMANDS) {
       text =
-          text.replace(params.OUT_COMMANDS[property].rawString,
+          text.replace(params.OUT_COMMANDS[property].replacementRegex,
               params.OUT_COMMANDS[property].htmlElement);
     }
 
@@ -526,7 +531,7 @@
     var property, rawArray, html, i, count;
 
     for (property in params.EMOTICONS) {
-      rawArray = params.EMOTICONS[property].raw;
+      rawArray = params.EMOTICONS[property].replacementRegexes;
       html = params.EMOTICONS[property].html;
 
       for (i = 0, count = rawArray.length; i < count; i++) {
