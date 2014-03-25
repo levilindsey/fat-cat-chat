@@ -30,14 +30,14 @@
     fromUser = inMessageManager.chatManager.getUserFromName(fromUserName);
     toUser = inMessageManager.chatManager.getUserFromName(toUserName);
 
-    if (toUser === inMessageManager.chatManager.thisUser) {
+    if (fromUser && toUser === inMessageManager.chatManager.thisUser) {
       // Parse message to display in console
       prefix = fromUserName + ': ';
       htmlText = inMessageManager.chatManager.parseRawMessageTextForDom(prefix + messageText);
       message = new Message(messageText, htmlText, fromUser, Date.now(), 'in', null, null);
       inMessageManager.chatManager.showPrivateMessage(message, fromUser);
     } else {
-      log.w('receivedPrivateMessage', 'User doesn\'t match current user');
+      log.w('receivedPrivateMessage', 'toUser doesn\'t match current user, or fromUser does not exist');
     }
   }
 

@@ -27,10 +27,14 @@
    * @returns {String}
    */
   function parseRooms(text) {
-    var chatManager = this;
-    chatManager.allRooms.forEach(function (room) {
-      text = text.replace(room.nameRegex, '<code class=\'room\'>' + room.name + '</code>');
-    });
+    var chatManager, i, count, room;
+    chatManager = this;
+
+    for (i = 0, count = chatManager.allRooms.length; i < count; i++) {
+      room = chatManager.allRooms[i];
+      text = text.replace(room.nameRegex, '<code class=\"room\" onclick=\"app.chatManager.onRoomNameClick(\'' + room.name + '\')\" tooltip=\"Click to join chat room\">' + room.name + '</code>');
+    }
+
     return text;
   }
 
@@ -40,21 +44,18 @@
    * @returns {String}
    */
   function parseUsers(text) {
-    var chatManager = this;
-    chatManager.allUsers.forEach(function (user) {
-      text = text.replace(user.nameRegex, '<code class=\'user\'>' + user.name + '</code>');
-    });
-    return text;
-  }
+    var chatManager, i, count, user;
+    chatManager = this;
 
-  /**
-   * @function ChatManager~parseOwnName
-   * @param {String} text
-   * @returns {String}
-   */
-  function parseOwnName(text) {
-    var chatManager = this;
-    text = text.replace(chatManager.thisUser.nameRegex, '*' + chatManager.thisUser.name);
+    for (i = 0, count = chatManager.allUsers.length; i < count; i++) {
+      user = chatManager.allUsers[i];
+      if (user === chatManager.thisUser) {
+        text = text.replace(user.nameRegex, '<code class=\"user thisUser\" tooltip=\"This is you!\">' + user.name + '</code>');
+      } else {
+        text = text.replace(user.nameRegex, '<code class=\"user\" onclick=\"app.chatManager.onUserNameClick(\'' + user.name + '\')\" tooltip=\"Click to open private chat\">' + user.name + '</code>');
+      }
+    }
+
     return text;
   }
 
@@ -149,10 +150,9 @@
     text = parseEmoticons(text);
     text = parseRooms.call(chatManager, text);
     text = parseUsers.call(chatManager, text);
-    text = parseOwnName.call(chatManager, text);
     // TODO: parseURLs
 
-    // TODO: add an additional class, 'thisUser':
+    // TODO: add an additional css class, 'thisUser':
     // - add to the code element for the user name of this user
     // - give it an underline
     // - make sure it does NOT get the pointer cursor
@@ -217,7 +217,7 @@
 
   /**
    * @function ChatManager#showPrivateMessage
-   * @param {Message} message
+   * @param {Message|null} message If message is null, then the private chat window will be opened to the given private user with no message sent.
    * @param {User} privateChatUser
    */
   function showPrivateMessage(message, privateChatUser) {
@@ -225,22 +225,27 @@
 
     chatManager = this;
 
-    // Show the message
-    chatManager.consoles.privateMessages.addMessage(message);
+    // Don't do anything if the private chat user does not exist
+    if (privateChatUser) {
+      chatManager.thisUser.privateChatUser = privateChatUser;
 
-    chatManager.uiManager.textBoxes.privateMessages.textBox.focus();
+      chatManager.uiManager.textBoxes.privateMessages.textBox.focus();
 
-    chatManager.thisUser.privateChatUser = privateChatUser;
-    privateChatUser.privateMessages.push(message);
+      if (message) {
+        // Show the message
+        chatManager.consoles.privateMessages.addMessage(message);
+        privateChatUser.privateMessages.push(message);
+      }
 
-    // TODO:
-    // - add the logic to position the private message console onResize
-    // - add the logic to toggle the private message console visibility
-    // - show the private message console here
-    // - change the header of the private message console to show the private chat user's name
-    // - make sure I add some way of closing the private message console (an 'X' button in the top-right corner?)
-    // - if this is a new private chat user, then show all of the messages contained the user's list
-    // - switch out the panel state if this is not the same private chat user as the last message
+      // TODO:
+      // - add the logic to position the private message console onResize
+      // - add the logic to toggle the private message console visibility
+      // - show the private message console here
+      // - change the header of the private message console to show the private chat user's name
+      // - make sure I add some way of closing the private message console (an 'X' button in the top-right corner?)
+      // - if this is a new private chat user, then show all of the messages contained the user's list
+      // - switch out the panel state if this is not the same private chat user as the last message
+    }
   }
 
   /**
@@ -462,6 +467,26 @@
     chatManager.consoles.chatRoomUsers.changeMessageRawText(oldName, newName);
   }
 
+  /**
+   * @function ChatManager#onUserNameClick
+   * @param {String} userName
+   */
+  function onUserNameClick(userName) {
+    var chatManager, privateChatUser;
+    chatManager = this;
+    privateChatUser = chatManager.getUserFromName(userName);
+    chatManager.showPrivateMessage(null, privateChatUser);
+  }
+
+  /**
+   * @function ChatManager#onRoomNameClick
+   * @param {String} roomName
+   */
+  function onRoomNameClick(roomName) {
+    var chatManager = this;
+    chatManager.uiManager.socketManager.outMessageManager.joinRoom(roomName, null, null);
+  }
+
   // ------------------------------------------------------------------------------------------- //
   // Private static functions
 
@@ -585,6 +610,8 @@
     chatManager.addUserToRoom = addUserToRoom;
     chatManager.removeUserFromRoom = removeUserFromRoom;
     chatManager.changeUserName = changeUserName;
+    chatManager.onUserNameClick = onUserNameClick;
+    chatManager.onRoomNameClick = onRoomNameClick;
   }
 
   // Expose this module

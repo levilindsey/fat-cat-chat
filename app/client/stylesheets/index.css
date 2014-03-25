@@ -92,7 +92,7 @@ ul {
   font-size: 24px;
   font-weight: bold;
   text-align: center;
-  z-index: 32090;
+  z-index: 100;
   cursor: pointer;
 }
 
@@ -115,7 +115,7 @@ ul {
   font-size: 30px;
   font-weight: bold;
   box-shadow: -2px 5px 15px 0 #000000;
-  z-index: 20;
+  z-index: 10;
   -webkit-border-radius: 6px 6px 0 0;
   -moz-border-radius: 6px 6px 0 0;
   -ms-border-radius: 6px 6px 0 0;
@@ -495,10 +495,21 @@ img.emoticon.blank {
 
 code.room {
   color: #ffb080;
+  cursor: pointer;
 }
 
 code.user {
   color: #99eeaa;
+  cursor: pointer;
+}
+
+code.user.thisUser, code.user.thisUser:before {
+  color: #66bb88;
+  cursor: default;
+}
+
+code.user.thisUser:before {
+  content: '*';
 }
 
 .emoticon {
@@ -508,4 +519,29 @@ code.user {
 
 code.command {
   font-weight: bold;
+}
+
+/* Custom tooltip */
+[tooltip] {
+  position: relative;
+}
+[tooltip]:hover:after {
+  content: attr(tooltip);
+  position: absolute;
+  left: 100%;
+  top: 100%;
+  padding: 0 6px;
+  z-index: 20;
+  color: #101010;
+  font-family: sans-serif;
+  font-size: 14px;
+  white-space: nowrap;
+  box-shadow: 0 0 6px #000000;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  background-image: -webkit-linear-gradient(#f0f0f0, #b0b0b0);
+  background-image: -o-linear-gradient(#f0f0f0, #b0b0b0);
+  background-image: -moz-linear-gradient(#f0f0f0, #b0b0b0);
+  background-image: linear-gradient(#f0f0f0, #b0b0b0);
 }

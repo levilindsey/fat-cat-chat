@@ -68,6 +68,9 @@
       uiManager = new UIManager();
       socketManager.init(uiManager);
       uiManager.init(socketManager);
+      app.socketManager = socketManager;
+      app.uiManager = uiManager;
+      app.chatManager = uiManager.chatManager;
     }
   }
 
