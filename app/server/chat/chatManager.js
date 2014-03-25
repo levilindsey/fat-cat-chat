@@ -6,7 +6,7 @@
 // ------------------------------------------------------------------------------------------- //
 // Private static variables
 
-var HEARTBEAT_REQUEST_INTERVAL = 8000, // in milliseconds
+var HEARTBEAT_REQUEST_INTERVAL = 6500, // in milliseconds
     HEARTBEAT_TIMEOUT_DELAY = HEARTBEAT_REQUEST_INTERVAL * 3 + 100,
     IN_COMING_COMMANDS = {
       msg: {
@@ -223,6 +223,10 @@ function sendHeartbeat(userId, socketId) {
   var user, room, roomName, usersInRoomString, text, message;
 
   console.log('   sendHeartbeat: userId=' + userId + ', socketId=' + socketId);
+
+  if (userId < 0) {
+    return;
+  }
 
   user = chatManager.allUsers[userId];
 

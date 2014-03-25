@@ -336,6 +336,15 @@
 
     inMessageManager.chatManager.lastServerHeartbeatTime = Date.now();
 
+    if (!inMessageManager.chatManager.connectedToServer) {
+      // Notify the user
+      message = inMessageManager.chatManager.parseInternalMessage('Connected to server!', false);
+      inMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
+      inMessageManager.chatManager.consoles.privateMessages.addMessage(message);
+
+      inMessageManager.chatManager.connectedToServer = true;
+    }
+
     user = inMessageManager.chatManager.getUserFromName(userName);
     allRooms = allRoomsString ? allRoomsString.split(' ') : [];
     allUsers = allUsersString ? allUsersString.split(' ') : [];

@@ -100,10 +100,14 @@
 
     // Check whether our connection has timed out
     if (currentTime - chatManager.lastServerHeartbeatTime > params.HEARTBEAT_TIMEOUT_DELAY) {
-      // Notify the user
-      message = chatManager.parseInternalMessage('Server connection lost', true);
-      chatManager.consoles.chatRoomMessages.addMessage(message);
-      chatManager.consoles.privateMessages.addMessage(message);
+      if (chatManager.connectedToServer) {
+        // Notify the user
+        message = chatManager.parseInternalMessage('Server connection lost!', true);
+        chatManager.consoles.chatRoomMessages.addMessage(message);
+        chatManager.consoles.privateMessages.addMessage(message);
+      }
+
+      chatManager.connectedToServer = false;
 
       // Send a request for a new heartbeat
       chatManager.socketManager.outMessageManager.sendHeartbeatRequest();
@@ -595,6 +599,7 @@
     chatManager.allRooms = [];
     chatManager.consoles = null;
     chatManager.lastServerHeartbeatTime = Number.NEGATIVE_INFINITY;
+    chatManager.connectedToServer = false;
 
     chatManager.init = init;
     chatManager.getRoomFromName = getRoomFromName;
