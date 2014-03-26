@@ -302,7 +302,7 @@
    * @returns {Message}
    */
   function parseOutGoingMessage(rawText, isPrivate) {
-    var outMessageManager, htmlText, htmlTextPrefix, time, type, result, command, arguments, thisUserName;
+    var outMessageManager, htmlText, htmlTextPrefix, time, type, result, command, arguments, thisUserName, isACommand;
 
     log.d('parseOutGoingMessage', 'rawText=' + rawText);
     outMessageManager = this;
@@ -320,6 +320,8 @@
 
     // Is this a command?
     if (rawText[0] === '/') {
+      isACommand = true;
+
       if (params.OUT_COMMANDS.help.regex.exec(rawText)) {
         command = 'help';
       } else if (params.OUT_COMMANDS.rooms.regex.exec(rawText)) {
@@ -361,13 +363,17 @@
             '/leave ' + thisUserName + ' ' + outMessageManager.chatManager.thisUser.activeRoom.name;
       } else if (params.OUT_COMMANDS.quit.regex.exec(rawText)) {
         command = 'quit';
+      } else if (rawText.substr(0, 5) === '/link') {
+        isACommand = false;
       } else {
         // Print an error message to the user, because she entered an invalid command
         type = 'error';
         command = 'none';
         arguments = ['Invalid command'];
       }
-    } else {
+    }
+
+    if (!isACommand) {
       if (isPrivate) {
         command = 'msg';
         arguments =

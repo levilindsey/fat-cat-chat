@@ -180,10 +180,14 @@
     }
   };
 
-  params.LINK_COMMAND = {
-    regex: /\/link (\S+) \((.*)\)/,
-    rawString: '/link',
-    htmlElement: '<code class=\'command\'>/link</code>'
+  params.LINK_REPLACEMENT = {
+    linkRegex: /(?:\/link (\S+) \(([^()]+)\)|(\bhttps?:\/\/\S+\b))/g,
+    replacementRegex: /%%/g,
+    replacementString: '%%',
+    toEscapeRegex: /%/g,
+    toEscapeString: '%',
+    escapeWithRegex: /\\%/g,
+    escapeWithString: '\\%'
   };
 
   params.NAME_VALIDATION = {

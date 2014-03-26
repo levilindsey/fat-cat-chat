@@ -143,23 +143,21 @@
    * @returns {String}
    */
   function parseRawMessageTextForDom(text) {
-    var chatManager = this;
+    var chatManager, linkMatches;
+
+    chatManager = this;
+    linkMatches = [];
 
     // Encode HTML entities so that the text may be safely inserted into the HTML document
     text = he.encode(text);
 
     // Replace any substrings that represent commands, emoticons, current rooms, current users, or links with decorated versions
-    // TODO: add event handlers to the inline elements created in each of the following functions
+    text = preParseUrls(text, linkMatches);
     text = parseCommands(text);
     text = parseEmoticons(text);
     text = parseRooms.call(chatManager, text);
     text = parseUsers.call(chatManager, text);
-    // TODO: parseURLs
-
-    // TODO: add an additional css class, 'thisUser':
-    // - add to the code element for the user name of this user
-    // - give it an underline
-    // - make sure it does NOT get the pointer cursor
+    text = postParseUrls(text, linkMatches);
 
     return text;
   }
@@ -569,6 +567,57 @@
     }
 
     return text;
+  }
+
+  /**
+   * @function ChatManager.preParseUrls
+   * @param {String} text
+   * @param {Array.<Object>} linkMatches
+   * @returns {String}
+   */
+  function preParseUrls(text, linkMatches) {
+    var linkMatch;
+
+    // Escape the characters used in our special link replacement string
+    text = text.replace(params.LINK_REPLACEMENT.toEscapeRegex, params.LINK_REPLACEMENT.escapeWithString);
+
+    // Record the links and replace them with a special character combination
+    return text.replace(params.LINK_REPLACEMENT.linkRegex, function(match, group1, group2, group3) {
+      if (group1) {
+        linkMatch = {
+          url: group1,
+          linkText: group2
+        };
+      } else { // group3
+        linkMatch = {
+          url: group3,
+          linkText: group3
+        };
+      }
+      linkMatches.push(linkMatch);
+      return params.LINK_REPLACEMENT.replacementString;
+    });
+  }
+
+  /**
+   * @function ChatManager.preParseUrls
+   * @param {String} text
+   * @param {Array.<Object>} linkMatches
+   * @returns {String}
+   */
+  function postParseUrls(text, linkMatches) {
+    var i, linkString;
+    i = 0;
+
+    // Replace occurrences of our special link replacement string with the actual HTML link elements
+    text = text.replace(params.LINK_REPLACEMENT.replacementRegex, function() {
+      linkString = '<a href=\"' + linkMatches[i].url + '\" target=\"_blank\">' + linkMatches[i].linkText + '</a>';
+      i++;
+      return linkString;
+    });
+
+    // Un-escape the original occurrences of our special link replacement characters
+    return text.replace(params.LINK_REPLACEMENT.escapeWithRegex, params.LINK_REPLACEMENT.toEscapeString);
   }
 
   /**
