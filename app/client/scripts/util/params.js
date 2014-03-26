@@ -27,8 +27,8 @@
   moduleParams.BODY_MARGIN = 16;
   moduleParams.BORDER_THICKNESS = 1;
   moduleParams.USERS_CONSOLE_WIDTH = 200;
-  moduleParams.PRIVATE_CONSOLE_WIDTH = 300;
-  moduleParams.PRIVATE_CONSOLE_HEIGHT = 260;
+//  moduleParams.PRIVATE_CONSOLE_WIDTH = 300;
+//  moduleParams.PRIVATE_CONSOLE_HEIGHT = 260;
   moduleParams.TEXT_BOX_PADDING = 2;
 
   // --- Log parameters --- //
@@ -38,7 +38,7 @@
 
   moduleParams.RECENT_ENTRIES_LIMIT = 80;
   moduleParams.DEBUG = true;
-  moduleParams.VERBOSE = true;
+  moduleParams.VERBOSE = false;
 
   moduleParams.SEPARATOR_LINE =
       '********************************************************************************';
@@ -87,8 +87,8 @@
   params.SMALL_SCREEN_WIDTH_THRESHOLD = 900;
   params.SMALL_SCREEN_HEIGHT_THRESHOLD = 675;
 
-  params.HEARTBEAT_REQUEST_INTERVAL = 6500;
-  params.HEARTBEAT_TIMEOUT_DELAY = params.HEARTBEAT_REQUEST_INTERVAL * 3 + 100;
+  params.HEARTBEAT_REQUEST_INTERVAL = 4000;
+  params.HEARTBEAT_TIMEOUT_DELAY = params.HEARTBEAT_REQUEST_INTERVAL * 2 + 200;
 
   params.OUT_COMMANDS = {
     help: {

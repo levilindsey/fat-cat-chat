@@ -22,9 +22,13 @@
     consoleEntry = this;
 
     li =
-        util.createElement('li', consoleEntry.parent, null,
+        util.createElement('li', null, null,
             ['consoleEntry', consoleEntry.message.type]);
     li.innerHTML = consoleEntry.message.htmlText;
+
+    if (consoleEntry.displayEntry) {
+      consoleEntry.parent.appendChild(li);
+    }
 
     consoleEntry.elements = {
       li: li
@@ -64,12 +68,14 @@
    * @global
    * @param {Message} message The message for this console entry to display.
    * @param {HTMLElement} parent The parent element to add this entry's DOM element to.
+   * @param {Boolean} displayEntry
    */
-  function ConsoleEntry(message, parent) {
+  function ConsoleEntry(message, parent, displayEntry) {
     var consoleEntry = this;
 
     consoleEntry.message = message;
     consoleEntry.parent = parent;
+    consoleEntry.displayEntry = displayEntry;
     consoleEntry.removeFromDom = removeFromDom;
     consoleEntry.elements = null;
 

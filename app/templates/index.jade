@@ -12,6 +12,8 @@ html(lang='en')
     link(rel='stylesheet', href='#{BASE_DIR}/stylesheets/index.css#{currentVersion}')
   body
 
+    include privateChatPanel
+
     #contentColumn
 
       include topPanels
@@ -19,7 +21,6 @@ html(lang='en')
       include directoryPanel
       include commandsPanel
       include emoticonsPanel
-      include privateChatPanel
 
       #footer
         a(href='http://jackieandlevi.com/levi', target='_blank')

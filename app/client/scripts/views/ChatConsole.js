@@ -90,17 +90,36 @@
   }
 
   /**
+   * @function ChatConsole#replaceMessages
+   * @param {Array.<Message>} messages
+   */
+  function replaceMessages(messages) {
+    var chatConsole, i, count;
+    chatConsole = this;
+
+    chatConsole.clearMessages();
+
+    for (i = 0, count = messages.length; i < count; i++) {
+      chatConsole.addMessage(messages[i]);
+    }
+  }
+
+  /**
    * @function ChatConsole#addMessage
    * @param {Message} message The new message to add.
    */
   function addMessage(message) {
-    var chatConsole, entry, wasScrolledToBottom;
+    var chatConsole, entry, wasScrolledToBottom, displayEntry;
 
     log.d('addMessage', 'message.htmlText=' + message.htmlText);
     chatConsole = this;
+
+    // Do not display messages that are from an ignored user
+    displayEntry = !message.fromUser || !message.fromUser.isIgnored;
+
     wasScrolledToBottom = checkIsScrolledToBottom.call(chatConsole);
 
-    entry = new ConsoleEntry(message, chatConsole.elements.list);
+    entry = new ConsoleEntry(message, chatConsole.elements.list, displayEntry);
     chatConsole.entries.push(entry);
 
     if (wasScrolledToBottom) {
@@ -208,6 +227,7 @@
     chatConsole.changeMessageRawText = changeMessageRawText;
     chatConsole.setTitle = setTitle;
     chatConsole.clearMessages = clearMessages;
+    chatConsole.replaceMessages = replaceMessages;
     chatConsole.elements = null;
 
     setUpElements.call(chatConsole, containerId, headerId, panelId);

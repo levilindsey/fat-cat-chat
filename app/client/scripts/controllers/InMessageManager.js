@@ -59,7 +59,7 @@
     user = inMessageManager.chatManager.getUserFromName(userName);
     room = inMessageManager.chatManager.getRoomFromName(roomName);
 
-    if (user && room === inMessageManager.chatManager.thisUser.activeRoom &&
+    if (user && room === inMessageManager.chatManager.thisUser.room &&
         user !== inMessageManager.chatManager.thisUser) {
       // Parse message to display in console
       prefix = userName + ': ';
@@ -90,7 +90,7 @@
     if (user && room) {
       inMessageManager.chatManager.removeUserFromRoom(user, room);
 
-      if (room === inMessageManager.chatManager.thisUser.activeRoom) {
+      if (room === inMessageManager.chatManager.thisUser.room) {
         // Notify the user that something happened
         rawText = userName + ' left the room.';
         message = inMessageManager.chatManager.parseInternalMessage(rawText, false);
@@ -123,7 +123,7 @@
       if (user !== inMessageManager.chatManager.thisUser) {
         inMessageManager.chatManager.addUserToRoom(user, room);
 
-        if (room === inMessageManager.chatManager.thisUser.activeRoom) {
+        if (room === inMessageManager.chatManager.thisUser.room) {
           // Notify the user that something happened
           rawText = userName + ' joined the room.';
           message = inMessageManager.chatManager.parseInternalMessage(rawText, false);
@@ -200,8 +200,8 @@
       log.w('roomCreated', 'Room already exists');
     }
 
-    if (inMessageManager.chatManager.thisUser.activeRoom &&
-        inMessageManager.chatManager.thisUser.activeRoom !== room) {
+    if (inMessageManager.chatManager.thisUser.room &&
+        inMessageManager.chatManager.thisUser.room !== room) {
       // Notify the user that something happened
       rawText = 'Room ' + roomName + ' was created.';
       message = inMessageManager.chatManager.parseInternalMessage(rawText, false);
@@ -308,7 +308,7 @@
     inMessageManager = this;
     userName = message.arguments[0];
 
-    log.d('handleHeartbeatRequest', 'userName=' + userName);
+    log.v('handleHeartbeatRequest', 'userName=' + userName);
 
     user = inMessageManager.chatManager.getUserFromName(userName);
 
@@ -329,7 +329,7 @@
     currentRoomName = message.arguments[3];
     usersInRoomString = message.arguments[4];
 
-    log.d('handleHeartbeat',
+    log.v('handleHeartbeat',
         'userName=' + userName + ', allRoomsString=' + allRoomsString + ', allUsersString=' +
             allUsersString + ', currentRoomName=' + currentRoomName + ', usersInRoomString=' +
             usersInRoomString);
@@ -395,7 +395,7 @@
   function parseInComingMessage(rawText) {
     var inMessageManager, time, type, result, command, arguments;
 
-    log.d('parseInComingMessage', 'rawText=' + rawText);
+    log.v('parseInComingMessage', 'rawText=' + rawText);
     inMessageManager = this;
 
     if (!rawText) {
@@ -480,7 +480,7 @@
   function handleInComingMessage(rawText) {
     var inMessageManager, message;
 
-    log.d('handleInComingMessage');
+    log.v('handleInComingMessage');
     inMessageManager = this;
 
     message = parseInComingMessage.call(inMessageManager, rawText);

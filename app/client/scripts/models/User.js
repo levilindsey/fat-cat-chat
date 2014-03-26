@@ -38,8 +38,9 @@
     user.nameRegex = null;
     user.startTime = startTime;
     user.isIgnored = false;
+    // These are the private chat messages sent this user and the local user
     user.privateMessages = [];
-    user.activeRoom = null;
+    user.room = null;
     user.privateChatUser = null;
 
     user.setName = function (name) {

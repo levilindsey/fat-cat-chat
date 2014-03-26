@@ -6,8 +6,8 @@
 // ------------------------------------------------------------------------------------------- //
 // Private static variables
 
-var HEARTBEAT_REQUEST_INTERVAL = 6500, // in milliseconds
-    HEARTBEAT_TIMEOUT_DELAY = HEARTBEAT_REQUEST_INTERVAL * 3 + 100,
+var HEARTBEAT_REQUEST_INTERVAL = 4000, // in milliseconds
+    HEARTBEAT_TIMEOUT_DELAY = HEARTBEAT_REQUEST_INTERVAL * 2 + 200,
     IN_COMING_COMMANDS = {
       msg: {
         // /msg <from_user> <to_user> (<message>)
@@ -388,6 +388,9 @@ function changeUserName(userId, newName, socketId) {
     oldName = user.name;
     user.name = newName;
     updateUsersString();
+    if (user.roomId > 0) {
+      chatManager.allRooms[user.roomId].updateUsersInRoomString();
+    }
 
     // Send a message to the clients
     text = '/userchangedname ' + oldName + ' ' + newName;

@@ -6,12 +6,14 @@
 
 Some of the features of this chat server/client application include:
 
+- A chat server using Node.js and socket.io.
 - A fancy web client.
 - Commands can be triggered both from typed commands and by clicking on appropriate graphical elements.
 - Active, color-coded text for significant strings (e.g., commands, user names, room names).
     - Many of these color-coded strings can be clicked on for triggering some corresponding event (e.g., opening a private chat with a user by clicking on his/her name).
 - Adorable emoticons.
 - Private chat.
+- The ability to include links in chat messages.
 - Dummy bots for helping to test and explore the functionality.
 - Dynamic panels which can be expanded/collapsed by clicking on their headers.
 - Encodes user-entered text for safe insertion into the HTML document.
@@ -37,7 +39,7 @@ Any word that starts with `http[s]://[...]` will be shown as an active hyperlink
 
 ### Technology stack
 
-HTML5/CSS3/JavaScript, NodeJS, Express, Socket.IO, AWS Elastic Beanstalk, Jade.
+HTML5/CSS3/JavaScript, Node.js, Express, Socket.IO, AWS Elastic Beanstalk, Jade.
 
 ### External libraries
 

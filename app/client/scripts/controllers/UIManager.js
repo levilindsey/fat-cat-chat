@@ -314,7 +314,7 @@
    * @function UIManager#resize
    */
   function resize() {
-    var uiManager, panelBodyWidth, mainConsoleWidth, usersConsoleWidth, privateConsoleWidth;
+    var uiManager, panelBodyWidth, mainConsoleWidth, usersConsoleWidth;
 
     uiManager = this;
 
@@ -323,18 +323,18 @@
         panelBodyWidth - params.PANELS.BODY_MARGIN * 2 - params.PANELS.BORDER_THICKNESS * 3 -
             params.PANELS.USERS_CONSOLE_WIDTH;
     usersConsoleWidth = params.PANELS.USERS_CONSOLE_WIDTH;
-    privateConsoleWidth = params.PANELS.PRIVATE_CONSOLE_WIDTH;
+//    privateConsoleWidth = params.PANELS.PRIVATE_CONSOLE_WIDTH;
 
     uiManager.consoles.directoryRooms.resize(mainConsoleWidth);
     uiManager.consoles.directoryUsers.resize(usersConsoleWidth);
     uiManager.consoles.chatRoomMessages.resize(mainConsoleWidth);
     uiManager.consoles.chatRoomUsers.resize(usersConsoleWidth);
-    uiManager.consoles.privateMessages.resize(privateConsoleWidth);
+//    uiManager.consoles.privateMessages.resize(privateConsoleWidth);
 
     uiManager.textBoxes.chatRoomMessages.resize(mainConsoleWidth -
         params.PANELS.TEXT_BOX_PADDING * 2);
-    uiManager.textBoxes.privateMessages.resize(privateConsoleWidth -
-        params.PANELS.TEXT_BOX_PADDING * 2);
+//    uiManager.textBoxes.privateMessages.resize(privateConsoleWidth -
+//        params.PANELS.TEXT_BOX_PADDING * 2);
   }
 
   // ------------------------------------------------------------------------------------------- //

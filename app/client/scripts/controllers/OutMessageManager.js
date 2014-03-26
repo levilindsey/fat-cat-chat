@@ -84,7 +84,7 @@
    * @param {Boolean} enteredAsACommand
    */
   function sendPrivateMessage(message, console, enteredAsACommand) {
-    var outMessageManager, userName, privateChatUser, rawText, htmlText, user;
+    var outMessageManager, userName, privateChatUser, rawText, htmlTextPrefix, htmlText, thisUser;
 
     log.d('sendPrivateMessage', 'message.htmlText=' + message.htmlText);
     outMessageManager = this;
@@ -96,6 +96,7 @@
 
     userName = message.arguments[1];
     privateChatUser = outMessageManager.chatManager.getUserFromName(userName);
+    thisUser = outMessageManager.chatManager.thisUser;
 
     if (!privateChatUser) {
       // There is no user with this name
@@ -109,6 +110,15 @@
       rawText = 'There is no user with the name ' + userName + '.';
       message = outMessageManager.chatManager.parseInternalMessage(rawText, true);
       console.addMessage(message);
+    } else if (privateChatUser === thisUser) {
+      // The user is trying to private message herself
+
+      console.addMessage(message);
+
+      // Notify the user that we did something
+      rawText = 'You cannot private message yourself.';
+      message = outMessageManager.chatManager.parseInternalMessage(rawText, true);
+      console.addMessage(message);
     } else {
       outMessageManager.socketManager.sendMessage(message);
 
@@ -116,11 +126,18 @@
       if (enteredAsACommand) {
         console.addMessage(message);
 
-        // Show the text of the message, in non-command form
         rawText = message.arguments[2];
         htmlText = outMessageManager.chatManager.parseRawMessageTextForDom(rawText);
-        user = outMessageManager.chatManager.thisUser;
-        message = new Message(rawText, htmlText, user, Date.now(), 'out', 'none', null);
+
+        // Prefix the displayed message with this user's name, even if it was entered from the room chat
+        if (console === outMessageManager.chatManager.consoles.chatRoomMessages) {
+          htmlTextPrefix = thisUser.name + ': ';
+          htmlTextPrefix = outMessageManager.chatManager.parseRawMessageTextForDom(htmlTextPrefix);
+          htmlText = htmlTextPrefix + htmlText;
+        }
+
+        // Show the text of the message, in non-command form
+        message = new Message(rawText, htmlText, thisUser, Date.now(), 'out', 'none', null);
         outMessageManager.chatManager.showPrivateMessage(message, privateChatUser);
       } else {
         message.type = 'out';
@@ -173,7 +190,7 @@
    * @param {Message} message
    * @param {ChatConsole} console
    */
-  function ignoreUser(userName, console, message) {
+  function ignoreUser(userName, message, console) {
     var outMessageManager, ignoredUser, rawText;
 
     log.d('ignoreUser');
@@ -196,6 +213,7 @@
       ignoredUser.isIgnored = true;
 
       // TODO: remove all previously displayed messages from the ignored user
+      // - ChatConsole.replaceMessages
 
       rawText = 'You are now ignoring all messages from ' + userName;
     } else {
@@ -204,6 +222,7 @@
       ignoredUser.isIgnored = false;
 
       // TODO: show all previously hidden messages from the ignored user
+      // - ChatConsole.replaceMessages
 
       rawText = 'You are now receiving messages from ' + userName;
     }
@@ -237,8 +256,8 @@
 
       outMessageManager.socketManager.sendMessage(message);
 
-      outMessageManager.chatManager.thisUser.activeRoom.removeUser(outMessageManager.thisUser);
-      outMessageManager.chatManager.thisUser.activeRoom = null;
+      outMessageManager.chatManager.thisUser.room.removeUser(outMessageManager.thisUser);
+      outMessageManager.chatManager.thisUser.room = null;
     }
 
     // Hide the panel
@@ -360,7 +379,7 @@
       } else if (params.OUT_COMMANDS.leave.regex.exec(rawText)) {
         command = 'leave';
         rawText =
-            '/leave ' + thisUserName + ' ' + outMessageManager.chatManager.thisUser.activeRoom.name;
+            '/leave ' + thisUserName + ' ' + (outMessageManager.chatManager.thisUser.room ? outMessageManager.chatManager.thisUser.room.name : '/none');
       } else if (params.OUT_COMMANDS.quit.regex.exec(rawText)) {
         command = 'quit';
       } else if (rawText.substr(0, 5) === '/link') {
@@ -386,7 +405,7 @@
         command = 'pubmsg';
         rawText =
             '/pubmsg ' + thisUserName + ' ' +
-                outMessageManager.chatManager.thisUser.activeRoom.name + ' (' + rawText + ')';
+                outMessageManager.chatManager.thisUser.room.name + ' (' + rawText + ')';
         htmlTextPrefix = thisUserName + ': ';
         htmlTextPrefix = outMessageManager.chatManager.parseRawMessageTextForDom(htmlTextPrefix);
         htmlText = htmlTextPrefix + htmlText;
@@ -534,7 +553,7 @@
     outMessageManager.chatManager.consoles.chatRoomMessages.clearMessages();
     outMessageManager.chatManager.consoles.chatRoomUsers.clearMessages();
 
-    outMessageManager.chatManager.thisUser.activeRoom = room;
+    outMessageManager.chatManager.thisUser.room = room;
     outMessageManager.chatManager.addUserToRoom(outMessageManager.chatManager.thisUser, room);
 
     // Show the user-entered command
@@ -608,7 +627,7 @@
   function sendHeartbeat(user) {
     var outMessageManager, room, userName, roomName, rawText, time, type, command, arguments, message;
 
-    log.d('sendHeartbeat');
+    log.v('sendHeartbeat');
     outMessageManager = this;
 
     if (!user) {
@@ -616,7 +635,7 @@
       return;
     }
 
-    room = outMessageManager.chatManager.thisUser.activeRoom;
+    room = outMessageManager.chatManager.thisUser.room;
 
     userName = user.name;
     roomName = room ? room.name : '/none';
@@ -639,7 +658,7 @@
   function sendHeartbeatRequest() {
     var outMessageManager, user, userName, rawText, time, type, command, arguments, message;
 
-    log.d('sendHeartbeatRequest');
+    log.v('sendHeartbeatRequest');
     outMessageManager = this;
 
     user = outMessageManager.chatManager.thisUser;

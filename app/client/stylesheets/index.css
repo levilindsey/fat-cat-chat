@@ -207,18 +207,18 @@ ul {
   -ms-border-radius: 0 0 6px 6px;
   -o-border-radius: 0 0 6px 6px;
   border-radius: 0 0 6px 6px;
-  -webkit-transition: height 0.5s, max-height 0.5s;
-  -moz-transition: height 0.5s, max-height 0.5s;
-  -ms-transition: height 0.5s, max-height 0.5s;
-  -o-transition: height 0.5s, max-height 0.5s;
-  transition: height 0.5s, max-height 0.5s;
+  -webkit-transition: height 0.4s, max-height 0.4s;
+  -moz-transition: height 0.4s, max-height 0.4s;
+  -ms-transition: height 0.4s, max-height 0.4s;
+  -o-transition: height 0.4s, max-height 0.4s;
+  transition: height 0.4s, max-height 0.4s;
 }
 
 .innerBodyContainer {
   width: 100%;
 }
 
-#contentColumn>.panelContainer.closed .panelBody {
+.panelContainer.closed .panelBody {
   max-height: 0;
 }
 
@@ -278,20 +278,49 @@ ul {
   height: 328px;
 }
 
-#privateChatPanel .panelBody {
-  width: 322px;
-  height: 324px;
+#privateChatPanel {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  margin-right: 10px;
+  z-index: 11;
+  -webkit-transition: bottom 0.4s;
+  -moz-transition: bottom 0.4s;
+  -ms-transition: bottom 0.4s;
+  -o-transition: bottom 0.4s;
+  transition: bottom 0.4s;
 }
 
-#privateChatPanel .panelBody>#privateChatMessagesConsole {
-  margin: 10px;
-  width: 300px;
-  height: 261px;
-  border-bottom-width: 0;
+div#privateChatPanel.hidden {
+  bottom: -100%;
 }
 
 #privateChatPanel.closed {
-  display: none;
+  bottom: -328px;
+}
+
+#privateChatPanel .panelBody {
+  width: 322px;
+  height: 328px;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  -ms-border-radius: 0;
+  -o-border-radius: 0;
+  border-radius: 0;
+}
+
+#privateChatPanel .innerBodyContainer {
+  margin: 0;
+}
+
+#privateChatPanel .panelBody #privateChatMessagesConsole {
+  width: 320px;
+  height: 285px;
+  border-bottom-width: 0;
+}
+
+#privateChatPanel .panelBody #privateChatMessagesTextBox {
+  width: 316px;
 }
 
 .chatConsole, .consoleTextBox, input {
@@ -462,15 +491,21 @@ img.emoticon.blank {
   padding-top: 8px;
 }
 
-.roomChatMsg {
-  background-color: #202020;
-  color: #e0e0d0;
+#privateChatPanel #privateChatMessagesConsole {
+  background-color: #141A2B;
+  /*background-color: #1F1910;*/
 }
 
-.privateChatMsg {
-  background-color: #102804;
-  color: #99aaee;
-  font-weight: bold;
+#privateChatPanel #privateChatMessagesConsole li:nth-child(even) {
+  background-color: #1B233B;
+  /*background-color: #2B2314;*/
+}
+
+#privateChatPanel #privateChatMessagesTextBox {
+  background-color: #090B12;
+  /*background-color: #0A0805;*/
+  color: #C0CCF0;
+  /*color: #ede4d3;*/
 }
 
 .in {

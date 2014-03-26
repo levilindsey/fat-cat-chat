@@ -71,11 +71,11 @@ module.exports = function Room(name, chatManager) {
 
   room.addUser = function(userId) {
     userIds.push(userId);
-    updateUsersInRoomString();
+    room.updateUsersInRoomString();
   };
   room.removeUser = function(userId) {
     removeUser(userIds, userId);
-    updateUsersInRoomString();
+    room.updateUsersInRoomString();
   };
   room.isEmpty = function() {
     return userIds.length === 0;
@@ -86,8 +86,7 @@ module.exports = function Room(name, chatManager) {
   room.multicast = function(message) {
     multicastMessageToUsers(message, userIds, room.chatManager);
   };
-
-  function updateUsersInRoomString() {
+  room.updateUsersInRoomString = function() {
     usersInRoomString = computeUsersInRoomString(userIds, chatManager.allUsers);
   }
 };

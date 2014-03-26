@@ -229,8 +229,6 @@
 
     // Don't do anything if the private chat user does not exist
     if (privateChatUser) {
-      chatManager.thisUser.privateChatUser = privateChatUser;
-
       chatManager.uiManager.textBoxes.privateMessages.textBox.focus();
 
       if (message) {
@@ -239,14 +237,26 @@
         privateChatUser.privateMessages.push(message);
       }
 
+      // Switch out the panel state if this is not the same private chat user as the last message
+      if (privateChatUser !== chatManager.thisUser.privateChatUser) {
+        // TODO: it would be better to actually leave this closed, and simply add a flashy animation to the panel header (and then also add this animation for messages from the same, old user)
+        // Expand the private message panel
+        util.toggleClass(chatManager.uiManager.panels.privateChat.container, 'closed', false);
+
+        // Update the panel header to match the current private user's name
+        chatManager.consoles.privateMessages.setTitle(privateChatUser.name);
+
+        // Show any previous messages from a conversation with this new private user
+        chatManager.consoles.privateMessages.replaceMessages(privateChatUser.privateMessages);
+      }
+
+      // Show the private message panel
+      util.toggleClass(chatManager.uiManager.panels.privateChat.container, 'hidden', false);
+
+      chatManager.thisUser.privateChatUser = privateChatUser;
+
       // TODO:
-      // - add the logic to position the private message console onResize
-      // - add the logic to toggle the private message console visibility
-      // - show the private message console here
-      // - change the header of the private message console to show the private chat user's name
       // - make sure I add some way of closing the private message console (an 'X' button in the top-right corner?)
-      // - if this is a new private chat user, then show all of the messages contained the user's list
-      // - switch out the panel state if this is not the same private chat user as the last message
     }
   }
 
@@ -276,7 +286,7 @@
     // Remove any extra rooms the client has
     for (i = 0; i < chatManager.allRooms.length; i++) {
       if (allRoomNames.indexOf(chatManager.allRooms[i].name) < 0 &&
-          chatManager.allRooms[i] !== chatManager.thisUser.activeRoom) {
+          chatManager.allRooms[i] !== chatManager.thisUser.room) {
         log.d('syncLocalStateToServer', 'Removing room: ' + chatManager.allRooms[i]);
         chatManager.removeRoom(chatManager.allRooms[i]);
       }
@@ -304,8 +314,7 @@
     // --- Sync users in room --- //
 
     // Check whether the rooms match
-    if (chatManager.thisUser.activeRoom &&
-        chatManager.thisUser.activeRoom.name === currentRoomName) {
+    if (chatManager.thisUser.room && chatManager.thisUser.room.name === currentRoomName) {
       currentRoom = chatManager.getRoomFromName(currentRoomName);
 
       // Add any users the client is missing to the room
@@ -467,6 +476,10 @@
 
     chatManager.consoles.directoryUsers.changeMessageRawText(oldName, newName);
     chatManager.consoles.chatRoomUsers.changeMessageRawText(oldName, newName);
+
+    if (user === chatManager.thisUser.privateChatUser) {
+      chatManager.consoles.privateMessages.setTitle(user.name);
+    }
   }
 
   /**
@@ -537,8 +550,6 @@
    */
   function parseCommands(text) {
     var property;
-
-    // TODO: replace /link commands with <a> elements (use params.LINK_COMMAND)
 
     for (property in params.OUT_COMMANDS) {
       text =
