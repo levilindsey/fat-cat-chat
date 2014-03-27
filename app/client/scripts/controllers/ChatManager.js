@@ -414,6 +414,10 @@
 
     chatManager.consoles.directoryUsers.removeMessageByRawText(user.name);
     chatManager.consoles.directoryUsers.setTitle('Users (' + chatManager.allUsers.length + ')');
+
+    if (user === chatManager.thisUser.privateChatUser) {
+      chatManager.thisUser.privateChatUser = null;
+    }
   }
 
   /**

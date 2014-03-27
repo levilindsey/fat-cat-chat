@@ -2,8 +2,9 @@
 
 var io;
 
+// TODO: remove the IP from the listen call
 module.exports.run = function run(server, port, connectionHandler) {
-  io = require('socket.io').listen(server.listen(port, function() {
+  io = require('socket.io').listen(server.listen(port, '0.0.0.0', function() {
     console.log('Express and socket server listening on port ' + port);
   }));
 

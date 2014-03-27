@@ -140,7 +140,7 @@
    * @param {Message} message
    */
   function userLeftServer(message) {
-    var inMessageManager, userName, user;
+    var inMessageManager, userName, user, rawText;
 
     inMessageManager = this;
     userName = message.arguments[0];
@@ -150,6 +150,13 @@
     user = inMessageManager.chatManager.getUserFromName(userName);
 
     if (user) {
+      if (user === inMessageManager.chatManager.thisUser.privateChatUser) {
+        // Notify the user that something happened
+        rawText = userName + ' left the server.';
+        message = inMessageManager.chatManager.parseInternalMessage(rawText, false);
+        inMessageManager.chatManager.consoles.privateMessages.addMessage(message);
+      }
+
       inMessageManager.chatManager.removeUser(user);
     } else {
       log.w('userLeftServer', 'No matching user');

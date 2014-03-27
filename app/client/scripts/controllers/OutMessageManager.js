@@ -101,15 +101,20 @@
     if (!privateChatUser) {
       // There is no user with this name
 
-      // Only show the user-entered message if it is in the form of a command
       if (enteredAsACommand) {
+        // Only show the user-entered message if it is in the form of a command
+        console.addMessage(message);
+
+        // Notify the user that we did something
+        rawText = 'There is no user with the name ' + userName + '.';
+        message = outMessageManager.chatManager.parseInternalMessage(rawText, true);
+        console.addMessage(message);
+      } else {
+        // Notify the user that we did something
+        rawText = 'This user has left, and will not receive your message.';
+        message = outMessageManager.chatManager.parseInternalMessage(rawText, true);
         console.addMessage(message);
       }
-
-      // Notify the user that we did something
-      rawText = 'There is no user with the name ' + userName + '.';
-      message = outMessageManager.chatManager.parseInternalMessage(rawText, true);
-      console.addMessage(message);
     } else if (privateChatUser === thisUser) {
       // The user is trying to private message herself
 
@@ -396,7 +401,7 @@
       if (isPrivate) {
         command = 'msg';
         arguments =
-            [thisUserName, outMessageManager.chatManager.thisUser.privateChatUser.name, rawText];
+            [thisUserName, outMessageManager.chatManager.thisUser.privateChatUser ? outMessageManager.chatManager.thisUser.privateChatUser.name : '/none', rawText];
         rawText = '/msg ' + arguments[0] + ' ' + arguments[1] + ' (' + arguments[2] + ')';
         htmlTextPrefix = thisUserName + ': ';
         htmlTextPrefix = outMessageManager.chatManager.parseRawMessageTextForDom(htmlTextPrefix);
