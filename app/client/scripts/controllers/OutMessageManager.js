@@ -125,27 +125,34 @@
       message = outMessageManager.chatManager.parseInternalMessage(rawText, true);
       console.addMessage(message);
     } else {
-      outMessageManager.socketManager.sendMessage(message);
+      if (outMessageManager.chatManager.connectedToServer) {
+        outMessageManager.socketManager.sendMessage(message);
 
-      // Show the user-entered message
-      if (enteredAsACommand) {
-        console.addMessage(message);
+        // Show the user-entered message
+        if (enteredAsACommand) {
+          console.addMessage(message);
 
-        rawText = message.arguments[2];
-        htmlText = outMessageManager.chatManager.parseRawMessageTextForDom(rawText);
+          rawText = message.arguments[2];
+          htmlText = outMessageManager.chatManager.parseRawMessageTextForDom(rawText);
 
-        // Prefix the displayed message with this user's name, even if it was entered from the room chat
-        if (console === outMessageManager.chatManager.consoles.chatRoomMessages) {
-          htmlTextPrefix = thisUser.name + ': ';
-          htmlTextPrefix = outMessageManager.chatManager.parseRawMessageTextForDom(htmlTextPrefix);
-          htmlText = htmlTextPrefix + htmlText;
+          // Prefix the displayed message with this user's name, even if it was entered from the room chat
+          if (console === outMessageManager.chatManager.consoles.chatRoomMessages) {
+            htmlTextPrefix = thisUser.name + ': ';
+            htmlTextPrefix = outMessageManager.chatManager.parseRawMessageTextForDom(htmlTextPrefix);
+            htmlText = htmlTextPrefix + htmlText;
+          }
+
+          // Show the text of the message, in non-command form
+          message = new Message(rawText, htmlText, thisUser, Date.now(), 'out', 'none', null);
+          outMessageManager.chatManager.showPrivateMessage(message, privateChatUser);
+        } else {
+          message.type = 'out';
+          console.addMessage(message);
         }
-
-        // Show the text of the message, in non-command form
-        message = new Message(rawText, htmlText, thisUser, Date.now(), 'out', 'none', null);
-        outMessageManager.chatManager.showPrivateMessage(message, privateChatUser);
       } else {
-        message.type = 'out';
+        // Not connected to the server!
+        rawText = 'Not connected to the server!';
+        message = outMessageManager.chatManager.parseInternalMessage(rawText, true);
         console.addMessage(message);
       }
     }
@@ -307,16 +314,23 @@
    * @param {Message} message
    */
   function sendRoomMessage(message) {
-    var outMessageManager;
+    var outMessageManager, rawText;
 
     log.d('sendRoomMessage', 'message.htmlText=' + message.htmlText);
     outMessageManager = this;
 
-    outMessageManager.socketManager.sendMessage(message);
+    if (outMessageManager.chatManager.connectedToServer) {
+      outMessageManager.socketManager.sendMessage(message);
 
-    // Show the user-entered message
-    message.type = 'out';
-    outMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
+      // Show the user-entered message
+      message.type = 'out';
+      outMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
+    } else {
+      // Not connected to the server!
+      rawText = 'Not connected to the server!';
+      message = outMessageManager.chatManager.parseInternalMessage(rawText, true);
+      outMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
+    }
   }
 
   /**
@@ -636,12 +650,11 @@
     outMessageManager = this;
 
     if (!user) {
-      log.e('sendHeartbeat', 'No user');
+      log.w('sendHeartbeat', 'No such user');
       return;
     }
 
-    room = outMessageManager.chatManager.thisUser.room;
-
+    room = user.room;
     userName = user.name;
     roomName = room ? room.name : '/none';
 
@@ -686,12 +699,11 @@
    * @function OutMessageManager~initHelpMessages
    */
   function initHelpMessages() {
-    var message, time, htmlText;
+    var message, time;
     time = Date.now();
     helpMessages = [];
-    params.L18N.EN.HELP_MESSAGES.forEach(function (rawText) {
-      htmlText = ChatManager.parseCommands(rawText);
-      message = new Message(rawText, htmlText, null, time, 'system', null, null);
+    params.L18N.EN.HELP_MESSAGES.forEach(function (htmlText) {
+      message = new Message(htmlText, htmlText, null, time, 'system', null, null);
       helpMessages.push(message);
     });
   }

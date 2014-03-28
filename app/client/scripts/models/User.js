@@ -22,18 +22,13 @@
     log.d('initStaticFields', 'Module initialized');
   }
 
-  // ------------------------------------------------------------------------------------------- //
-  // Expose this module's constructor
-
   /**
-   * @constructor
-   * @global
-   * @param {String} name The name of this user.
-   * @param {Number} startTime The first time this user was detectable by this client.
+   * @function User.initUserInstance
+   * @param {User} user
+   * @param {String} name
+   * @param {Number} startTime
    */
-  function User(name, startTime) {
-    var user = this;
-
+  function initUserInstance(user, name, startTime) {
     user.name = null;
     user.nameRegex = null;
     user.startTime = startTime;
@@ -51,10 +46,25 @@
     user.setName(name);
   }
 
+  // ------------------------------------------------------------------------------------------- //
+  // Expose this module's constructor
+
+  /**
+   * @constructor
+   * @global
+   * @param {String} name The name of this user.
+   * @param {Number} startTime The first time this user was detectable by this client.
+   */
+  function User(name, startTime) {
+    var user = this;
+    initUserInstance(user, name, startTime);
+  }
+
   // Expose this module
   if (!window.app) window.app = {};
   window.app.User = User;
   User.initStaticFields = initStaticFields;
+  User.initUserInstance = initUserInstance;
 
   console.log('User module loaded');
 })();

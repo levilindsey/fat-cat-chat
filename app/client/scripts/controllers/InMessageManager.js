@@ -361,7 +361,7 @@
       inMessageManager.chatManager.syncLocalStateToServer(allRooms, allUsers, currentRoomName,
           usersInRoom);
     } else {
-      log.w('handleHeartbeat', 'User doesn\'t match current user');
+      // The chat bots don't care
     }
   }
 

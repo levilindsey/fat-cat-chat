@@ -6,7 +6,7 @@
   // ------------------------------------------------------------------------------------------- //
   // Private static variables
 
-  var he, params, util, log, Room, User, Message, ChatBot;
+  var he, params, util, log, Room, User, Message, ChatBotManager;
 
   // ------------------------------------------------------------------------------------------- //
   // Private dynamic functions
@@ -229,8 +229,6 @@
 
     // Don't do anything if the private chat user does not exist
     if (privateChatUser) {
-      chatManager.uiManager.textBoxes.privateMessages.textBox.focus();
-
       if (message) {
         // Show the message
         chatManager.consoles.privateMessages.addMessage(message);
@@ -252,6 +250,8 @@
 
       // Show the private message panel
       util.toggleClass(chatManager.uiManager.panels.privateChat.container, 'hidden', false);
+
+      chatManager.uiManager.textBoxes.privateMessages.textBox.focus();
 
       chatManager.thisUser.privateChatUser = privateChatUser;
 
@@ -543,7 +543,7 @@
     Room = app.Room;
     User = app.User;
     Message = app.Message;
-    ChatBot = app.ChatBot;
+    ChatBotManager = app.ChatBotManager;
     log.d('initStaticFields', 'Module initialized');
   }
 
@@ -570,14 +570,14 @@
    * @returns {String}
    */
   function parseEmoticons(text) {
-    var property, rawArray, html, i, count;
+    var rawArray, html, i, j, iCount, jCount;
 
-    for (property in params.EMOTICONS) {
-      rawArray = params.EMOTICONS[property].replacementRegexes;
-      html = params.EMOTICONS[property].html;
+    for (i = 0, iCount = params.EMOTICONS.length; i < iCount; i++) {
+      rawArray = params.EMOTICONS[i].replacementRegexes;
+      html = params.EMOTICONS[i].html;
 
-      for (i = 0, count = rawArray.length; i < count; i++) {
-        text = text.replace(rawArray[i], html);
+      for (j = 0, jCount = rawArray.length; j < jCount; j++) {
+        text = text.replace(rawArray[j], html);
       }
     }
 
@@ -657,6 +657,7 @@
     var chatManager = this;
 
     chatManager.uiManager = uiManager;
+    chatManager.chatBotManager = new ChatBotManager(chatManager);
     chatManager.socketManager = null;
     chatManager.thisUser = null;
     chatManager.allUsers = [];

@@ -33,7 +33,8 @@
    * @param {UIManager} uiManager
    */
   function init(uiManager) {
-    var socketManager = this;
+    var socketManager, bots, i, count;
+    socketManager = this;
 
     socketManager.uiManager = uiManager;
     socketManager.inMessageManager.init(uiManager.chatManager);
@@ -46,6 +47,12 @@
     socketManager.socket.on('connect', function () {
       // Send the initial heartbeat to the server
       socketManager.outMessageManager.sendHeartbeat(socketManager.uiManager.chatManager.thisUser);
+
+      // Send the initial heartbeat of any bots that were created before the server connection was established
+      bots = socketManager.uiManager.chatManager.chatBotManager.bots;
+      for (i = 0, count = bots.length; i < count; i++) {
+        socketManager.outMessageManager.sendHeartbeat(bots[i]);
+      }
     });
   }
 

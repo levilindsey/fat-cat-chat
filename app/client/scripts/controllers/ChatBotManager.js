@@ -6,10 +6,46 @@
   // ------------------------------------------------------------------------------------------- //
   // Private static variables
 
-  var params, util, log, ChatBot;
+  var params, util, log, ChatManager, ChatBot;
 
   // ------------------------------------------------------------------------------------------- //
   // Private dynamic functions
+
+  /**
+   * @function ChatBotManager~handleHeartbeatRequest
+   * @param {Message} message
+   */
+  function handleHeartbeatRequest(message) {
+    var inMessageManager, userName, user;
+
+    inMessageManager = this;
+    userName = message.arguments[0];
+
+    log.v('handleHeartbeatRequest', 'userName=' + userName);
+
+    user = inMessageManager.chatManager.getUserFromName(userName);
+
+    inMessageManager.socketManager.outMessageManager.sendHeartbeat(user);
+  }
+
+  /**
+   *
+   * @function InMessageManager~getBotByName
+   * @param {String} name
+   * @returns {ChatBot}
+   */
+  function getBotByName(name) {
+    var chatBotManager, i, count;
+    chatBotManager = this;
+
+    for (i = 0, count = chatBotManager.bots.length; i < count; i++) {
+      if (chatBotManager.bots[i].name === name) {
+        return chatBotManager.bots[i];
+      }
+    }
+
+    return null;
+  }
 
   // ------------------------------------------------------------------------------------------- //
   // Public dynamic functions
@@ -25,8 +61,26 @@
 
     log.d('addChatBot', 'name=' + botName);
 
-    bot = new ChatBot(chatBotManager, botName);
+    bot = new ChatBot(botName, chatBotManager);
     chatBotManager.bots.push(bot);
+  }
+
+  /**
+   * @function ChatBotManager#removeChatBot
+   * @params {ChatBot} chatBot
+   */
+  function removeChatBot(chatBot) {
+    var chatBotManager, i, count;
+    chatBotManager = this;
+
+    log.d('removeChatBot', 'name=' + chatBot.name);
+
+    for (i = 0, count = chatBotManager.bots.length; i < count; i++) {
+      if (chatBotManager.bots[i] === chatBot) {
+        chatBotManager.bots.splice(i, 1);
+        return;
+      }
+    }
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -43,6 +97,7 @@
     params = app.params;
     util = app.util;
     log = new app.Log('ChatBotManager');
+    ChatManager = app.ChatManager;
     ChatBot = app.ChatBot;
     log.d('initStaticFields', 'Module initialized');
   }
@@ -61,6 +116,7 @@
     chatBotManager.chatManager = chatManager;
     chatBotManager.bots = [];
     chatBotManager.addChatBot = addChatBot;
+    chatBotManager.removeChatBot = removeChatBot;
   }
 
   // Expose this module
