@@ -55,7 +55,7 @@
   function onTextChanged(newText) {
     var chatTextBox = this;
 
-    // TODO: If I have time, add an overlay over the textbox, which I can then size and position precicesly in order to "add markup" to the contents of the textbox
+    // TODO: add an overlay over the textbox, which I can then size and position precisely in order to "add markup" to the contents of the textbox
   }
 
   // ------------------------------------------------------------------------------------------- //

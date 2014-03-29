@@ -15,7 +15,7 @@
   params.APP = moduleParams;
 
   moduleParams.TITLE = 'Fat-Cat Chat';
-  moduleParams.VERSION = '0.0.4';
+  moduleParams.VERSION = '1.0.2';
   moduleParams.LICENSE =
       'The MIT License (MIT). Copyright (c) 2014 Levi Lindsey <levi@jackieandlevi.com>.';
 
@@ -81,10 +81,10 @@
   moduleParams = {};
   params.BOT = moduleParams;
 
-  moduleParams.INITIAL_COUNT = 3;
+  moduleParams.INITIAL_COUNT = 1;
 
-  moduleParams.ACTION_DELAY_MIN = 4000; // milliseconds
-  moduleParams.ACTION_DELAY_MAX = 6000; // milliseconds
+  moduleParams.ACTION_DELAY_MIN = 5000; // milliseconds
+  moduleParams.ACTION_DELAY_MAX = 7000; // milliseconds
 
   moduleParams.ACTION_PROBABILITIES = {};
   moduleParams.ACTION_PROBABILITIES.MSG = 0.1;

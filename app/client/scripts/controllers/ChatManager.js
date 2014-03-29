@@ -310,8 +310,7 @@
 
       chatManager.thisUser.privateChatUser = privateChatUser;
 
-      // TODO:
-      // - make sure I add some way of closing the private message console (an 'X' button in the top-right corner?)
+      // TODO: add some way of closing the private message console (an 'X' button in the top-right corner?)
     }
   }
 

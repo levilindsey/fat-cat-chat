@@ -292,9 +292,6 @@ function handleHeartbeat(userId, roomId, userName, roomName, isBot, socketId) {
   }
 
   user.onHeartbeatReceived();
-
-  // TODO: somewhere else: remove users from the server when they have not been heard from in too long a time
-  // - this means we will need to keep track of (within the User class) how long it has been since we have heard from the user
 }
 
 /**

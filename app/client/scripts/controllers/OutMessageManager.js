@@ -224,8 +224,7 @@
 
       ignoredUser.isIgnored = true;
 
-      // TODO: remove all previously displayed messages from the ignored user
-      // - ChatConsole.replaceMessages
+      // TODO: remove all previously displayed messages from the ignored user (ChatConsole.replaceMessages)
 
       rawText = 'You are now ignoring all messages from ' + userName;
     } else {
@@ -233,8 +232,7 @@
 
       ignoredUser.isIgnored = false;
 
-      // TODO: show all previously hidden messages from the ignored user
-      // - ChatConsole.replaceMessages
+      // TODO: show all previously hidden messages from the ignored user (ChatConsole.replaceMessages)
 
       rawText = 'You are now receiving messages from ' + userName;
     }

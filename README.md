@@ -2,8 +2,6 @@
 
 #### An IRC-like chat server and web client application
 
-### _THIS PROJECT IS CURRENTLY A WORK-IN-PROGRESS_
-
 Some of the features of this chat server/client application include:
 
 - A chat server using Node.js and socket.io.
@@ -41,7 +39,7 @@ Any word that starts with `http[s]://[...]` will be shown as an active hyperlink
 
 HTML5/CSS3/JavaScript, Node.js, Express, Socket.IO, AWS Elastic Beanstalk, Jade.
 
-### External libraries
+### Other external libraries
 
 - **he.js**
   - An HTML entity encoder/decoder written in JavaScript.

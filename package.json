@@ -1,9 +1,9 @@
 {
   "name": "fat-cat-chat",
-  "version": "0.0.4",
+  "version": "1.0.2",
   "private": false,
   "scripts": {
-    "start": "node app/server.js"
+    "start": "node app/init.js"
   },
   "dependencies": {
     "express": "3.4.x",
