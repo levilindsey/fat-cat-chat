@@ -167,6 +167,32 @@
   }
 
   /**
+   * @function ChatManager#onConnect
+   */
+  function onConnect() {
+    var chatManager, bots, i, count;
+    chatManager = this;
+
+    // Send the initial heartbeat to the server
+    chatManager.socketManager.outMessageManager.sendHeartbeat(chatManager.thisUser);
+
+    // Send the initial heartbeat of any bots that were created before the server connection was established
+    bots = chatManager.chatBotManager.bots;
+    for (i = 0, count = bots.length; i < count; i++) {
+      chatManager.socketManager.outMessageManager.sendHeartbeat(bots[i]);
+    }
+
+    if (!chatManager.hasEverConnected) {
+      // Create some bots to start things off
+      for (i = 0; i < params.BOT.INITIAL_COUNT; i++) {
+        chatManager.chatBotManager.addChatBot();
+      }
+    }
+
+    chatManager.hasEverConnected = true;
+  }
+
+  /**
    * @function ChatManager#parseRawMessageTextForDom
    * @param {String} text
    * @returns {String}
@@ -440,7 +466,7 @@
    * @param {User} user
    */
   function removeUser(user) {
-    var chatManager, index;
+    var chatManager, index, rawText, message;
 
     chatManager = this;
     log.d('removeUser', 'userName=' + user.name);
@@ -456,6 +482,15 @@
 
     if (user === chatManager.thisUser.privateChatUser) {
       chatManager.thisUser.privateChatUser = null;
+
+      // Notify the user that something happened
+      rawText = user.name + ' left the server.';
+      message = chatManager.parseInternalMessage(rawText, false);
+      chatManager.consoles.privateMessages.addMessage(message);
+    }
+
+    if (user.room) {
+      removeUserFromRoom.call(chatManager, user, user.room);
     }
 
     if (user instanceof ChatBot) {
@@ -469,7 +504,7 @@
    * @param {Room} room
    */
   function addUserToRoom(user, room) {
-    var chatManager, message, i, count;
+    var chatManager, message, i, count, rawText;
 
     chatManager = this;
     log.d('addUserToRoom', 'userName=' + user.name + ', roomName=' + room.name);
@@ -505,6 +540,11 @@
           chatManager.consoles.chatRoomUsers.addMessage(message);
         }
         chatManager.consoles.chatRoomUsers.setTitle('Users (' + room.users.length + ')');
+
+        // Notify the user that something happened
+        rawText = user.name + ' joined the room.';
+        message = chatManager.parseInternalMessage(rawText, false);
+        chatManager.consoles.chatRoomMessages.addMessage(message);
       }
     } else {
       log.w('addUserToRoom', 'Room already contained user');
@@ -517,7 +557,7 @@
    * @param {Room} room
    */
   function removeUserFromRoom(user, room) {
-    var chatManager, index;
+    var chatManager, index, rawText, message;
 
     chatManager = this;
     log.d('removeUserFromRoom', 'userName=' + user.name + ', roomName=' + room.name);
@@ -532,6 +572,13 @@
     if (room === chatManager.thisUser.room) {
       chatManager.consoles.chatRoomUsers.removeMessageByRawText(user.name);
       chatManager.consoles.chatRoomUsers.setTitle('Users (' + room.users.length + ')');
+
+      if (index >= 0) {
+        // Notify the user that something happened
+        rawText = user.name + ' left the room.';
+        message = chatManager.parseInternalMessage(rawText, false);
+        chatManager.consoles.chatRoomMessages.addMessage(message);
+      }
     }
   }
 
@@ -564,6 +611,7 @@
   function onUserNameClick(userName) {
     var chatManager, privateChatUser;
     chatManager = this;
+    log.i('onUserNameClick', 'userName=' + userName);
     privateChatUser = chatManager.getUserFromName(userName);
     chatManager.showPrivateMessage(null, privateChatUser);
   }
@@ -574,7 +622,10 @@
    */
   function onRoomNameClick(roomName) {
     var chatManager = this;
-    chatManager.uiManager.socketManager.outMessageManager.joinRoom(roomName, null, null);
+    log.i('onRoomNameClick', 'roomName=' + roomName);
+    if (!chatManager.thisUser.room || chatManager.thisUser.room.name !== roomName) {
+      chatManager.uiManager.socketManager.outMessageManager.joinRoom(roomName, null, null);
+    }
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -713,8 +764,21 @@
    * @returns {String}
    */
   function generateRandomUserName(isBot) {
-    var prefix = isBot ? 'catBot' : 'coolCat';
-    return prefix + parseInt(Math.random() * 100000000);
+    var index, name, suffix;
+
+    index = parseInt(Math.random() * params.CAT_NAMES.length);
+    name = params.CAT_NAMES[index];
+    suffix = (isBot ? '_Bot' : '') + '_' + parseInt(Math.random() * 100000);
+    name += suffix;
+
+    return name;
+  }
+
+  /**
+   * @function ChatManager.generateRandomRoomName
+   */
+  function generateRandomRoomName() {
+    return 'Room_' + parseInt(Math.random() * 100000);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -737,6 +801,7 @@
     chatManager.consoles = null;
     chatManager.lastServerHeartbeatTime = Number.NEGATIVE_INFINITY;
     chatManager.connectedToServer = false;
+    chatManager.hasEverConnected = false;
 
     chatManager.init = init;
     chatManager.getRoomFromName = getRoomFromName;
@@ -754,6 +819,7 @@
     chatManager.changeUserName = changeUserName;
     chatManager.onUserNameClick = onUserNameClick;
     chatManager.onRoomNameClick = onRoomNameClick;
+    chatManager.onConnect = onConnect;
   }
 
   // Expose this module
@@ -763,6 +829,7 @@
   ChatManager.parseCommands = parseCommands;
   ChatManager.parseEmoticons = parseEmoticons;
   ChatManager.generateRandomUserName = generateRandomUserName;
+  ChatManager.generateRandomRoomName = generateRandomRoomName;
 
   console.log('ChatManager module loaded');
 })();

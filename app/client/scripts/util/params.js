@@ -81,18 +81,20 @@
   moduleParams = {};
   params.BOT = moduleParams;
 
+  moduleParams.INITIAL_COUNT = 3;
+
   moduleParams.ACTION_DELAY_MIN = 4000; // milliseconds
   moduleParams.ACTION_DELAY_MAX = 6000; // milliseconds
 
   moduleParams.ACTION_PROBABILITIES = {};
-  moduleParams.ACTION_PROBABILITIES.MSG = 0.15;
-  moduleParams.ACTION_PROBABILITIES.LEAVE = 0.05;
-  moduleParams.ACTION_PROBABILITIES.QUIT = 0.05;
-  moduleParams.ACTION_PROBABILITIES.PUBMSG = 0.5;
+  moduleParams.ACTION_PROBABILITIES.MSG = 0.1;
+  moduleParams.ACTION_PROBABILITIES.LEAVE = 0.01;
+  moduleParams.ACTION_PROBABILITIES.QUIT = 0.005;
+  moduleParams.ACTION_PROBABILITIES.PUBMSG = 0.635;
   moduleParams.ACTION_PROBABILITIES.JOIN = 0.15;
   moduleParams.ACTION_PROBABILITIES.NICK = 0.1;
 
-  moduleParams.JOIN_CREATE_NEW_ROOM_PROB = 0.4;
+  moduleParams.JOIN_CREATE_NEW_ROOM_PROB = 0.2;
   moduleParams.JOIN_ENTER_OLD_ROOM_PROB = 1 - moduleParams.JOIN_CREATE_NEW_ROOM_PROB;
 
   moduleParams.MSG_CAT_GIF_PROB = 0.3;
@@ -369,7 +371,7 @@
     'Cat fact #72: In the 1750s, Europeans introduced cats into the Americas to control pests.',
     'Cat fact #73: The first cat show was organized in 1871 in London. Cat shows later became a worldwide craze.',
     'Cat fact #74: The first cartoon cat was Felix the Cat in 1919. In 1940, Tom and Jerry starred in the first theatrical cartoon "Puss Gets the Boot." In 1981 Andrew Lloyd Weber created the musical Cats, based on T.S. Eliot\'s Old Possum\'s Book of Practical Cats.',
-    'Cat fact #75: The normal body temperature of a cat is between 100.5°F and 102.5°F. A cat is sick if its temperature goes below 100° or above 103°F.',
+    'Cat fact #75: The normal body temperature of a cat is between 100.5°F and 102.5°F. A cat is sick if its temperature goes below 100°F or above 103°F.',
     'Cat fact #76: A cat has 230 bones in its body. A human has 206. A cat has no collarbone, so it can fit through any opening the size of its head.',
     'Cat fact #77: A cat\'s nose pad is ridged with a unique pattern, just like the fingerprint of a human.',
     'Cat fact #78: If they have ample water, cats can tolerate temperatures up to 133°F.',
@@ -386,7 +388,7 @@
     'Cat fact #89: Cats are extremely sensitive to vibrations. Cats are said to detect earthquake tremors 10 or 15 minutes before humans can.',
     'Cat fact #90: In contrast to dogs, cats have not undergone major changes during their domestication process.',
     'Cat fact #91: A female cat is called a queen or a molly.',
-    'Cat fact #92: In the 1930s, two Russian biologists discovered that color change in Siamese kittens depend on their body temperature. Siamese cats carry albino genes that work only when the body temperature is above 98° F. If these kittens are left in a very warm room, their points won\'t darken and they will stay a creamy white.',
+    'Cat fact #92: In the 1930s, two Russian biologists discovered that color change in Siamese kittens depend on their body temperature. Siamese cats carry albino genes that work only when the body temperature is above 98°F. If these kittens are left in a very warm room, their points won\'t darken and they will stay a creamy white.',
     'Cat fact #93: There are up to 60 million feral cats in the United States alone.',
     'Cat fact #94: The oldest cat to give birth was Kitty who, at the age of 30, gave birth to two kittens. During her life, she gave birth to 218 kittens.',
     'Cat fact #95: The most traveled cat is Hamlet, who escaped from his carrier while on a flight. He hid for seven weeks behind a pane. By the time he was discovered, he had traveled nearly 373,000 miles (600,000 km).',
@@ -485,6 +487,111 @@
       url: 'http://25.media.tumblr.com/5440fd4c60ff1c009b6f907dfcb3f463/tumblr_mkc1mlBxlD1s3oe2qo1_500.gif',
       description: 'Cat or metronome?'
     }
+  ];
+
+  // Cat names taken from http://www.youpet.com/cat-names/
+  params.CAT_NAMES = [
+    'Kitty',
+    'Tiger',
+    'Smokey',
+    'Shadow',
+    'Tigger',
+    'Baby',
+    'Princess',
+    'Max',
+    'Oreo',
+    'Angel',
+    'Bella',
+    'Buddy',
+    'Gizmo',
+    'Midnight',
+    'Sassy',
+    'Simba',
+    'Patches',
+    'Precious',
+    'Lucky',
+    'Lucy',
+    'Chloe',
+    'Boots',
+    'Charlie',
+    'Callie',
+    'Jack',
+    'Sammy',
+    'Pepper',
+    'Fluffy',
+    'Molly',
+    'Missy',
+    'Kiki',
+    'Daisy',
+    'Sophie',
+    'Garfield',
+    'Lily',
+    'Cleo',
+    'Gracie',
+    'Cali',
+    'Oliver',
+    'Pumpkin',
+    'Milo',
+    'Toby',
+    'Jasper',
+    'Sam',
+    'Misty',
+    'Felix',
+    'Sasha',
+    'Oscar',
+    'Rocky',
+    'Bailey',
+    'Jasmine',
+    'Ginger',
+    'Peanut',
+    'Bandit',
+    'Simon',
+    'Mittens',
+    'Coco',
+    'Harley',
+    'Lilly',
+    'Boo',
+    'Luna',
+    'Cookie',
+    'Abby',
+    'Mimi',
+    'Snowball',
+    'Salem',
+    'Snickers',
+    'George',
+    'Nala',
+    'Sugar',
+    'Leo',
+    'Casper',
+    'Miss_kitty',
+    'Trouble',
+    'Maggie',
+    'Buster',
+    'Rascal',
+    'Scooter',
+    'Samantha',
+    'Cuddles',
+    'Tinkerbell',
+    'Zoey',
+    'Sadie',
+    'Lola',
+    'Willow',
+    'Spooky',
+    'Bear',
+    'Dusty',
+    'Bob',
+    'Zoe',
+    'Chester',
+    'Muffin',
+    'Mia',
+    'Whiskers',
+    'Socks',
+    'Snuggles',
+    'Loki',
+    'Sheba',
+    'Jinx',
+    'Bubba',
+    'Frisky'
   ];
 
   // --- Expose this module --- //

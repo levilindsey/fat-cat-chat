@@ -309,6 +309,14 @@ div#privateChatPanel.hidden {
   border-radius: 0;
 }
 
+#privateChatPanel .panelHeader {
+  -webkit-border-radius: 6px 6px 0 0;
+  -moz-border-radius: 6px 6px 0 0;
+  -ms-border-radius: 6px 6px 0 0;
+  -o-border-radius: 6px 6px 0 0;
+  border-radius: 6px 6px 0 0;
+}
+
 #privateChatPanel .innerBodyContainer {
   margin: 0;
 }

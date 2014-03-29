@@ -13,6 +13,7 @@
 
   /**
    * @function ChatBot~actionLoop
+   * @returns {Number}
    */
   function actionLoop() {
     var bot, delay;
@@ -20,8 +21,8 @@
     bot = this;
     delay = Math.random() * (params.BOT.ACTION_DELAY_MAX - params.BOT.ACTION_DELAY_MIN) + params.BOT.ACTION_DELAY_MIN;
 
-    setTimeout(function() {
-      actionLoop.call(bot);
+    return setTimeout(function() {
+      bot.actionLoopTimeout = actionLoop.call(bot);
       doSomething.call(bot);
     }, delay);
   }
@@ -76,16 +77,15 @@
     log.v('leaveRoom');
     bot = this;
 
-//    if (bot.room) {
-//      rawText = '/leave ' + bot.name + ' ' + bot.room.name;
-//      message = new Message(rawText, null, bot, Date.now(), 'command', 'quit', null);
-//      sendMessage.call(bot, message);
-//
-//      return true;
-//    } else {
-//      return false;
-//    }
-    return true;
+    if (bot.room) {
+      rawText = '/leave ' + bot.name + ' ' + bot.room.name;
+      message = new Message(rawText, null, bot, Date.now(), 'command', 'quit', null);
+      sendMessage.call(bot, message);
+
+      return true;
+    } else {
+      return false;
+    }
   }
 
   /**
@@ -98,13 +98,13 @@
     log.v('quit');
     bot = this;
 
-//    rawText = '/quit ' + bot.name;
-//    message = new Message(rawText, null, bot, Date.now(), 'command', 'quit', null);
-//    sendMessage.call(bot, message);
-//
-//    clearInterval(bot.actionLoop);
-//    bot.chatBotManager.removeChatBot(bot);
-//    bot.chatBotManager.chatManager.removeUser(bot);
+    rawText = '/quit ' + bot.name;
+    message = new Message(rawText, null, bot, Date.now(), 'command', 'quit', null);
+    sendMessage.call(bot, message);
+
+    clearTimeout(bot.actionLoopTimeout);
+    bot.chatBotManager.removeChatBot(bot);
+    bot.chatBotManager.chatManager.removeUser(bot);
 
     return true;
   }
@@ -167,10 +167,10 @@
     log.v('changeOwnNickname');
     bot = this;
 
-//    newName = ChatManager.generateRandomUserName(true);
-//    rawText = '/nick ' + bot.name + ' ' + newName;
-//    message = new Message(rawText, null, bot, Date.now(), 'command', 'nick', null);
-//    sendMessage.call(bot, message);
+    newName = ChatManager.generateRandomUserName(true);
+    rawText = '/nick ' + bot.name + ' ' + newName;
+    message = new Message(rawText, null, bot, Date.now(), 'command', 'nick', null);
+    sendMessage.call(bot, message);
 
     return true;
   }
@@ -196,7 +196,7 @@
 
     if (bot.chatBotManager.chatManager.allRooms.length === 0 ||
         Math.random() < params.BOT.JOIN_CREATE_NEW_ROOM_PROB) {
-      return generateRandomRoomName();
+      return ChatManager.generateRandomRoomName();
     } else {
       room = getRandomRoom.call(bot);
 
@@ -251,13 +251,6 @@
     messageChoices.push({ probabilityThreshold: probabilityThreshold, action: chooseEmoticon });
     probabilityThreshold += params.BOT.MSG_TEXT_PROB;
     messageChoices.push({ probabilityThreshold: probabilityThreshold, action: chooseCatFact });
-  }
-
-  /**
-   * @function ChatBot~generateRandomRoomName
-   */
-  function generateRandomRoomName() {
-    return 'room' + parseInt(Math.random() * 100000000);
   }
 
   /**
@@ -349,7 +342,7 @@
     bot.chatBotManager.chatManager.socketManager.outMessageManager.sendHeartbeat(bot);
 
     // Start doing stuff
-    actionLoop.call(bot);
+    bot.actionLoopTimeout = actionLoop.call(bot);
   }
 
   // Expose this module

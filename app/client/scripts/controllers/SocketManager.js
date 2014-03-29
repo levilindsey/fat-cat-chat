@@ -25,6 +25,23 @@
     socketManager.inMessageManager.handleInComingMessage(rawText);
   }
 
+  /**
+   * @function SocketManager~initSocket
+   */
+  function initSocket() {
+    var socketManager = this;
+
+    socketManager.socket = io.connect(socketManager.server.address);
+
+    socketManager.socket.on('message', function (message) {
+      receivedMessage.call(socketManager, message)
+    });
+
+    socketManager.socket.on('connect', function () {
+      socketManager.uiManager.chatManager.onConnect();
+    });
+  }
+
   // ------------------------------------------------------------------------------------------- //
   // Public dynamic functions
 
@@ -33,27 +50,13 @@
    * @param {UIManager} uiManager
    */
   function init(uiManager) {
-    var socketManager, bots, i, count;
-    socketManager = this;
+    var socketManager = this;
 
     socketManager.uiManager = uiManager;
     socketManager.inMessageManager.init(uiManager.chatManager);
     socketManager.outMessageManager.init(uiManager.chatManager);
 
-    socketManager.socket = io.connect(socketManager.server.address);
-    socketManager.socket.on('message', function (message) {
-      receivedMessage.call(socketManager, message)
-    });
-    socketManager.socket.on('connect', function () {
-      // Send the initial heartbeat to the server
-      socketManager.outMessageManager.sendHeartbeat(socketManager.uiManager.chatManager.thisUser);
-
-      // Send the initial heartbeat of any bots that were created before the server connection was established
-      bots = socketManager.uiManager.chatManager.chatBotManager.bots;
-      for (i = 0, count = bots.length; i < count; i++) {
-        socketManager.outMessageManager.sendHeartbeat(bots[i]);
-      }
-    });
+    initSocket.call(socketManager);
   }
 
   /**

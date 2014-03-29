@@ -90,12 +90,7 @@
     if (user && room) {
       inMessageManager.chatManager.removeUserFromRoom(user, room);
 
-      if (room === inMessageManager.chatManager.thisUser.room) {
-        // Notify the user that something happened
-        rawText = userName + ' left the room.';
-        message = inMessageManager.chatManager.parseInternalMessage(rawText, false);
-        inMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
-      } else {
+      if (room !== inMessageManager.chatManager.thisUser.room) {
         log.w('userLeftRoom', 'Not in room');
       }
     } else {
@@ -122,13 +117,6 @@
     if (user && room) {
       if (user !== inMessageManager.chatManager.thisUser) {
         inMessageManager.chatManager.addUserToRoom(user, room);
-
-        if (room === inMessageManager.chatManager.thisUser.room) {
-          // Notify the user that something happened
-          rawText = userName + ' joined the room.';
-          message = inMessageManager.chatManager.parseInternalMessage(rawText, false);
-          inMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
-        }
       }
     } else {
       log.w('userJoinedRoom', 'No matching user or room');
@@ -150,13 +138,6 @@
     user = inMessageManager.chatManager.getUserFromName(userName);
 
     if (user) {
-      if (user === inMessageManager.chatManager.thisUser.privateChatUser) {
-        // Notify the user that something happened
-        rawText = userName + ' left the server.';
-        message = inMessageManager.chatManager.parseInternalMessage(rawText, false);
-        inMessageManager.chatManager.consoles.privateMessages.addMessage(message);
-      }
-
       inMessageManager.chatManager.removeUser(user);
     } else {
       log.w('userLeftServer', 'No matching user');
@@ -252,15 +233,22 @@
         inMessageManager.socketManager.uiManager.panels.textEntryDialogue.ownUserNameLabel.innerHTML =
             newName;
 
+        // Notify the user that something happened
         rawText = 'Your name changed from ' + oldName + ' to ' + newName + '.';
+        message = inMessageManager.chatManager.parseInternalMessage(rawText, false);
+        inMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
       } else {
         // Some other user changed her name
         rawText = oldName + ' changed his/her name to ' + newName + '.';
-      }
+        message = inMessageManager.chatManager.parseInternalMessage(rawText, false);
 
-      // Notify the user that something happened
-      message = inMessageManager.chatManager.parseInternalMessage(rawText, false);
-      inMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
+        // Notify the user that something happened?
+        if (user === inMessageManager.chatManager.thisUser.privateChatUser) {
+          inMessageManager.chatManager.consoles.privateMessages.addMessage(message);
+        } else if (user.room === inMessageManager.chatManager.thisUser.room) {
+          inMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
+        }
+      }
     } else {
       log.w('userChangedName', 'No matching user');
     }
