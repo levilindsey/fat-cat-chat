@@ -37,18 +37,22 @@ function removeUser(userIds, userId) {
 }
 
 /**
- * @function Room~multicastMessageToUsers
+ * @function Room~multicastMessageToHumanUsers
  * @param {Message} message
  * @param {Array.<Number>} userIds
  * @param {chatManager} chatManager
  */
-function multicastMessageToUsers(message, userIds, chatManager) {
+function multicastMessageToHumanUsers(message, userIds, chatManager) {
   var i, count, user, socket;
 
   for (i = 0, count = userIds.length; i < count; i++) {
     user = chatManager.allUsers[userIds[i]];
-    socket = chatManager.allSockets[user.socketId];
-    chatManager.socketManager.unicastMessage(socket, message.text);
+
+    // Don't send room messages to bots
+    if (!user.isBot) {
+      socket = chatManager.allSockets[user.socketId];
+      chatManager.socketManager.unicastMessage(socket, message.text);
+    }
   }
 }
 
@@ -84,7 +88,7 @@ module.exports = function Room(name, chatManager) {
     return usersInRoomString;
   };
   room.multicast = function(message) {
-    multicastMessageToUsers(message, userIds, room.chatManager);
+    multicastMessageToHumanUsers(message, userIds, room.chatManager);
   };
   room.updateUsersInRoomString = function() {
     usersInRoomString = computeUsersInRoomString(userIds, chatManager.allUsers);

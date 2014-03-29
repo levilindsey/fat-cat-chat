@@ -7,9 +7,10 @@
  * @constructor
  * @global
  * @param {String} name The name of this user.
+ * @param {Boolean} isBot True if this user represents a ChatBot.
  * @param {Number} socketId The socket ID of this user.
  */
-module.exports = function User(name, socketId) {
+module.exports = function User(name, isBot, socketId) {
   var user, heartbeatRequestSentTime, heartbeatReceivedTime, latency;
 
   user = this;
@@ -18,6 +19,7 @@ module.exports = function User(name, socketId) {
   latency = Number.POSITIVE_INFINITY;
 
   user.name = name;
+  user.isBot = isBot;
   user.socketId = socketId;
   user.lastHeartbeatTime = Date.now();
   user.roomId = -1;

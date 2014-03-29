@@ -6,7 +6,7 @@
   // ------------------------------------------------------------------------------------------- //
   // Private static variables
 
-  var he, params, util, log, Room, User, Message, ChatManager, helpMessages;
+  var he, params, util, log, Room, User, Message, ChatBot, ChatManager, helpMessages;
 
   // ------------------------------------------------------------------------------------------- //
   // Private dynamic functions
@@ -658,7 +658,7 @@
     userName = user.name;
     roomName = room ? room.name : '/none';
 
-    rawText = '/heartbeat ' + userName + ' ' + roomName;
+    rawText = '/heartbeat ' + userName + ' ' + roomName + ' ' + (user instanceof ChatBot ? 'bot' : 'human');
 
     time = Date.now();
     type = 'system';
@@ -723,6 +723,7 @@
     Room = app.Room;
     User = app.User;
     Message = app.Message;
+    ChatBot = app.ChatBot;
     ChatManager = app.ChatManager;
     initHelpMessages();
     log.d('initStaticFields', 'Module initialized');

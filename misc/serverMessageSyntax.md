@@ -10,7 +10,7 @@ The client parses all commands entered by the user and transforms some of them s
 - `/leave <user_name> <room_name>`
 - `/quit <user_name>`
 - `/heartbeatrequest <user_name>`
-- `/heartbeat <user_name> [<room_name>|/none]`
+- `/heartbeat <user_name> [<room_name>|/none] [human|bot]`
 
 #### Bidirectional messages
 

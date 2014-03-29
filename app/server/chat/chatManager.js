@@ -42,8 +42,8 @@ var HEARTBEAT_REQUEST_INTERVAL = 4000, // in milliseconds
         regex: /^\/heartbeatrequest (\S+)$/
       },
       heartbeat: {
-        // /heartbeat <user_name> [<room_name>|/none]
-        regex: /^\/heartbeat (\S+) (\/?\S+)$/
+        // /heartbeat <user_name> [<room_name>|/none] [human|bot]
+        regex: /^\/heartbeat (\S+) (\/?\S+) (\S+)$/
       }
     };
 
@@ -79,12 +79,12 @@ function forwardPrivateMessage(fromUserId, toUserId, text, fromSocketId) {
 
   // Validate the input
   if (fromUserId < 0) {
-    text = 'No such user';
+    text = 'Cannot send private message: No such sender';
     sendErrorMessage(text, chatManager.allSockets[fromSocketId]);
     return;
   }
   if (toUserId < 0) {
-    text = 'No such user';
+    text = 'Cannot send private message: No such receiver';
     sendErrorMessage(text, fromUserId);
     return;
   }
@@ -114,12 +114,12 @@ function forwardRoomMessage(userId, roomId, text, socketId) {
 
   // Validate the input
   if (userId < 0) {
-    text = 'No such user';
+    text = 'Cannot send room message: No such sender';
     sendErrorMessage(text, chatManager.allSockets[socketId]);
     return;
   }
   if (roomId < 0) {
-    text = 'No such room';
+    text = 'Cannot send room message: No such room';
     sendErrorMessage(text, userId);
     return;
   }
@@ -161,12 +161,12 @@ function sendPong(fromUserId, toUserId, toSocketId) {
 
   // Validate the input
   if (toUserId < 0) {
-    text = 'No such user';
+    text = 'Cannot send ping: No such sender';
     sendErrorMessage(text, chatManager.allSockets[toSocketId]);
     return;
   }
   if (fromUserId < 0) {
-    text = 'No such user';
+    text = 'Cannot send ping: No such receiver';
     sendErrorMessage(text, toUserId);
     return;
   }
@@ -255,16 +255,17 @@ function sendHeartbeat(userId, socketId) {
  * @param {Number} roomId
  * @param {String} userName
  * @param {String} roomName
+ * @param {Boolean} isBot
  * @param {Number} socketId
  */
-function handleHeartbeat(userId, roomId, userName, roomName, socketId) {
+function handleHeartbeat(userId, roomId, userName, roomName, isBot, socketId) {
   var user;
 
   console.log('   handleHeartbeat: userId=' + userId + ', roomId=' + roomId + ', userName=' + userName + ', roomName=' + roomName + ', socketId=' + socketId);
 
   // If this user did not previously exist, the add the new user to the list
   if (userId < 0) {
-    userId = addNewUser(userName, socketId);
+    userId = addNewUser(userName, isBot, socketId);
   }
 
   user = chatManager.allUsers[userId];
@@ -300,16 +301,17 @@ function handleHeartbeat(userId, roomId, userName, roomName, socketId) {
  * /userjoinedserver <user_name>
  * @function chatManager~addNewUser
  * @param {String} userName
+ * @param {Boolean} isBot
  * @param {Number} socketId
  * @returns {Number} The new user ID.
  */
-function addNewUser(userName, socketId) {
+function addNewUser(userName, isBot, socketId) {
   var user, text, message;
 
   console.log('   addNewUser: userName=' + userName);
 
   // Add the user
-  user = new User(userName, socketId);
+  user = new User(userName, isBot, socketId);
   user.id = nextUserId++;
   chatManager.allUsers[user.id] = user;
   updateUsersString();
@@ -336,7 +338,7 @@ function removeUser(userId, socketId) {
 
   // Validate the input
   if (userId < 0) {
-    text = 'No such user';
+    text = 'Cannot remove user: No such user';
     sendErrorMessage(text, chatManager.allSockets[socketId]);
     return;
   }
@@ -373,7 +375,7 @@ function changeUserName(userId, newName, socketId) {
 
   // Validate the input
   if (userId < 0) {
-    text = 'No such user';
+    text = 'Cannot change nickname: No such user';
     sendErrorMessage(text, chatManager.allSockets[socketId]);
     return;
   }
@@ -415,7 +417,7 @@ function addUserToRoom(userId, roomId, roomName, socketId) {
 
   // Validate the input
   if (userId < 0) {
-    text = 'No such user';
+    text = 'Cannot add user to room: No such user';
     sendErrorMessage(text, chatManager.allSockets[socketId]);
     return;
   }
@@ -458,12 +460,12 @@ function removeUserFromRoom(userId, roomId, socketId) {
 
   // Validate the input
   if (userId < 0) {
-    text = 'No such user';
+    text = 'Cannot remove user from room: No such user';
     sendErrorMessage(text, chatManager.allSockets[socketId]);
     return;
   }
   if (roomId < 0) {
-    text = 'No such room';
+    text = 'Cannot remove user from room: No such room';
     sendErrorMessage(text, userId);
     return;
   }
@@ -687,7 +689,7 @@ function parseAndRecordInComingMessage(text, socketId) {
     arguments = [result[1]];
   } else if (result = IN_COMING_COMMANDS.heartbeat.regex.exec(text)) {
     command = 'heartbeat';
-    arguments = [result[1], result[2]];
+    arguments = [result[1], result[2], result[3]];
     roomId = getRoomIdFromName(arguments[1]);
   } else {
     text = 'Unknown message format: ' + text;
@@ -809,7 +811,7 @@ function handleNewMessage(socketId, text) {
         sendHeartbeat(message.fromUserId, socketId);
         break;
       case 'heartbeat':
-        handleHeartbeat(message.fromUserId, message.roomId, message.arguments[0], message.arguments[1], socketId);
+        handleHeartbeat(message.fromUserId, message.roomId, message.arguments[0], message.arguments[1], message.arguments[2] === 'bot', socketId);
         break;
       default:
         text = 'Invalid message command: ' + message.command;

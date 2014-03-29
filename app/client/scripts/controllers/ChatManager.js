@@ -6,7 +6,7 @@
   // ------------------------------------------------------------------------------------------- //
   // Private static variables
 
-  var he, params, util, log, Room, User, Message, ChatBotManager;
+  var he, params, util, log, Room, User, Message, ChatBot, ChatBotManager;
 
   // ------------------------------------------------------------------------------------------- //
   // Private dynamic functions
@@ -112,6 +112,35 @@
       // Send a request for a new heartbeat
       chatManager.socketManager.outMessageManager.sendHeartbeatRequest();
     }
+  }
+
+  /**
+   * @function ChatManager#isUserThisUserOrABot
+   * @param {Room} user
+   * @returns {Boolean}
+   */
+  function isUserThisUserOrABot(user) {
+    var chatManager = this;
+    return user === chatManager.thisUser || user instanceof ChatBot;
+  }
+
+  /**
+   * @function ChatManager#doesRoomContainThisUserOrABot
+   * @param {Room} room
+   * @returns {Boolean}
+   */
+  function doesRoomContainThisUserOrABot(room) {
+    var chatManager, i, count;
+
+    chatManager = this;
+
+    for (i = 0, count = room.users; i < count; i++) {
+      if (isUserThisUserOrABot.call(chatManager, room.users[i])) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -268,7 +297,7 @@
    * @param {Array.<String>} userNamesInRoom
    */
   function syncLocalStateToServer(allRoomNames, allUserNames, currentRoomName, userNamesInRoom) {
-    var chatManager, i, count, time, currentRoom;
+    var chatManager, i, count, time, currentRoom, user;
 
     chatManager = this;
     time = Date.now();
@@ -286,7 +315,7 @@
     // Remove any extra rooms the client has
     for (i = 0; i < chatManager.allRooms.length; i++) {
       if (allRoomNames.indexOf(chatManager.allRooms[i].name) < 0 &&
-          chatManager.allRooms[i] !== chatManager.thisUser.room) {
+          !doesRoomContainThisUserOrABot.call(chatManager, chatManager.allRooms[i])) {
         log.d('syncLocalStateToServer', 'Removing room: ' + chatManager.allRooms[i]);
         chatManager.removeRoom(chatManager.allRooms[i]);
       }
@@ -305,7 +334,7 @@
     // Remove any extra users the client has
     for (i = 0; i < chatManager.allUsers.length; i++) {
       if (allUserNames.indexOf(chatManager.allUsers[i].name) < 0 &&
-          chatManager.allUsers[i] !== chatManager.thisUser) {
+          !isUserThisUserOrABot.call(chatManager, chatManager.allUsers[i])) {
         log.d('syncLocalStateToServer', 'Removing user: ' + chatManager.allUsers[i]);
         chatManager.removeUser(chatManager.allUsers[i]);
       }
@@ -320,17 +349,27 @@
       // Add any users the client is missing to the room
       for (i = 0, count = userNamesInRoom.length; i < count; i++) {
         if (!currentRoom.getUserFromName(userNamesInRoom[i])) {
-          log.d('syncLocalStateToServer',
-              'Adding user to room: userName=' + userNamesInRoom[i] + ', roomName=' +
-                  currentRoomName);
-          chatManager.addUserToRoom(new User(userNamesInRoom[i], time), currentRoom);
+          // Don't create the user if she already existed
+          user = chatManager.getUserFromName(userNamesInRoom[i]);
+          if (!user) {
+            log.d('syncLocalStateToServer',
+                'Adding NEW user to room: userName=' + userNamesInRoom[i] + ', roomName=' +
+                    currentRoomName);
+            user = new User(userNamesInRoom[i], time);
+          } else {
+            log.d('syncLocalStateToServer',
+                'Adding OLD user to room: userName=' + userNamesInRoom[i] + ', roomName=' +
+                    currentRoomName);
+          }
+
+          chatManager.addUserToRoom(user, currentRoom);
         }
       }
 
       // Remove any extra users the client has in the room
       for (i = 0; i < currentRoom.users.length; i++) {
         if (userNamesInRoom.indexOf(currentRoom.users[i].name) < 0 &&
-            currentRoom.users[i] !== chatManager.thisUser) {
+            !isUserThisUserOrABot.call(chatManager, currentRoom.users[i])) {
           log.d('syncLocalStateToServer',
               'Removing user from room: userName=' + currentRoom.users[i].name + ', roomName=' +
                   currentRoomName);
@@ -417,6 +456,10 @@
 
     if (user === chatManager.thisUser.privateChatUser) {
       chatManager.thisUser.privateChatUser = null;
+    }
+
+    if (user instanceof ChatBot) {
+      chatManager.chatBotManager.removeChatBot(user);
     }
   }
 
@@ -543,6 +586,7 @@
     Room = app.Room;
     User = app.User;
     Message = app.Message;
+    ChatBot = app.ChatBot;
     ChatBotManager = app.ChatBotManager;
     log.d('initStaticFields', 'Module initialized');
   }

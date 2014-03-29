@@ -12,6 +12,21 @@
   // Private dynamic functions
 
   /**
+   * @function ChatBot~actionLoop
+   */
+  function actionLoop() {
+    var bot, delay;
+
+    bot = this;
+    delay = Math.random() * (params.BOT.ACTION_DELAY_MAX - params.BOT.ACTION_DELAY_MIN) + params.BOT.ACTION_DELAY_MIN;
+
+    setTimeout(function() {
+      actionLoop.call(bot);
+      doSomething.call(bot);
+    }, delay);
+  }
+
+  /**
    * @function ChatBot~doSomething
    */
   function doSomething() {
@@ -61,15 +76,16 @@
     log.v('leaveRoom');
     bot = this;
 
-    if (bot.room) {
-      rawText = '/leave ' + bot.name + ' ' + bot.room.name;
-      message = new Message(rawText, null, bot, Date.now(), 'command', 'quit', null);
-      sendMessage.call(bot, message);
-
-      return true;
-    } else {
-      return false;
-    }
+//    if (bot.room) {
+//      rawText = '/leave ' + bot.name + ' ' + bot.room.name;
+//      message = new Message(rawText, null, bot, Date.now(), 'command', 'quit', null);
+//      sendMessage.call(bot, message);
+//
+//      return true;
+//    } else {
+//      return false;
+//    }
+    return true;
   }
 
   /**
@@ -88,6 +104,7 @@
 //
 //    clearInterval(bot.actionLoop);
 //    bot.chatBotManager.removeChatBot(bot);
+//    bot.chatBotManager.chatManager.removeUser(bot);
 
     return true;
   }
@@ -135,6 +152,9 @@
       bot.chatBotManager.chatManager.addRoom(room);
     }
 
+    bot.room = room;
+    bot.chatBotManager.chatManager.addUserToRoom(bot, room);
+
     return true;
   }
 
@@ -169,7 +189,7 @@
 
   /**
    * @function ChatBot~chooseRoomNameToJoin
-   * @returns {Room}
+   * @returns {String}
    */
   function chooseRoomNameToJoin() {
     var bot, room;
@@ -330,9 +350,7 @@
     bot.chatBotManager.chatManager.socketManager.outMessageManager.sendHeartbeat(bot);
 
     // Start doing stuff
-    bot.actionLoop = setInterval(function() {
-      doSomething.call(bot);
-    }, params.BOT.ACTION_INTERVAL);
+    actionLoop.call(bot);
   }
 
   // Expose this module

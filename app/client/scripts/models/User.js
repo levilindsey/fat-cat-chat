@@ -57,6 +57,16 @@
    */
   function User(name, startTime) {
     var user = this;
+
+    user.name = null;
+    user.nameRegex = null;
+    user.startTime = null;
+    user.isIgnored = null;
+    user.privateMessages = null;
+    user.room = null;
+    user.privateChatUser = null;
+    user.setName = null;
+
     initUserInstance(user, name, startTime);
   }
 

@@ -63,6 +63,7 @@
 
     bot = new ChatBot(botName, chatBotManager);
     chatBotManager.bots.push(bot);
+    chatBotManager.chatManager.addUser(bot);
   }
 
   /**

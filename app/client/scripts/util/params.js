@@ -81,7 +81,8 @@
   moduleParams = {};
   params.BOT = moduleParams;
 
-  moduleParams.ACTION_INTERVAL = 4000; // milliseconds
+  moduleParams.ACTION_DELAY_MIN = 4000; // milliseconds
+  moduleParams.ACTION_DELAY_MAX = 6000; // milliseconds
 
   moduleParams.ACTION_PROBABILITIES = {};
   moduleParams.ACTION_PROBABILITIES.MSG = 0.15;
@@ -310,7 +311,7 @@
     'Cat fact #14: During the time of the Spanish Inquisition, Pope Innocent VIII condemned cats as evil and thousands of cats were burned. Unfortunately, the widespread killing of cats led to an explosion of the rat population, which exacerbated the effects of the Black Death.',
     'Cat fact #15: During the Middle Ages, cats were associated with withcraft, and on St. John\'s Day, people all over Europe would stuff them into sacks and toss the cats into bonfires. On holy days, people celebrated by tossing cats from church towers.',
     'Cat fact #16: Cats are North America\'s most popular pets: there are 73 million cats compared to 63 million dogs. Over 30% of households in North America own a cat.',
-    'Cat fact #17: The first cat in space was a French cat named Felicette (a.k.a. "Astrocat") In 1963, France blasted the cat into outer space. Electrodes implanted in her brain sent neurological signals back to Earth. She survived the trip.',
+    'Cat fact #17: The first cat in space was a French cat named Felicette (a.k.a. Astrocat). In 1963, France blasted the cat into outer space. Electrodes implanted in her brain sent neurological signals back to Earth. She survived the trip.',
     'Cat fact #18: The group of words associated with cat (catt, cath, chat, katze) stem from the Latin catus, meaning domestic cat, as opposed to feles, or wild cat.',
     'Cat fact #19: The term "puss" is the root of the principal word for "cat" in the Romanian term pisica and the root of secondary words in Lithuanian (puz) and Low German puus. Some scholars suggest that "puss" could be imitative of the hissing sound used to get a cat\'s attention. As a slang word for the female pudenda, it could be associated with the connotation of a cat being soft, warm, and fuzzy.',
     'Cat fact #20: Approximately 40,000 people are bitten by cats in the U.S. annually.',
@@ -368,10 +369,10 @@
     'Cat fact #72: In the 1750s, Europeans introduced cats into the Americas to control pests.',
     'Cat fact #73: The first cat show was organized in 1871 in London. Cat shows later became a worldwide craze.',
     'Cat fact #74: The first cartoon cat was Felix the Cat in 1919. In 1940, Tom and Jerry starred in the first theatrical cartoon "Puss Gets the Boot." In 1981 Andrew Lloyd Weber created the musical Cats, based on T.S. Eliot\'s Old Possum\'s Book of Practical Cats.',
-    'Cat fact #75: The normal body temperature of a cat is between 100.5&deg;F and 102.5&deg;F. A cat is sick if its temperature goes below 100&deg;or above 103&deg;F.',
+    'Cat fact #75: The normal body temperature of a cat is between 100.5°F and 102.5°F. A cat is sick if its temperature goes below 100° or above 103°F.',
     'Cat fact #76: A cat has 230 bones in its body. A human has 206. A cat has no collarbone, so it can fit through any opening the size of its head.',
     'Cat fact #77: A cat\'s nose pad is ridged with a unique pattern, just like the fingerprint of a human.',
-    'Cat fact #78: If they have ample water, cats can tolerate temperatures up to 133 &deg;F.',
+    'Cat fact #78: If they have ample water, cats can tolerate temperatures up to 133 °F.',
     'Cat fact #79: Foods that should not be given to cats include onions, garlic, green tomatoes, raw potatoes, chocolate, grapes, and raisins. Though milk is not toxic, it can cause an upset stomach and gas. Tylenol and aspirin are extremely toxic to cats, as are many common houseplants. Feeding cats dog food or canned tuna that\'s for human consumption can cause malnutrition.',
     'Cat fact #80: A 2007 Gallup poll revealed that both men and women were equally likely to own a cat.',
     'Cat fact #81: A cat\'s heart beats nearly twice as fast as a human heart, at 110 to 140 beats a minute.',
@@ -385,7 +386,7 @@
     'Cat fact #89: Cats are extremely sensitive to vibrations. Cats are said to detect earthquake tremors 10 or 15 minutes before humans can.',
     'Cat fact #90: In contrast to dogs, cats have not undergone major changes during their domestication process.',
     'Cat fact #91: A female cat is called a queen or a molly.',
-    'Cat fact #92: In the 1930s, two Russian biologists discovered that color change in Siamese kittens depend on their body temperature. Siamese cats carry albino genes that work only when the body temperature is above 98&deg; F. If these kittens are left in a very warm room, their points won\'t darken and they will stay a creamy white.',
+    'Cat fact #92: In the 1930s, two Russian biologists discovered that color change in Siamese kittens depend on their body temperature. Siamese cats carry albino genes that work only when the body temperature is above 98° F. If these kittens are left in a very warm room, their points won\'t darken and they will stay a creamy white.',
     'Cat fact #93: There are up to 60 million feral cats in the United States alone.',
     'Cat fact #94: The oldest cat to give birth was Kitty who, at the age of 30, gave birth to two kittens. During her life, she gave birth to 218 kittens.',
     'Cat fact #95: The most traveled cat is Hamlet, who escaped from his carrier while on a flight. He hid for seven weeks behind a pane. By the time he was discovered, he had traveled nearly 373,000 miles (600,000 km).',

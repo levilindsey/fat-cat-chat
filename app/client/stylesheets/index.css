@@ -481,6 +481,11 @@ img.emoticon.blank {
   margin: 16px;
 }
 
+#emoticonsPanel>.panelBody>.innerBodyContainer>ul {
+  width: 430px;
+  margin: 16px auto;
+}
+
 #emoticonsPanel li {
   float: left;
   margin-right: 16px;
