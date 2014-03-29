@@ -138,7 +138,8 @@
           // Prefix the displayed message with this user's name, even if it was entered from the room chat
           if (console === outMessageManager.chatManager.consoles.chatRoomMessages) {
             htmlTextPrefix = thisUser.name + ': ';
-            htmlTextPrefix = outMessageManager.chatManager.parseRawMessageTextForDom(htmlTextPrefix);
+            htmlTextPrefix =
+                outMessageManager.chatManager.parseRawMessageTextForDom(htmlTextPrefix);
             htmlText = htmlTextPrefix + htmlText;
           }
 
@@ -396,7 +397,9 @@
       } else if (params.OUT_COMMANDS.leave.regex.exec(rawText)) {
         command = 'leave';
         rawText =
-            '/leave ' + thisUserName + ' ' + (outMessageManager.chatManager.thisUser.room ? outMessageManager.chatManager.thisUser.room.name : '/none');
+            '/leave ' + thisUserName + ' ' +
+                (outMessageManager.chatManager.thisUser.room ?
+                    outMessageManager.chatManager.thisUser.room.name : '/none');
       } else if (params.OUT_COMMANDS.quit.regex.exec(rawText)) {
         command = 'quit';
       } else if (rawText.substr(0, 5) === '/link') {
@@ -413,7 +416,9 @@
       if (isPrivate) {
         command = 'msg';
         arguments =
-            [thisUserName, outMessageManager.chatManager.thisUser.privateChatUser ? outMessageManager.chatManager.thisUser.privateChatUser.name : '/none', rawText];
+            [thisUserName,
+              outMessageManager.chatManager.thisUser.privateChatUser ?
+                  outMessageManager.chatManager.thisUser.privateChatUser.name : '/none', rawText];
         rawText = '/msg ' + arguments[0] + ' ' + arguments[1] + ' (' + arguments[2] + ')';
         htmlTextPrefix = thisUserName + ': ';
         htmlTextPrefix = outMessageManager.chatManager.parseRawMessageTextForDom(htmlTextPrefix);
@@ -421,8 +426,8 @@
       } else { // Normal, public message
         command = 'pubmsg';
         rawText =
-            '/pubmsg ' + thisUserName + ' ' +
-                outMessageManager.chatManager.thisUser.room.name + ' (' + rawText + ')';
+            '/pubmsg ' + thisUserName + ' ' + outMessageManager.chatManager.thisUser.room.name +
+                ' (' + rawText + ')';
         htmlTextPrefix = thisUserName + ': ';
         htmlTextPrefix = outMessageManager.chatManager.parseRawMessageTextForDom(htmlTextPrefix);
         htmlText = htmlTextPrefix + htmlText;
@@ -650,7 +655,9 @@
     userName = user.name;
     roomName = room ? room.name : '/none';
 
-    rawText = '/heartbeat ' + userName + ' ' + roomName + ' ' + (user instanceof ChatBot ? 'bot' : 'human');
+    rawText =
+        '/heartbeat ' + userName + ' ' + roomName + ' ' +
+            (user instanceof ChatBot ? 'bot' : 'human');
 
     time = Date.now();
     type = 'system';

@@ -28,9 +28,11 @@
    * @function UIManager~getReferencesToElements
    */
   function getReferencesToElements() {
-    var uiManager, changeNameButton, newRoomButton, addBotButton, confirmButton, cancelButton, roomChatContainer, directoryContainer, commandsContainer, emoticonsContainer, privateChatContainer, roomChatHeader, directoryHeader, commandsHeader, emoticonsHeader, privateChatHeader, roomChatBody, directoryBody, commandsBody, emoticonsBody, privateChatBody, roomsConsole, directoryUsersConsole, chatRoomMessagesConsole, chatRoomUsersConsole, privateMessagesConsole, chatRoomMessagesTextBox, privateMessagesTextBox, ownUserNameLabel, textEntryDialoguePanel, changeNameTextBox;
+    var uiManager, connectingToServerMessage, changeNameButton, newRoomButton, addBotButton, confirmButton, cancelButton, roomChatContainer, directoryContainer, commandsContainer, emoticonsContainer, privateChatContainer, roomChatHeader, directoryHeader, commandsHeader, emoticonsHeader, privateChatHeader, roomChatBody, directoryBody, commandsBody, emoticonsBody, privateChatBody, roomsConsole, directoryUsersConsole, chatRoomMessagesConsole, chatRoomUsersConsole, privateMessagesConsole, chatRoomMessagesTextBox, privateMessagesTextBox, ownUserNameLabel, textEntryDialoguePanel, changeNameTextBox;
 
     uiManager = this;
+
+    connectingToServerMessage = document.getElementById('connectingToServerMessage');
 
     ownUserNameLabel = document.getElementById('ownUserNameLabel');
     textEntryDialoguePanel = document.getElementById('textEntryDialoguePanel');
@@ -77,6 +79,7 @@
     chatRoomMessagesTextBox = new ChatTextBox('roomChatMessagesTextBox', uiManager);
     privateMessagesTextBox = new ChatTextBox('privateChatMessagesTextBox', uiManager);
 
+    uiManager.connectingToServerMessage = connectingToServerMessage;
     uiManager.buttons = {
       changeName: changeNameButton,
       newRoom: newRoomButton,
@@ -199,13 +202,19 @@
 
     switch (button) {
       case uiManager.buttons.changeName:
-        openTextEntryDialogue.call(uiManager, false);
+        if (!uiManager.buttons.changeName.hasAttribute('disabled')) {
+          openTextEntryDialogue.call(uiManager, false);
+        }
         break;
       case uiManager.buttons.newRoom:
-        openTextEntryDialogue.call(uiManager, true);
+        if (!uiManager.buttons.newRoom.hasAttribute('disabled')) {
+          openTextEntryDialogue.call(uiManager, true);
+        }
         break;
       case uiManager.buttons.addBot:
-        uiManager.chatManager.chatBotManager.addChatBot();
+        if (!uiManager.buttons.addBot.hasAttribute('disabled')) {
+          uiManager.chatManager.chatBotManager.addChatBot();
+        }
         break;
       case uiManager.buttons.confirm:
         onDialogueConfimation.call(uiManager);
@@ -248,7 +257,8 @@
     if (succeeded) {
       closeTextEntryDialogue.call(uiManager);
     } else {
-      app.showErrorMessage(':( Names cannot already be in use and can only contain the characters ' + params.NAME_VALIDATION.validChars);
+      app.showErrorMessage(':( Names cannot already be in use and can only contain the characters ' +
+          params.NAME_VALIDATION.validChars);
     }
   }
 
@@ -277,6 +287,27 @@
     var uiManager = this;
 
     util.toggleClass(uiManager.panels.textEntryDialogue.container, 'hidden', true);
+  }
+
+  /**
+   * @function UIManager~updateConnectingToServerMessage
+   * @param {Boolean} connected
+   */
+  function updateConnectingToServerMessage(connected) {
+    var uiManager, message;
+    uiManager = this;
+
+    if (connected) {
+      message = 'Connected to server!';
+      uiManager.hideConnectedMessageTimeout = setTimeout(function () {
+        uiManager.connectingToServerMessage.style.display = 'none';
+      }, params.SHOW_CONNECTED_MESSAGE_DURATION);
+    } else {
+      message = params.CONNECTING_MESSAGES[uiManager.connectingToServerMessageIndex];
+      uiManager.connectingToServerMessageIndex =
+          (uiManager.connectingToServerMessageIndex + 1) % params.CONNECTING_MESSAGES.length;
+    }
+    uiManager.connectingToServerMessage.innerHTML = message;
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -337,6 +368,36 @@
 //        params.PANELS.TEXT_BOX_PADDING * 2);
   }
 
+  /**
+   * @function UIManager#showConnectingToServerMessage
+   */
+  function showConnectingToServerMessage() {
+    var uiManager = this;
+
+    clearTimeout(uiManager.hideConnectedMessageTimeout);
+    clearInterval(uiManager.updateConnectingToServerInterval);
+
+    uiManager.updateConnectingToServerInterval = setInterval(function () {
+      updateConnectingToServerMessage.call(uiManager, false);
+    }, params.CONNECTING_MESSAGE_UPDATE_INTERVAL);
+  }
+
+  /**
+   * @function UIManager#showConnectedToServerMessage
+   */
+  function showConnectedToServerMessage() {
+    var uiManager = this;
+
+    clearTimeout(uiManager.hideConnectedMessageTimeout);
+    clearInterval(uiManager.updateConnectingToServerInterval);
+
+    updateConnectingToServerMessage.call(uiManager, true);
+
+    uiManager.buttons.changeName.removeAttribute('disabled');
+    uiManager.buttons.newRoom.removeAttribute('disabled');
+    uiManager.buttons.addBot.removeAttribute('disabled');
+  }
+
   // ------------------------------------------------------------------------------------------- //
   // Private static functions
 
@@ -369,7 +430,11 @@
 
     uiManager.socketManager = null;
     uiManager.chatManager = new ChatManager(uiManager);
+    uiManager.connectingToServerMessageIndex = 0;
+    uiManager.hideConnectedMessageTimeout = Number.NaN;
+    uiManager.updateConnectingToServerInterval = Number.NaN;
     uiManager.dialogueIsForNewRoom = false;
+    uiManager.connectingToServerMessage = null;
     uiManager.buttons = null;
     uiManager.panels = null;
     uiManager.consoles = null;
@@ -377,6 +442,8 @@
 
     uiManager.init = init;
     uiManager.resize = resize;
+    uiManager.showConnectingToServerMessage = showConnectingToServerMessage;
+    uiManager.showConnectedToServerMessage = showConnectedToServerMessage;
   }
 
   // Expose this module

@@ -19,9 +19,11 @@
     var bot, delay;
 
     bot = this;
-    delay = Math.random() * (params.BOT.ACTION_DELAY_MAX - params.BOT.ACTION_DELAY_MIN) + params.BOT.ACTION_DELAY_MIN;
+    delay =
+        Math.random() * (params.BOT.ACTION_DELAY_MAX - params.BOT.ACTION_DELAY_MIN) +
+            params.BOT.ACTION_DELAY_MIN;
 
-    return setTimeout(function() {
+    return setTimeout(function () {
       bot.actionLoopTimeout = actionLoop.call(bot);
       doSomething.call(bot);
     }, delay);

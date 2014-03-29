@@ -32,7 +32,10 @@
 
     for (i = 0, count = chatManager.allRooms.length; i < count; i++) {
       room = chatManager.allRooms[i];
-      text = text.replace(room.nameRegex, '<code class=\"room\" onclick=\"app.chatManager.onRoomNameClick(\'' + room.name + '\')\" tooltip=\"Click to join chat room\">' + room.name + '</code>');
+      text =
+          text.replace(room.nameRegex,
+              '<code class=\"room\" onclick=\"app.chatManager.onRoomNameClick(\'' + room.name +
+                  '\')\" tooltip=\"Click to join chat room\">' + room.name + '</code>');
     }
 
     return text;
@@ -50,9 +53,14 @@
     for (i = 0, count = chatManager.allUsers.length; i < count; i++) {
       user = chatManager.allUsers[i];
       if (user === chatManager.thisUser) {
-        text = text.replace(user.nameRegex, '<code class=\"user thisUser\" tooltip=\"This is you!\">' + user.name + '</code>');
+        text =
+            text.replace(user.nameRegex,
+                '<code class=\"user thisUser\" tooltip=\"This is you!\">' + user.name + '</code>');
       } else {
-        text = text.replace(user.nameRegex, '<code class=\"user\" onclick=\"app.chatManager.onUserNameClick(\'' + user.name + '\')\" tooltip=\"Click to open private chat\">' + user.name + '</code>');
+        text =
+            text.replace(user.nameRegex,
+                '<code class=\"user\" onclick=\"app.chatManager.onUserNameClick(\'' + user.name +
+                    '\')\" tooltip=\"Click to open private chat\">' + user.name + '</code>');
       }
     }
 
@@ -115,7 +123,7 @@
   }
 
   /**
-   * @function ChatManager#isUserThisUserOrABot
+   * @function ChatManager~isUserThisUserOrABot
    * @param {Room} user
    * @returns {Boolean}
    */
@@ -125,7 +133,7 @@
   }
 
   /**
-   * @function ChatManager#doesRoomContainThisUserOrABot
+   * @function ChatManager~doesRoomContainThisUserOrABot
    * @param {Room} room
    * @returns {Boolean}
    */
@@ -164,6 +172,8 @@
     setInterval(function () {
       monitorHeartbeat.call(chatManager);
     }, params.HEARTBEAT_REQUEST_INTERVAL);
+
+    chatManager.uiManager.showConnectingToServerMessage();
   }
 
   /**
@@ -190,6 +200,8 @@
     }
 
     chatManager.hasEverConnected = true;
+
+    chatManager.uiManager.showConnectedToServerMessage();
   }
 
   /**
@@ -716,24 +728,27 @@
     var linkMatch;
 
     // Escape the characters used in our special link replacement string
-    text = text.replace(params.LINK_REPLACEMENT.toEscapeRegex, params.LINK_REPLACEMENT.escapeWithString);
+    text =
+        text.replace(params.LINK_REPLACEMENT.toEscapeRegex,
+            params.LINK_REPLACEMENT.escapeWithString);
 
     // Record the links and replace them with a special character combination
-    return text.replace(params.LINK_REPLACEMENT.linkRegex, function(match, group1, group2, group3) {
-      if (group1) {
-        linkMatch = {
-          url: group1,
-          linkText: group2
-        };
-      } else { // group3
-        linkMatch = {
-          url: group3,
-          linkText: group3
-        };
-      }
-      linkMatches.push(linkMatch);
-      return params.LINK_REPLACEMENT.replacementString;
-    });
+    return text.replace(params.LINK_REPLACEMENT.linkRegex,
+        function (match, group1, group2, group3) {
+          if (group1) {
+            linkMatch = {
+              url: group1,
+              linkText: group2
+            };
+          } else { // group3
+            linkMatch = {
+              url: group3,
+              linkText: group3
+            };
+          }
+          linkMatches.push(linkMatch);
+          return params.LINK_REPLACEMENT.replacementString;
+        });
   }
 
   /**
@@ -747,14 +762,17 @@
     i = 0;
 
     // Replace occurrences of our special link replacement string with the actual HTML link elements
-    text = text.replace(params.LINK_REPLACEMENT.replacementRegex, function() {
-      linkString = '<a href=\"' + linkMatches[i].url + '\" target=\"_blank\">' + linkMatches[i].linkText + '</a>';
+    text = text.replace(params.LINK_REPLACEMENT.replacementRegex, function () {
+      linkString =
+          '<a href=\"' + linkMatches[i].url + '\" target=\"_blank\">' + linkMatches[i].linkText +
+              '</a>';
       i++;
       return linkString;
     });
 
     // Un-escape the original occurrences of our special link replacement characters
-    return text.replace(params.LINK_REPLACEMENT.escapeWithRegex, params.LINK_REPLACEMENT.toEscapeString);
+    return text.replace(params.LINK_REPLACEMENT.escapeWithRegex,
+        params.LINK_REPLACEMENT.toEscapeString);
   }
 
   /**

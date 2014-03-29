@@ -15,7 +15,7 @@
   params.APP = moduleParams;
 
   moduleParams.TITLE = 'Fat-Cat Chat';
-  moduleParams.VERSION = '1.0.2';
+  moduleParams.VERSION = '1.0.3';
   moduleParams.LICENSE =
       'The MIT License (MIT). Copyright (c) 2014 Levi Lindsey <levi@jackieandlevi.com>.';
 
@@ -114,6 +114,13 @@
 
   params.HEARTBEAT_REQUEST_INTERVAL = 4000;
   params.HEARTBEAT_TIMEOUT_DELAY = params.HEARTBEAT_REQUEST_INTERVAL * 2 + 200;
+
+  params.CONNECTING_MESSAGE_UPDATE_INTERVAL = 100;
+  params.SHOW_CONNECTED_MESSAGE_DURATION = 2000;
+  params.CONNECTING_MESSAGES = [
+    'Connecting to server ......', 'Connecting to server. .....', 'Connecting to server.. ....',
+    'Connecting to server... ...', 'Connecting to server.... ..', 'Connecting to server..... .'
+  ];
 
   params.OUT_COMMANDS = {
     help: {
@@ -491,107 +498,17 @@
 
   // Cat names taken from http://www.youpet.com/cat-names/
   params.CAT_NAMES = [
-    'Kitty',
-    'Tiger',
-    'Smokey',
-    'Shadow',
-    'Tigger',
-    'Baby',
-    'Princess',
-    'Max',
-    'Oreo',
-    'Angel',
-    'Bella',
-    'Buddy',
-    'Gizmo',
-    'Midnight',
-    'Sassy',
-    'Simba',
-    'Patches',
-    'Precious',
-    'Lucky',
-    'Lucy',
-    'Chloe',
-    'Boots',
-    'Charlie',
-    'Callie',
-    'Jack',
-    'Sammy',
-    'Pepper',
-    'Fluffy',
-    'Molly',
-    'Missy',
-    'Kiki',
-    'Daisy',
-    'Sophie',
-    'Garfield',
-    'Lily',
-    'Cleo',
-    'Gracie',
-    'Cali',
-    'Oliver',
-    'Pumpkin',
-    'Milo',
-    'Toby',
-    'Jasper',
-    'Sam',
-    'Misty',
-    'Felix',
-    'Sasha',
-    'Oscar',
-    'Rocky',
-    'Bailey',
-    'Jasmine',
-    'Ginger',
-    'Peanut',
-    'Bandit',
-    'Simon',
-    'Mittens',
-    'Coco',
-    'Harley',
-    'Lilly',
-    'Boo',
-    'Luna',
-    'Cookie',
-    'Abby',
-    'Mimi',
-    'Snowball',
-    'Salem',
-    'Snickers',
-    'George',
-    'Nala',
-    'Sugar',
-    'Leo',
-    'Casper',
-    'Miss_kitty',
-    'Trouble',
-    'Maggie',
-    'Buster',
-    'Rascal',
-    'Scooter',
-    'Samantha',
-    'Cuddles',
-    'Tinkerbell',
-    'Zoey',
-    'Sadie',
-    'Lola',
-    'Willow',
-    'Spooky',
-    'Bear',
-    'Dusty',
-    'Bob',
-    'Zoe',
-    'Chester',
-    'Muffin',
-    'Mia',
-    'Whiskers',
-    'Socks',
-    'Snuggles',
-    'Loki',
-    'Sheba',
-    'Jinx',
-    'Bubba',
-    'Frisky'
+    'Kitty', 'Tiger', 'Smokey', 'Shadow', 'Tigger', 'Baby', 'Princess', 'Max', 'Oreo', 'Angel',
+    'Bella', 'Buddy', 'Gizmo', 'Midnight', 'Sassy', 'Simba', 'Patches', 'Precious', 'Lucky', 'Lucy',
+    'Chloe', 'Boots', 'Charlie', 'Callie', 'Jack', 'Sammy', 'Pepper', 'Fluffy', 'Molly', 'Missy',
+    'Kiki', 'Daisy', 'Sophie', 'Garfield', 'Lily', 'Cleo', 'Gracie', 'Cali', 'Oliver', 'Pumpkin',
+    'Milo', 'Toby', 'Jasper', 'Sam', 'Misty', 'Felix', 'Sasha', 'Oscar', 'Rocky', 'Bailey',
+    'Jasmine', 'Ginger', 'Peanut', 'Bandit', 'Simon', 'Mittens', 'Coco', 'Harley', 'Lilly', 'Boo',
+    'Luna', 'Cookie', 'Abby', 'Mimi', 'Snowball', 'Salem', 'Snickers', 'George', 'Nala', 'Sugar',
+    'Leo', 'Casper', 'Miss_kitty', 'Trouble', 'Maggie', 'Buster', 'Rascal', 'Scooter', 'Samantha',
+    'Cuddles', 'Tinkerbell', 'Zoey', 'Sadie', 'Lola', 'Willow', 'Spooky', 'Bear', 'Dusty', 'Bob',
+    'Zoe', 'Chester', 'Muffin', 'Mia', 'Whiskers', 'Socks', 'Snuggles', 'Loki', 'Sheba', 'Jinx',
+    'Bubba', 'Frisky'
   ];
 
   // --- Expose this module --- //

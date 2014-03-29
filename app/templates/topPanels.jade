@@ -4,16 +4,17 @@
     img(class='emoticon wink' src='#{BASE_DIR}/images/empty.gif')
 
 #buttonsPanel
+  p#connectingToServerMessage
   p#ownUserNameDisplay
     | Your nickname is&nbsp;
     code(id='ownUserNameLabel' class='user')
       | user_name
     | .
-  button#changeNameButton
+  button#changeNameButton(disabled)
     | Change Name
-  button#newRoomButton
+  button#newRoomButton(disabled)
     | New Room
-  button#addBotButton
+  button#addBotButton(disabled)
     | Add Bot
 
 #textEntryDialoguePanel.hidden

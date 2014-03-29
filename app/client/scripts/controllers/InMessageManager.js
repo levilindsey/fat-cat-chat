@@ -37,7 +37,8 @@
       message = new Message(messageText, htmlText, fromUser, Date.now(), 'in', null, null);
       inMessageManager.chatManager.showPrivateMessage(message, fromUser);
     } else {
-      log.w('receivedPrivateMessage', 'toUser doesn\'t match current user, or fromUser does not exist');
+      log.w('receivedPrivateMessage',
+          'toUser doesn\'t match current user, or fromUser does not exist');
     }
   }
 
