@@ -206,14 +206,6 @@
     } else {
       log.w('roomCreated', 'Room already exists');
     }
-
-    if (inMessageManager.chatManager.thisUser.room &&
-        inMessageManager.chatManager.thisUser.room !== room) {
-      // Notify the user that something happened
-      rawText = 'Room ' + roomName + ' was created.';
-      message = inMessageManager.chatManager.parseInternalMessage(rawText, false);
-      inMessageManager.chatManager.consoles.chatRoomMessages.addMessage(message);
-    }
   }
 
   /**

@@ -567,12 +567,6 @@
     util.toggleClass(outMessageManager.socketManager.uiManager.panels.roomChat.container, 'hidden',
         false);
 
-    outMessageManager.socketManager.uiManager.textBoxes.chatRoomMessages.textBox.focus();
-    outMessageManager.chatManager.consoles.chatRoomMessages.setTitle('Room: ' + roomName);
-    outMessageManager.chatManager.consoles.chatRoomMessages.clearMessages();
-    outMessageManager.chatManager.consoles.chatRoomUsers.clearMessages();
-
-    outMessageManager.chatManager.thisUser.room = room;
     outMessageManager.chatManager.addUserToRoom(outMessageManager.chatManager.thisUser, room);
 
     // Show the user-entered command

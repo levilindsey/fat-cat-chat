@@ -372,7 +372,7 @@
     'Cat fact #75: The normal body temperature of a cat is between 100.5°F and 102.5°F. A cat is sick if its temperature goes below 100° or above 103°F.',
     'Cat fact #76: A cat has 230 bones in its body. A human has 206. A cat has no collarbone, so it can fit through any opening the size of its head.',
     'Cat fact #77: A cat\'s nose pad is ridged with a unique pattern, just like the fingerprint of a human.',
-    'Cat fact #78: If they have ample water, cats can tolerate temperatures up to 133 °F.',
+    'Cat fact #78: If they have ample water, cats can tolerate temperatures up to 133°F.',
     'Cat fact #79: Foods that should not be given to cats include onions, garlic, green tomatoes, raw potatoes, chocolate, grapes, and raisins. Though milk is not toxic, it can cause an upset stomach and gas. Tylenol and aspirin are extremely toxic to cats, as are many common houseplants. Feeding cats dog food or canned tuna that\'s for human consumption can cause malnutrition.',
     'Cat fact #80: A 2007 Gallup poll revealed that both men and women were equally likely to own a cat.',
     'Cat fact #81: A cat\'s heart beats nearly twice as fast as a human heart, at 110 to 140 beats a minute.',

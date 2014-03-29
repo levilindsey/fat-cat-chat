@@ -152,7 +152,6 @@
       bot.chatBotManager.chatManager.addRoom(room);
     }
 
-    bot.room = room;
     bot.chatBotManager.chatManager.addUserToRoom(bot, room);
 
     return true;

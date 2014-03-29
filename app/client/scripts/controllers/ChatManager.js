@@ -469,18 +469,43 @@
    * @param {Room} room
    */
   function addUserToRoom(user, room) {
-    var chatManager, message;
+    var chatManager, message, i, count;
 
     chatManager = this;
     log.d('addUserToRoom', 'userName=' + user.name + ', roomName=' + room.name);
 
+    // Remove the user from any room she was previously in
+    if (user.room && user.room !== room) {
+      removeUserFromRoom.call(chatManager, user, user.room);
+    }
+
+    user.room = room;
+
+    // Only add the user to the room if she wasn't already in the room
     if (room.users.indexOf(user) < 0) {
       room.users.push(user);
 
-      message = parseUserMessage.call(chatManager, user.name);
+      // Only update the chat room users list if this is the room this human user is in
+      if (room === chatManager.thisUser.room) {
+        if (user === chatManager.thisUser) {
+          // This human user is entering a new room, so update the chat room panel
+          chatManager.uiManager.textBoxes.chatRoomMessages.textBox.focus();
+          chatManager.consoles.chatRoomMessages.setTitle('Room: ' + room.name);
+          chatManager.consoles.chatRoomMessages.clearMessages();
+          chatManager.consoles.chatRoomUsers.clearMessages();
 
-      chatManager.consoles.chatRoomUsers.addMessage(message);
-      chatManager.consoles.chatRoomUsers.setTitle('Users (' + room.users.length + ')');
+          // Update the list of users in this chat room
+          for (i = 0, count = room.users.length; i < count; i++) {
+            message = parseUserMessage.call(chatManager, room.users[i].name);
+            chatManager.consoles.chatRoomUsers.addMessage(message);
+          }
+        } else {
+          // Add the new user to the list of users in this chat room
+          message = parseUserMessage.call(chatManager, user.name);
+          chatManager.consoles.chatRoomUsers.addMessage(message);
+        }
+        chatManager.consoles.chatRoomUsers.setTitle('Users (' + room.users.length + ')');
+      }
     } else {
       log.w('addUserToRoom', 'Room already contained user');
     }
@@ -503,8 +528,11 @@
       room.users.splice(index, 1);
     }
 
-    chatManager.consoles.chatRoomUsers.removeMessageByRawText(user.name);
-    chatManager.consoles.chatRoomUsers.setTitle('Users (' + room.users.length + ')');
+    // Only update the chat room users list if this is the room this human user is in
+    if (room === chatManager.thisUser.room) {
+      chatManager.consoles.chatRoomUsers.removeMessageByRawText(user.name);
+      chatManager.consoles.chatRoomUsers.setTitle('Users (' + room.users.length + ')');
+    }
   }
 
   /**
