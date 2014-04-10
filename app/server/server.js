@@ -23,7 +23,7 @@ module.exports.run = function run(port) {
   require('./middleware').setMiddleware(BASE_DIR, server, express);
 
   // Configure AWS
-  aws.config.loadFromPath(BASE_DIR + '/server/aws_config.json');
+  //aws.config.loadFromPath(BASE_DIR + '/server/aws_config.json');
 
   // Attach route handlers
   require('./routes').attachHandlers(BASE_DIR, server, port);

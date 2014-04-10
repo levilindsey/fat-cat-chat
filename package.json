@@ -1,9 +1,22 @@
 {
   "name": "fat-cat-chat",
+  "preferGlobal": true,
   "version": "1.0.4",
-  "private": false,
+  "author": {
+    "name": "Levi Lindsey",
+    "email": "levi@jackieandlevi.com",
+    "url": "http://jackieandlevi.com/levi"
+  },
   "scripts": {
     "start": "node app/init.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/levisl176/fat-cat-chat"
+  },
+  "bugs": {
+    "url": "http://github.com/levisl176/fat-cat-chat/issues",
+    "email": "levi@jackieandlevi.com"
   },
   "dependencies": {
     "express": "3.4.x",
@@ -11,8 +24,10 @@
     "jade": "*",
     "aws-sdk": "*"
   },
-  "repository": {
-    "type": "git",
-    "url": "http://github.com/levisl176/fat-cat-chat"
-  }
+  "analyze": true,
+  "license": "MIT",
+  "engines": {
+      "node": ">=0.10"
+  },
+  "subdomain": "fat-cat-chat"
 }
