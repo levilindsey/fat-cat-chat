@@ -2,7 +2,9 @@
 
 #### An IRC-like chat server and web client application
 
-Some of the features of this chat server/client application include:
+_See the app running at [www.jackieandlevi.com/fat-cat-chat](http://www.jackieandlevi.com/fat-cat-chat)!_
+
+### Features
 
 - A chat server using Node.js and socket.io.
 - A fancy web client.
