@@ -2,7 +2,7 @@
 
 #### An IRC-like chat server and web client application
 
-_See the app running at [levi.codes/fat-cat-chat](http://levi.codes/fat-cat-chat)!_
+_See the app running at [levi.dev/fat-cat-chat](http://levi.dev/fat-cat-chat)!_
 
 ### Features
 
